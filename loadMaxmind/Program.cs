@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using CommonTools;
 using loadMaxmind.BissnesLayer;
 using loadMaxmind.BissnesLayer.Model;
+using loadMaxmind.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace loadMaxmind
 {
@@ -24,18 +27,14 @@ namespace loadMaxmind
             {
                 //работаем с csv
                 Csv csv = new Csv(config);
-                IEnumerable<Ipv4blocCsv> records = csv.DoIpv4blocs();
-                
-                if (records != null && records.Any())
-                    foreach (Ipv4blocCsv item in records.Take(100))
-                        Console.WriteLine("geoname_id {0}", item.geoname_id);
-
-                IEnumerable<CountryLocationCsv> r = csv.DoCountryLocations();
-                if(r!= null && r.Any())
-                    foreach (CountryLocationCsv item in r.Take(10))
-                        Console.WriteLine("geoname_id {0}", item.geoname_id);
+                IEnumerable<Ipv4blocCsv> ipv4blocs = csv.DoIpv4blocs();
+                IEnumerable<CountryLocationCsv> countryLocations = csv.DoCountryLocations();
 
 
+                SaveDataToDatabase.SaveCountryLocations(countryLocations);
+
+                SaveDataToDatabase.TrucateIpv4bloc();
+                SaveDataToDatabase.SaveIpv4blocs(ipv4blocs);
             }
             else
                 throw new Exception("error extract files");

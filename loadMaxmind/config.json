@@ -4,5 +4,6 @@
   "IntervalDownloadHours": 1,
   "ConnectionString": "",
   "Ipv4blocs": "GeoLite2-Country-Blocks-IPv4.csv",
-  "CountryLocation": "GeoLite2-Country-Locations-ru.csv"
+  "CountryLocation": "GeoLite2-Country-Locations-ru.csv",
+  "ConnectionStrings": "server=localhost;port=5432;userid=postgres;database=GeoMaxmind;password=changeme"
 }

@@ -16,10 +16,14 @@ namespace CommonTools
         {
             if (!ipMask.IsIpAndMask())
                 throw new Exception();
-
             string[] splitIp = ipMask.Split('/');
             int maskLen = int.Parse(splitIp[1]);
+
+            if (maskLen == 32)
+                return ipMask.IpToUint32(); //32 битная маска 1 Ip в подсетке
+
             string endMask = new String('1', 32 - maskLen);
+            
             UInt32 offset = Convert.ToUInt32(endMask, 2);
             UInt32 minIp = ipMask.GetIpMin();
 
@@ -33,6 +37,8 @@ namespace CommonTools
             string[] splitIp = ipMask.Split('/');
             string Ip = splitIp[0];
             int maskLen = int.Parse(splitIp[1]);
+            if (maskLen == 32)
+                return ipMask.IpToUint32(); //32 битная маска 1 Ip в подсетке
 
             string startMask = new String('1', maskLen);
             string endMask = new String('0', 32 - maskLen);
