@@ -54,6 +54,7 @@ namespace loadMaxmind.BissnesLayer
                 long ticsFromConfig = DateTime.MinValue.AddHours(double.Parse(_intervalDownloadHours)).Ticks;
                 if (ticsNow - ticsFromConfig < lastTics)
                 {
+                    Console.WriteLine("use zip from cache");
                     //возвращаем скачанный архив
                     return Path.Combine(_dir, lastTics.ToString() + ".zip");
                 }
@@ -65,6 +66,7 @@ namespace loadMaxmind.BissnesLayer
         private string downLoadFile()
         {
             string fileName = Path.Combine(_dir, DateTime.Now.Ticks.ToString() + ".zip");
+            Console.WriteLine("download zip");
 
             using (WebClient wc = new WebClient())
             {
