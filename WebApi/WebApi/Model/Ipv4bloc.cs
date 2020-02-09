@@ -4,7 +4,7 @@ using System.Text;
 
 namespace loadMaxmind.Model
 {
-    class Ipv4bloc
+    public class Ipv4bloc
     {
         public Guid ID { get; set; }
         public string Network { get; set; }

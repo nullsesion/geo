@@ -6,7 +6,7 @@ using System.Text;
 
 namespace loadMaxmind.Model
 {
-    class CountryLocation
+    public class CountryLocation
     {
         [Key]
         [ForeignKey("Ipv4bloc")]

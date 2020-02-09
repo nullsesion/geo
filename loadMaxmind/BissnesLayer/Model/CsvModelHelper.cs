@@ -13,8 +13,7 @@ namespace loadMaxmind.BissnesLayer.Model
         {
             return new CountryLocation()
             {
-                ID = new Guid(),
-                GeonameId = countryLocationCsv.geoname_id,
+                GeonameId = long.Parse(countryLocationCsv.geoname_id),
                 LocaleCode = countryLocationCsv.locale_code,
                 ContinentCode = countryLocationCsv.continent_code,
                 ContinentName = countryLocationCsv.continent_name,
@@ -27,13 +26,17 @@ namespace loadMaxmind.BissnesLayer.Model
         //Ipv4blocCsv
         public static Ipv4bloc Ipv4blocCsvToDb(this Ipv4blocCsv ipv4blocCsv)
         {
+            long.TryParse(ipv4blocCsv.registered_country_geoname_id, out long registered_country_geoname_id);
+            long.TryParse(ipv4blocCsv.registered_country_geoname_id, out long represented_country_geoname_id);
+            long.TryParse(ipv4blocCsv.geoname_id, out long geoname_id);
+            
             return new Ipv4bloc()
             {
                 ID = new Guid(),
                 Network = ipv4blocCsv.network,
-                GeonameId = ipv4blocCsv.geoname_id,
-                RegisteredCountryGeonameId  = ipv4blocCsv.registered_country_geoname_id,
-                RepresentedCountryGeonameId = ipv4blocCsv.represented_country_geoname_id,
+                GeonameId = geoname_id,
+                RegisteredCountryGeonameId  = registered_country_geoname_id,
+                RepresentedCountryGeonameId = represented_country_geoname_id,
                 IsAnonymousProxy = ipv4blocCsv.is_anonymous_proxy,
                 IsSatelliteProvider = ipv4blocCsv.is_satellite_provider,
                 IpMax = ipv4blocCsv.network.GetIpMax(),

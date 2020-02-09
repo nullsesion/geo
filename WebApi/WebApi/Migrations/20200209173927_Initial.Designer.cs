@@ -2,16 +2,18 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using loadMaxmind.Model;
 
-namespace loadMaxmind.Migrations
+namespace WebApi.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20200209173927_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,9 +23,10 @@ namespace loadMaxmind.Migrations
 
             modelBuilder.Entity("loadMaxmind.Model.CountryLocation", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<long>("GeonameId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("ContinentCode")
                         .HasColumnType("text");
@@ -37,16 +40,13 @@ namespace loadMaxmind.Migrations
                     b.Property<string>("CountryName")
                         .HasColumnType("text");
 
-                    b.Property<string>("GeonameId")
-                        .HasColumnType("text");
-
                     b.Property<string>("IsInEuropeanUnion")
                         .HasColumnType("text");
 
                     b.Property<string>("LocaleCode")
                         .HasColumnType("text");
 
-                    b.HasKey("ID");
+                    b.HasKey("GeonameId");
 
                     b.ToTable("CountryLocations");
                 });
@@ -57,8 +57,11 @@ namespace loadMaxmind.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("GeonameId")
-                        .HasColumnType("text");
+                    b.Property<long?>("CountryLocationGeonameId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("GeonameId")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("IpMax")
                         .HasColumnType("bigint");
@@ -75,15 +78,24 @@ namespace loadMaxmind.Migrations
                     b.Property<string>("Network")
                         .HasColumnType("text");
 
-                    b.Property<string>("RegisteredCountryGeonameId")
-                        .HasColumnType("text");
+                    b.Property<long?>("RegisteredCountryGeonameId")
+                        .HasColumnType("bigint");
 
-                    b.Property<string>("RepresentedCountryGeonameId")
-                        .HasColumnType("text");
+                    b.Property<long?>("RepresentedCountryGeonameId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("ID");
 
+                    b.HasIndex("CountryLocationGeonameId");
+
                     b.ToTable("Ipv4bloc");
+                });
+
+            modelBuilder.Entity("loadMaxmind.Model.Ipv4bloc", b =>
+                {
+                    b.HasOne("loadMaxmind.Model.CountryLocation", "CountryLocation")
+                        .WithMany()
+                        .HasForeignKey("CountryLocationGeonameId");
                 });
 #pragma warning restore 612, 618
         }

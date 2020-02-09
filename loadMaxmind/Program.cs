@@ -30,7 +30,7 @@ namespace loadMaxmind
                 IEnumerable<Ipv4blocCsv> ipv4blocs = csv.DoIpv4blocs();
                 IEnumerable<CountryLocationCsv> countryLocations = csv.DoCountryLocations();
 
-                SaveDataToDatabase.TrucateCountryLocations();
+
                 SaveDataToDatabase.SaveCountryLocations(countryLocations);
 
                 SaveDataToDatabase.TrucateIpv4bloc();
