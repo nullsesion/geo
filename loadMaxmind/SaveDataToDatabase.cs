@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using loadMaxmind.BissnesLayer.Model;
 using loadMaxmind.Model;
@@ -9,6 +10,7 @@ namespace loadMaxmind
 {
     static class SaveDataToDatabase
     {
+        /*
         public static void TrucateCountryLocations()
         {
             Console.WriteLine("");
@@ -19,6 +21,7 @@ namespace loadMaxmind
                 db.SaveChanges();
             }
         }
+        */
         public static void TrucateIpv4bloc()
         {
             Console.WriteLine("");
@@ -32,17 +35,33 @@ namespace loadMaxmind
 
         public static void SaveIpv4blocs(IEnumerable<Ipv4blocCsv> ipv4blocs)
         {
+            int pageSize = (int) Math.Ceiling((decimal) (ipv4blocs.Count() / 100));
+            long pages = ipv4blocs.Count() / pageSize;
+            for (int i = 0; i <= pages; i++)
+            {
+                SaveIpv4blocsPage(ipv4blocs.Skip(i * pageSize + 1).Take(pageSize));
+
+                Console.WriteLine("");
+                Console.WriteLine("{0}%", i);
+            }
+
+            Console.WriteLine("");
+            Console.WriteLine("write data to Ipv4bloc");
+        }
+
+        private static void SaveIpv4blocsPage(IEnumerable<Ipv4blocCsv> ipv4blocs)
+        {
+            int j = 0;
             using (ApplicationContext db = new ApplicationContext())
             {
                 foreach (Ipv4blocCsv item in ipv4blocs)
                 {
                     db.Ipv4bloc.Add(item.Ipv4blocCsvToDb());
-                    Console.Write(".");
+                    if(++j % 10 == 0)
+                        Console.Write(".");
                 }
                 db.SaveChanges();
             }
-            Console.WriteLine("");
-            Console.WriteLine("write data to Ipv4bloc");
         }
 
         public static void SaveCountryLocations(IEnumerable<CountryLocationCsv> countryLocations)
@@ -51,7 +70,18 @@ namespace loadMaxmind
             {
                 foreach (CountryLocationCsv item in countryLocations)
                 {
-                    db.CountryLocations.Add(item.CountryLocationCsvToDb());
+                    //ищем обновляем или добавляем
+                    if(db.CountryLocations.Any(x => x.GeonameId == item.CountryLocationCsvToDb().GeonameId))
+                    {
+                        CountryLocation countryLocation = db.CountryLocations.First(x => x.GeonameId == item.CountryLocationCsvToDb().GeonameId);
+                        countryLocation = item.CountryLocationCsvToDb();
+                    }
+                    else
+                    {
+                        db.CountryLocations.Add(item.CountryLocationCsvToDb());
+                    }
+
+                    
                     Console.Write(".");
                 }
                 db.SaveChanges();

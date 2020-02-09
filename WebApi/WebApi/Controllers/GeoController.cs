@@ -26,7 +26,15 @@ namespace WebApi.Controllers
         public Ipv4bloc Get(string ip)
         {
             uint uintIp = ip.IpToUint32();
-            Ipv4bloc ipInfo = _db.Ipv4bloc.Where(x => x.IpMax >= uintIp && x.IpMin <= uintIp).FirstOrDefault();
+            Ipv4bloc ipInfo = _db.Ipv4bloc.FirstOrDefault(x => x.IpMax >= uintIp && x.IpMin <= uintIp);
+            if (ipInfo != null)
+            {
+                IQueryable<CountryLocation> countryLocations = _db.CountryLocations.Where(x => x.GeonameId == ipInfo.GeonameId);
+                if (countryLocations.Any())
+                {
+                    ipInfo.CountryLocation = countryLocations.First();
+                }
+            }
             
             return ipInfo;
         }

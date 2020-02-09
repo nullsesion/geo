@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace loadMaxmind.Model
 {
     public class CountryLocation
     {
-        public Guid ID { get; set; }
-        public string GeonameId { get; set; }
+        [Key]
+        [ForeignKey("Ipv4bloc")]
+        public long GeonameId { get; set; }
+
         public string LocaleCode { get; set; }
         public string ContinentCode { get; set; }
         public string ContinentName { get; set; }

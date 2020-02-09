@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace loadMaxmind.Model
 {
-
     public class ApplicationContext : DbContext
     {
         public ApplicationContext(DbContextOptions options)
