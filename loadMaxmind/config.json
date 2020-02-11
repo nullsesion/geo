@@ -2,8 +2,7 @@
   "UrlLoad": "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country-CSV&amp;license_key=O2mIsHbae6XHMjJy&amp;suffix=zip",
   "DirectoryLoad": "tmp",
   "IntervalDownloadHours": 1,
-  "ConnectionString": "",
   "Ipv4blocs": "GeoLite2-Country-Blocks-IPv4.csv",
   "CountryLocation": "GeoLite2-Country-Locations-ru.csv",
-  "ConnectionStrings": "server=localhost;port=5432;userid=postgres;database=GeoMaxmind;password=changeme"
+  "ConnectionString": "server=localhost;port=5432;userid=postgres;database=GeoMaxmind;password=changeme"
 }

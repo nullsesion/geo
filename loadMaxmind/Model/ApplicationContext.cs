@@ -9,7 +9,7 @@ namespace loadMaxmind.Model
     class ApplicationContext : DbContext
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseNpgsql(Config.getInstans().GetConfigByName("ConnectionStrings"));
+            => optionsBuilder.UseNpgsql(Config.getInstans().GetConfigByName(Config.ConnectionString));
 
         public DbSet<CountryLocation> CountryLocations { get; set; }
         public DbSet<Ipv4bloc> Ipv4bloc { get; set; }
