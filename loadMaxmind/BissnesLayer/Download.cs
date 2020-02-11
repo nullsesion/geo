@@ -18,9 +18,9 @@ namespace loadMaxmind.BissnesLayer
 
         public Download(Config config)
         {
-            _url = config.GetConfigByName("UrlLoad");
-            _dir = Path.Combine(Environment.CurrentDirectory, config.GetConfigByName("DirectoryLoad"));
-            _intervalDownloadHours = config.GetConfigByName("IntervalDownloadHours");
+            _url = config.GetConfigByName(Config.UrlLoad);
+            _dir = Path.Combine(Environment.CurrentDirectory, config.GetConfigByName(Config.DirectoryLoad));
+            _intervalDownloadHours = config.GetConfigByName(Config.IntervalDownloadHours);
         }
         
         public string Do()

@@ -20,8 +20,8 @@ namespace loadMaxmind.BissnesLayer
 
         public IEnumerable<Ipv4blocCsv> DoIpv4blocs()
         {
-            string tmpDir = _config.GetConfigByName("DirectoryLoad");
-            string csvFileName = _config.GetConfigByName("Ipv4blocs");
+            string tmpDir = _config.GetConfigByName(Config.DirectoryLoad);
+            string csvFileName = _config.GetConfigByName(Config.Ipv4blocs);
             string path = Path.Combine(Environment.CurrentDirectory, tmpDir, csvFileName);
             
             List<Ipv4blocCsv> items = new List<Ipv4blocCsv>();
@@ -44,8 +44,8 @@ namespace loadMaxmind.BissnesLayer
 
         public IEnumerable<CountryLocationCsv> DoCountryLocations()
         {
-            string tmpDir = _config.GetConfigByName("DirectoryLoad");
-            string csvFileName = _config.GetConfigByName("CountryLocation");
+            string tmpDir = _config.GetConfigByName(Config.DirectoryLoad);
+            string csvFileName = _config.GetConfigByName(Config.CountryLocation);
             string path = Path.Combine(Environment.CurrentDirectory, tmpDir, csvFileName);
 
             List<CountryLocationCsv> items = new List<CountryLocationCsv>();

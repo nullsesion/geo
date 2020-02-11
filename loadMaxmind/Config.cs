@@ -8,6 +8,13 @@ namespace loadMaxmind
 {
     public class Config
     {
+        public static readonly string UrlLoad = "UrlLoad";
+        public static readonly string DirectoryLoad = "DirectoryLoad";
+        public static readonly string IntervalDownloadHours = "IntervalDownloadHours";
+        public static readonly string Ipv4blocs = "Ipv4blocs";
+        public static readonly string CountryLocation = "CountryLocation";
+        public static readonly string ConnectionString = "ConnectionString";
+        
         private readonly string  _fileConfig = Path.Combine(Environment.CurrentDirectory, "config.json");
         private static Config _instans;
         private static Dictionary<string, string> _configDictionary;
