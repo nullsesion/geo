@@ -22,6 +22,7 @@ namespace loadMaxmind.BissnesLayer
         {
             string tmpDir = _config.GetConfigByName(Config.DirectoryLoad);
             string csvFileName = _config.GetConfigByName(Config.Ipv4blocs);
+
             string path = Path.Combine(Environment.CurrentDirectory, tmpDir, csvFileName);
             
             List<Ipv4blocCsv> items = new List<Ipv4blocCsv>();

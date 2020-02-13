@@ -17,6 +17,10 @@ namespace loadMaxmind
 
             Config config = Config.getInstans();
             
+            Console.WriteLine("-----------------------------------");
+            Console.WriteLine(config.GetSqlConnection());
+            
+            /*
             Download download = new Download(config);
             string file = download.Do();
             
@@ -39,7 +43,7 @@ namespace loadMaxmind
             else
                 throw new Exception("error extract files");
 
-            
+            */
             Console.WriteLine("Press any key...");
             Console.ReadKey();
         }
