@@ -1,8 +1,0 @@
-C:\Project\gibridtz\CommonTools\CommonTools\bin\Debug\netcoreapp3.1\CommonTools.deps.json
-C:\Project\gibridtz\CommonTools\CommonTools\bin\Debug\netcoreapp3.1\CommonTools.dll
-C:\Project\gibridtz\CommonTools\CommonTools\bin\Debug\netcoreapp3.1\CommonTools.pdb
-C:\Project\gibridtz\CommonTools\CommonTools\obj\Debug\netcoreapp3.1\CommonTools.csprojAssemblyReference.cache
-C:\Project\gibridtz\CommonTools\CommonTools\obj\Debug\netcoreapp3.1\CommonTools.AssemblyInfoInputs.cache
-C:\Project\gibridtz\CommonTools\CommonTools\obj\Debug\netcoreapp3.1\CommonTools.AssemblyInfo.cs
-C:\Project\gibridtz\CommonTools\CommonTools\obj\Debug\netcoreapp3.1\CommonTools.dll
-C:\Project\gibridtz\CommonTools\CommonTools\obj\Debug\netcoreapp3.1\CommonTools.pdb
