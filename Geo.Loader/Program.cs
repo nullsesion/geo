@@ -1,13 +1,8 @@
-﻿using Geo.Loader.Data;
-using MediatR;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Reflection;
-using Geo.Application;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Geo.Application.IpLocations.Commands.Create;
-using Geo.Loader;
 using Geo.Application.Interfaces;
 using Geo.Persistence;
+using Geo.Loader.CSV;
 
 namespace Geo.Loader
 {
@@ -24,10 +19,19 @@ namespace Geo.Loader
 				collection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateIpLocation).Assembly));
 				return collection.BuildServiceProvider();
 			}
-			//run 
 
-			ServiceProvider serviceProvider = CreateServiceProvider();
-			serviceProvider.GetRequiredService<Execution>().Run();
+			string fileName = LoaderTools.GetFileNameFromArgs(args, "demogeoip.csv");
+			if (LoaderTools.TryFindFile(fileName, out FileInfo? file))
+			{
+				ServiceProvider serviceProvider = CreateServiceProvider();
+				serviceProvider.GetRequiredService<Execution>().Run(file);
+			}
+			else
+			{
+				Console.WriteLine("File Not Found");
+			}
+
+
 		}
 	}
 }
