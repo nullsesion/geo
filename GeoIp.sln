@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Persistence", "Geo.Pers
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Loader", "Geo.Loader\Geo.Loader.csproj", "{5F954FB7-1B6A-4B12-B47B-B08B662759F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geo.Application", "Geo.Application\Geo.Application.csproj", "{2C4546C0-EDF6-4680-A28A-5B7883B29A17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geo.Application", "Geo.Application\Geo.Application.csproj", "{2C4546C0-EDF6-4680-A28A-5B7883B29A17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geo.WebApp", "Geo.WebApp\Geo.WebApp.csproj", "{D96B2568-27C9-4484-9647-9940C4D60914}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{2C4546C0-EDF6-4680-A28A-5B7883B29A17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C4546C0-EDF6-4680-A28A-5B7883B29A17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C4546C0-EDF6-4680-A28A-5B7883B29A17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D96B2568-27C9-4484-9647-9940C4D60914}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D96B2568-27C9-4484-9647-9940C4D60914}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D96B2568-27C9-4484-9647-9940C4D60914}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D96B2568-27C9-4484-9647-9940C4D60914}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{2724D0E0-D797-44E1-9EEF-CA5065A6569D} = {006C5F6F-E375-4B80-BC26-ECC4501D159C}
 		{5F954FB7-1B6A-4B12-B47B-B08B662759F2} = {769065A4-2B6D-4799-85DB-EC6CB489D9E3}
 		{2C4546C0-EDF6-4680-A28A-5B7883B29A17} = {0EDD7CF6-5AF2-48CB-AE89-30A8A33EDDCC}
+		{D96B2568-27C9-4484-9647-9940C4D60914} = {769065A4-2B6D-4799-85DB-EC6CB489D9E3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF0EAA42-7CF0-4B05-ABF1-7DE6C8D3AB98}
