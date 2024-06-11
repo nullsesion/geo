@@ -7,14 +7,32 @@ namespace Geo.Application.Common
 {
     static public class StringExtensionsIPv4
     {
-        public static bool IsIpAndMask(this string ipMask)
+        private static bool IsIpAndMask(string ipMask)
         {
             var reg = new Regex(@"^\d+\.\d+\.\d+\.\d+/\d+$");
             return reg.IsMatch(ipMask);
         }
-        public static UInt32 GetIpMax(this string ipMask)
+        private static bool IsIp(string ip)
         {
-            if (!ipMask.IsIpAndMask())
+	        var reg = new Regex(@"^\d+\.\d+\.\d+\.\d+$");
+	        if (!reg.IsMatch(ip))
+	        {
+                return false;
+	        }
+	        
+	        foreach (string item in ip.Split('.'))
+	        {
+		        if (int.TryParse(item, out int n))
+		        {
+			        if (!(n < 256 && n > 0)) return false;
+		        }
+		        else return false;
+	        }
+            return true;
+		}
+		public static UInt32 GetIpMax(this string ipMask)
+        {
+            if (!IsIpAndMask(ipMask))
                 throw new Exception();
             string[] splitIp = ipMask.Split('/');
             int maskLen = int.Parse(splitIp[1]);
@@ -32,7 +50,7 @@ namespace Geo.Application.Common
 
         public static UInt32 GetIpMin(this string ipMask)
         {
-            if (!ipMask.IsIpAndMask())
+            if (!IsIpAndMask(ipMask))
                 throw new Exception();
             string[] splitIp = ipMask.Split('/');
             string Ip = splitIp[0];
@@ -53,6 +71,19 @@ namespace Geo.Application.Common
             byte[] bytsIP = IPAddress.Parse(ip.Split('/')[0]).GetAddressBytes().Reverse().ToArray<Byte>();
             UInt32 ipaddr = BitConverter.ToUInt32(bytsIP);
             return ipaddr;
+        }
+        
+        public static bool TryIpToUint32(this string ip, out UInt32 number )
+        {
+	        number = 0;
+			if (IsIp(ip))
+	        {
+		        byte[] bytsIP = IPAddress.Parse(ip.Split('/')[0]).GetAddressBytes().Reverse().ToArray<Byte>();
+		        number = BitConverter.ToUInt32(bytsIP);
+                return true;
+			}
+
+	        return false;
         }
     }
 }
