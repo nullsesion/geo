@@ -23,12 +23,5 @@ namespace Geo.Persistence
 			base.OnModelCreating(builder);
 		}
 		
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-		{
-			optionsBuilder.UseNpgsql(@"Host=localhost;Port=5432;Database=GeoLocation;User ID=postgresql;Password=postgresql")
-				//.LogTo(Console.WriteLine)
-				;
-		}
-		
 	}
 }

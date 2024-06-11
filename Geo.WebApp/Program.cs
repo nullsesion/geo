@@ -4,10 +4,16 @@ using Geo.Application.Interfaces;
 using Geo.Application.IpLocations.Queries.Get;
 using Geo.Persistence;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddScoped<IGeoApiDbContext, GeoApiDbContext>();
+
+builder.Services.AddDbContext<IGeoApiDbContext, GeoApiDbContext>(options =>
+	{
+		options.UseNpgsql(builder.Configuration.GetConnectionString(nameof(GeoApiDbContext)));
+	}
+	);
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddAutoMapper(config =>

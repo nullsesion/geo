@@ -3,6 +3,8 @@ using Geo.Application.IpLocations.Commands.Create;
 using Geo.Application.Interfaces;
 using Geo.Persistence;
 using Geo.Loader.CSV;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Geo.Loader
 {
@@ -14,7 +16,17 @@ namespace Geo.Loader
 			{
 				var collection = new ServiceCollection();
 				collection.AddScoped<Execution>();
-				collection.AddScoped<IGeoApiDbContext, GeoApiDbContext>();
+
+				IConfigurationRoot config = new ConfigurationBuilder()
+					.AddJsonFile("appsettings.json")
+					.AddEnvironmentVariables()//todo: use in future
+					.Build();
+
+				collection.AddDbContext<IGeoApiDbContext, GeoApiDbContext>(options =>
+					{
+						options.UseNpgsql(config.GetConnectionString(nameof(GeoApiDbContext)));
+					}
+				);
 
 				collection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateIpLocation).Assembly));
 				return collection.BuildServiceProvider();
