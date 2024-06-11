@@ -1,14 +1,14 @@
 ﻿using Geo.Application.Common;
 using Geo.Application.Interfaces;
-using Geo.Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Geo.Application.Common.Exceptions;
 using AutoMapper;
+using Geo.Domain.Models;
 
 namespace Geo.Application.IpLocations.Queries.Get
 {
-	public class GetIpLocationHandler: IRequestHandler<GetIpLocation, IpLocationVm>
+    public class GetIpLocationHandler: IRequestHandler<GetIpLocation, IpLocationVm>
 	{
 		private readonly IGeoApiDbContext _dbContext;
 		private readonly IMapper _mapper;

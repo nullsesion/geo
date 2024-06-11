@@ -1,11 +1,11 @@
 ﻿using Geo.Application.Interfaces;
-using Geo.Domain;
+using Geo.Domain.Models;
 using Geo.Persistence.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Geo.Persistence
 {
-	public class GeoApiDbContext: DbContext, IGeoApiDbContext
+    public class GeoApiDbContext: DbContext, IGeoApiDbContext
 	{
 		public DbSet<IpLocation> IpLocations { get; set; }
 		public Task<Guid> SaveChangesAsync(CancellationToken cancellationToken)
