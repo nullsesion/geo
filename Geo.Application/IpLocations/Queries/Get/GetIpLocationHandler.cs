@@ -25,11 +25,14 @@ namespace Geo.Application.IpLocations.Queries.Get
 				.FirstOrDefaultAsync(x =>
 					x.IpMin < request.Address.IpToUint32()
 					&& x.IpMax > request.Address.IpToUint32(), cancellationToken);
-
+			
+			
 			if (entity == null)
 			{
-				throw new NotFoundException(nameof(IpLocation), request.Address);
+				return null;
+				//throw new NotFoundException(nameof(IpLocation), request.Address);
 			}
+			
 
 			// todo fix automapper
 			//return _mapper.Map<IpLocationVm>(entity);
