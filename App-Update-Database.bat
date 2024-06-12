@@ -1,1 +1,1 @@
-dotnet ef database update
+dotnet ef database update --project Geo.Persistence 

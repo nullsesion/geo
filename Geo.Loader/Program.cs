@@ -16,27 +16,17 @@ namespace Geo.Loader
 			{
 				var collection = new ServiceCollection();
 				collection.AddScoped<Execution>();
-
-				IConfigurationRoot config = new ConfigurationBuilder()
-					.AddJsonFile("appsettings.json")
-					.AddEnvironmentVariables()//todo: use in future
-					.Build();
-
-				collection.AddDbContext<IGeoApiDbContext, GeoApiDbContext>(options =>
-					{
-						options.UseNpgsql(config.GetConnectionString(nameof(GeoApiDbContext)));
-					}
-				);
+				collection.AddScoped<IGeoApiDbContext, GeoApiDbContext>();
 
 				collection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateIpLocation).Assembly));
 				return collection.BuildServiceProvider();
 			}
 
-			string fileName = LoaderTools.GetFileNameFromArgs(args, "demogeoip.csv");
-			if (LoaderTools.TryFindFile(fileName, out FileInfo? file))
+			string fileName = LoaderTools.GetFileNameFromArgs(args) ?? "demogeoip.csv";
+			if (File.Exists(fileName))
 			{
 				ServiceProvider serviceProvider = CreateServiceProvider();
-				serviceProvider.GetRequiredService<Execution>().Run(file);
+				serviceProvider.GetRequiredService<Execution>().Run(new FileInfo(fileName));
 			}
 			else
 			{

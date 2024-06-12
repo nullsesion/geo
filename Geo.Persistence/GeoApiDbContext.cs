@@ -2,6 +2,7 @@
 using Geo.Domain.Models;
 using Geo.Persistence.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Geo.Persistence
 {
@@ -22,6 +23,20 @@ namespace Geo.Persistence
 			builder.ApplyConfiguration(new IpLocationConfiguration());
 			base.OnModelCreating(builder);
 		}
+
+		
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		{
+			IConfigurationRoot config = new ConfigurationBuilder()
+			.AddJsonFile("GeoApiDbContext.json")
+			.Build();
+
+			optionsBuilder.UseNpgsql(config.GetConnectionString(nameof(GeoApiDbContext)))
+			//.LogTo(Console.WriteLine)
+				;
+			
+		}
 		
 	}
 }
+
