@@ -1,11 +1,12 @@
 ﻿using Geo.Application.Interfaces;
-using Geo.Domain;
+using Geo.Domain.Models;
 using Geo.Persistence.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Geo.Persistence
 {
-	public class GeoApiDbContext: DbContext, IGeoApiDbContext
+    public class GeoApiDbContext: DbContext, IGeoApiDbContext
 	{
 		public DbSet<IpLocation> IpLocations { get; set; }
 		public Task<Guid> SaveChangesAsync(CancellationToken cancellationToken)
@@ -22,13 +23,20 @@ namespace Geo.Persistence
 			builder.ApplyConfiguration(new IpLocationConfiguration());
 			base.OnModelCreating(builder);
 		}
+
 		
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseNpgsql(@"Host=localhost;Port=5432;Database=GeoLocation;User ID=postgresql;Password=postgresql")
-				//.LogTo(Console.WriteLine)
+			IConfigurationRoot config = new ConfigurationBuilder()
+			.AddJsonFile("GeoApiDbContext.json")
+			.Build();
+
+			optionsBuilder.UseNpgsql(config.GetConnectionString(nameof(GeoApiDbContext)))
+			//.LogTo(Console.WriteLine)
 				;
+			
 		}
 		
 	}
 }
+

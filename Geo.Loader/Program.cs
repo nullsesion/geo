@@ -3,6 +3,8 @@ using Geo.Application.IpLocations.Commands.Create;
 using Geo.Application.Interfaces;
 using Geo.Persistence;
 using Geo.Loader.CSV;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Geo.Loader
 {
@@ -20,11 +22,11 @@ namespace Geo.Loader
 				return collection.BuildServiceProvider();
 			}
 
-			string fileName = LoaderTools.GetFileNameFromArgs(args, "demogeoip.csv");
-			if (LoaderTools.TryFindFile(fileName, out FileInfo? file))
+			string fileName = LoaderTools.GetFileNameFromArgs(args) ?? "demogeoip.csv";
+			if (File.Exists(fileName))
 			{
 				ServiceProvider serviceProvider = CreateServiceProvider();
-				serviceProvider.GetRequiredService<Execution>().Run(file);
+				serviceProvider.GetRequiredService<Execution>().Run(new FileInfo(fileName));
 			}
 			else
 			{

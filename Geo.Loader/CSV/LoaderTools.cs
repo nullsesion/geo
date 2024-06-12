@@ -9,50 +9,12 @@ namespace Geo.Loader.CSV
 	public static class LoaderTools
 	{
 		private const int COUNT_LINE = 10;
-		public static string? GetFileNameFromArgs(string[] args, string defaultName)
+		public static string? GetFileNameFromArgs(string[] args)
 		{
-			if (defaultName == null) throw new ArgumentNullException(nameof(defaultName));
 			string? filename = args.FirstOrDefault(x => x.Contains(".csv"));
-
-			if (filename == null)
-				return defaultName;
-
 			return filename;
 		}
-
-		public static bool TryFindFile(string fileName, out FileInfo? file)
-		{
-			file = null;
-			if (File.Exists(fileName))
-			{
-				file = new FileInfo(fileName);
-				return true;
-			}
-			
-			string currentDir = Directory.GetCurrentDirectory();
-			DirectoryInfo? dir = new DirectoryInfo(currentDir);
-
-			bool existFile = false;
-			FileInfo[] files;
-			do
-			{
-				files = dir.GetFiles();
-				IEnumerable<string> hasFile = files
-					.Select(x => x.Name)
-					.Where(x => x == fileName);
-
-				if (hasFile.Any())
-					existFile = true;
-
-				dir = dir.Parent;
-				if (null == dir) return false;
-			} while (!existFile);
-
-			file = files.First(x => x.Name == fileName);
-
-			return true;
-		}
-
+		
 		public static void ReadFile(FileInfo file, CsvLineValidateDelegate valid, CsvLinesLoad write)
 		{
 			StreamReader f = file.OpenText();
@@ -60,7 +22,7 @@ namespace Geo.Loader.CSV
 			List<string> lines = new List<string>();
 			while (!f.EndOfStream)
 			{
-				string line = f.ReadLine();
+				string line = f.ReadLine() ?? "";
 				if (valid(line))
 				{
 					lines.Add(line);
