@@ -17,6 +17,7 @@ namespace Geo.DomainShared
 			{
 				byte[] bytesIP = iPAddress
 					.GetAddressBytes()
+					.Reverse()
 					.ToArray<Byte>();
 				number = BitConverter.ToUInt32(bytesIP);
 				return true;
@@ -32,6 +33,7 @@ namespace Geo.DomainShared
 			{
 				byte[] bytesIP = ipAddress
 					.GetAddressBytes()
+					.Reverse()
 					.ToArray<Byte>();
 				number = BitConverter.ToInt32(bytesIP);
 				return true;

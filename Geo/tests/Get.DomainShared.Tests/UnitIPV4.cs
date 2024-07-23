@@ -10,18 +10,12 @@ namespace Get.DomainShared.Tests
 		{
 			//arrange
 			string IP = "62.118.93.157";
-			//IP = "62.118.93.150";
 
 			//act
 			if (IP.TryIpV4ToInt32(out Int32 number))
-			{
-				//assert
-				Assert.AreEqual(-1654819266, number);
-			}
+				Assert.AreEqual(1047944605, number);
 			else
-			{
 				Assert.Fail("bad parse");
-			}
 		}
 	}
 }
