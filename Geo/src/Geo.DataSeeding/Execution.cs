@@ -1,7 +1,8 @@
-﻿using Geo.DataSeeding.Services;
+﻿using Geo.DataSeeding.Services.Filemanager;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Spectre.Console;
+using System.IO;
 
 namespace Geo.DataSeeding
 {
@@ -17,8 +18,11 @@ namespace Geo.DataSeeding
 		}
 		public async void Run(IConfiguration config)
 		{
-			/*
-			//config
+			await DownloadFiles(config);
+		}
+
+		private async Task DownloadFiles(IConfiguration config)
+		{
 			List<string> files = config.GetSection("urlsCsvLoad")
 				.GetChildren()
 				.ToList()
@@ -26,36 +30,8 @@ namespace Geo.DataSeeding
 				.Select(x => x.Value)
 				.ToList()!;
 
-			var startLoad = new Rule("[green]Start load[/]");
-			startLoad.Justification = Justify.Left;
-			AnsiConsole.Write(startLoad);
-
-			foreach (string file in files)
-			{
-				WebLoader fileLoder = new WebLoader(file);
-
-				bool load = fileLoder.FileExist();
-				if (load)
-					load = AnsiConsole.Confirm($"file {fileLoder.path} already exist. Download again?", false);
-				else
-					load = true;
-
-				if (load)
-					await fileLoder.DownloadFile(() => AnsiConsole.MarkupLine("[green]Ok[/]"));
-			}
-
-			var startUnzip = new Rule("[green]Unzip[/]");
-			startUnzip.Justification = Justify.Left;
-			AnsiConsole.Write(startUnzip);
-
-			WebLoader.ClearBeforeUnzip();
-
-			foreach (string file in files)
-			{
-				WebLoader fileLoader = new WebLoader(file);
-				await fileLoader.unzipFile(() => AnsiConsole.MarkupLine("[green]Ok[/]"));
-			}
-			*/
+			FileManager fm = new FileManager();
+			await fm.Run(files);
 		}
 	}
 }

@@ -1,13 +1,11 @@
-﻿
-using System.IO.Compression;
+﻿using System.IO.Compression;
 
-namespace Geo.DataSeeding.Services
+namespace Geo.DataSeeding.Services.Filemanager
 {
 	public class WebLoader
 	{
 		private readonly string _url;
 		public string path { get; }
-		public static string zip { get; } = "zip";
 
 		public WebLoader(string url)
 		{
@@ -15,10 +13,6 @@ namespace Geo.DataSeeding.Services
 			path = url.Split('/').Last();
 		}
 
-		public static void ClearBeforeUnzip()
-		{
-			Directory.Delete(WebLoader.zip, true);
-		}
 		public bool FileExist()
 		{
 			return File.Exists(path);
@@ -35,13 +29,6 @@ namespace Geo.DataSeeding.Services
 				using (FileStream file = File.Create(path))
 					file.Write(data, 0, data.Length);
 			}
-			action();
-		}
-
-		public async Task unzipFile(Action action)
-		{
-			if (File.Exists(path))
-				await Task.Run(() => ZipFile.ExtractToDirectory(path, zip));
 			action();
 		}
 	}
