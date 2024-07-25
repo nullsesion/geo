@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Geo.Application\Geo.Application.csproj" />
+    <ProjectReference Include="..\Geo.DataAccess\Geo.DataAccess.csproj" />
+  </ItemGroup>
+
 </Project>
