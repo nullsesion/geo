@@ -1,9 +1,11 @@
 ﻿using Spectre.Console;
+using System.IO.Compression;
 
 namespace Geo.DataSeeding.Services.FileManager
 {
 	public class DownloadManager
 	{
+		private string zip = "zip";
 		private Display _display;
 		public DownloadManager(Display display) => _display = display;
 
@@ -26,35 +28,20 @@ namespace Geo.DataSeeding.Services.FileManager
 						_display.Ok();
 					else
 						_display.Fail();
-					/*
-					try
-					{
-
-					} 
-					catch (Exception e)	{ throw; }
-					*/
 				}
-					
 
-				if(fileLoder.FileExist())
+				if (fileLoder.FileExist())
+				{
 					paths.Add(fileLoder.Path);
 
-				//////////////////////////////////
+					if(Directory.Exists(zip))
+						Directory.Delete(zip, true);
 
+					ZipFile.ExtractToDirectory(fileLoder.Path, zip);
+					_display.Ok("unpack " + fileLoder.Path);
+				}
 			}
 			return paths;
-			/*
-			var startUnzip = new Rule("[green]Unzip[/]");
-			startUnzip.Justification = Justify.Left;
-			AnsiConsole.Write(startUnzip);
-
-			foreach (string _path in paths)
-			{
-				AnsiConsole.MarkupLine($"[yellow]extract[/] _path");
-				Console.WriteLine(_path);
-				ZipFile.ExtractToDirectory(_path,".");
-			}
-			*/
 		}
 	}
 }

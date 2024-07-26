@@ -18,11 +18,11 @@ namespace Geo.DataSeeding.Services
 		}
 		public void Ok(string message = "")
 		{
-			AnsiConsole.MarkupLine("[green]Ok[/]" + message);
+			AnsiConsole.MarkupLine("[green]Ok[/] " + message);
 		}
 		public void Fail(string message = "")
 		{
-			AnsiConsole.MarkupLine("[red]Fail[/]" + message);
+			AnsiConsole.MarkupLine("[red]Fail[/] " + message);
 		}
 
 		public void ShowStatus(IEnumerable<Worker> workers)
