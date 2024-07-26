@@ -1,21 +1,18 @@
-﻿using Geo.DataSeeding.Services.Filemanager;
-using MediatR;
+﻿using Geo.DataSeeding.Services.FileManager;
 using Microsoft.Extensions.Configuration;
-using Spectre.Console;
-using System.IO;
 
 namespace Geo.DataSeeding
 {
 	public class Execution
 	{
+		private readonly DownloadManager _download;
 		/*
 		private readonly IMediator _mediator;
 		public Execution(IMediator mediator) => _mediator = mediator;
 		*/
-		public Execution()
-		{
+		
+		public Execution(DownloadManager download) => _download = download;
 
-		}
 		public async void Run(IConfiguration config)
 		{
 			await DownloadFiles(config);
@@ -30,8 +27,11 @@ namespace Geo.DataSeeding
 				.Select(x => x.Value)
 				.ToList()!;
 
-			FileManager fm = new FileManager();
-			await fm.Run(files);
+			IEnumerable<string> fileExistList = await _download.Run(files.Select(x => new WebLoader(x)));
+			foreach (string file in fileExistList)
+			{
+				Console.WriteLine(file);
+			}
 		}
 	}
 }

@@ -2,14 +2,14 @@
 
 namespace Geo.DomainShared
 {
-	public static class BinaryExtensionsForIP
+	public static class BinaryExtensionsForIp
 	{
 		public static bool TryIpV4ToInt(this string ip, out UInt32 number)
 		{
 			number = 0;
-			if (IPAddress.TryParse(ip, out IPAddress iPAddress))
+			if (IPAddress.TryParse(ip, out IPAddress? iPAddress))
 			{
-				number = BitConverter.ToUInt32(GetBytesFromIP(iPAddress));
+				number = BitConverter.ToUInt32(GetBytesFromIp(iPAddress));
 				return true;
 			}
 
@@ -18,20 +18,21 @@ namespace Geo.DomainShared
 		public static bool TryIpV4ToInt(this string ip, out Int32 number)
 		{
 			number = 0;
-			if (IPAddress.TryParse(ip, out IPAddress iPAddress))
+			if (IPAddress.TryParse(ip, out IPAddress? iPAddress))
 			{
-				number = BitConverter.ToInt32(GetBytesFromIP(iPAddress));
+				number = BitConverter.ToInt32(GetBytesFromIp(iPAddress));
 				return true;
 			}
 
 			return false;
 		}
 		
-
+		/*
 		public static bool TryIpV6ToInt(this string ip, out UInt128 number)
 		{
+			throw new NotImplementedException();
 			number = 0;
-			if (IPAddress.TryParse(ip, out IPAddress iPAddress))
+			if (IPAddress.TryParse(ip, out IPAddress? iPAddress))
 			{
 				throw new NotImplementedException();
 				return true;
@@ -39,10 +40,12 @@ namespace Geo.DomainShared
 
 			return false;
 		}
+
+
 		public static bool TryIpV6ToInt(this string ip, out Int128 number)
 		{
 			number = 0;
-			if (IPAddress.TryParse(ip, out IPAddress iPAddress))
+			if (IPAddress.TryParse(ip, out IPAddress? iPAddress))
 			{
 				throw new NotImplementedException();
 				return true;
@@ -50,11 +53,11 @@ namespace Geo.DomainShared
 
 			return false;
 		}
-
+		*/
 		public static bool TryIpV4GetMaxMinViaMask(this string ip, int mask, out UInt32 max, out UInt32 min)
 		{
 			max = min = 0;
-			if (IPAddress.TryParse(ip, out IPAddress iPAddress))
+			if (IPAddress.TryParse(ip, out IPAddress? iPAddress))
 			{
 				UInt32 bits = 0b_0000_0000_0000_0000_0000_0000_0000_0000;
 				UInt32 currentBit = 0b_0000_0000_0000_0000_0000_0000_0000_0001;
@@ -67,7 +70,7 @@ namespace Geo.DomainShared
 						currentBit = currentBit << 1;
 					}
 				}
-				UInt32 number = BitConverter.ToUInt32(GetBytesFromIP(iPAddress));
+				UInt32 number = BitConverter.ToUInt32(GetBytesFromIp(iPAddress));
 				max = number | bits;
 				min = number & ~bits;
 
@@ -80,9 +83,9 @@ namespace Geo.DomainShared
 		public static bool TryIpToBytes(this string ip, out byte[] bytes)
 		{
 			bytes = new byte[]{};
-			if (IPAddress.TryParse(ip, out IPAddress iPAddress))
+			if (IPAddress.TryParse(ip, out IPAddress? iPAddress))
 			{
-				bytes = GetBytesFromIP(iPAddress);
+				bytes = GetBytesFromIp(iPAddress);
 				return true;
 			}
 
@@ -95,13 +98,18 @@ namespace Geo.DomainShared
 			return BitConverter.ToUInt32(bytes);
 		}
 
-		private static byte[] GetBytesFromIP(IPAddress iPAddress)
+		private static byte[] GetBytesFromIp(IPAddress? iPAddress)
 		{
-			byte[] bytesIP = iPAddress
-				.GetAddressBytes()
-				.Reverse()
-				.ToArray<Byte>();
-			return bytesIP;
+			if (iPAddress != null)
+			{
+				byte[] bytesIp = iPAddress
+					.GetAddressBytes()
+					.Reverse()
+					.ToArray();
+				return bytesIp;
+			}
+
+			return BitConverter.GetBytes(0x0000_0000);
 		}
 	}
 }
