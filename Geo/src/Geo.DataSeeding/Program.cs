@@ -1,5 +1,6 @@
 ﻿using Geo.DataSeeding;
 using Geo.DataSeeding.Services;
+using Geo.DataSeeding.Services.CSV;
 using Geo.DataSeeding.Services.FileManager;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,7 @@ ServiceProvider CreateServiceProvider()
 	collection.AddScoped<Execution>();
 	collection.AddScoped<Display>();
 	collection.AddScoped<DownloadManager>();
+	collection.AddScoped<CsvService>();
 	
 	//collection.AddDbContext<IGeoApiDbContext, GeoApiDbContext>(); ;
 	//collection.AddScoped<IProductsRepository, ProductsRepository>();
