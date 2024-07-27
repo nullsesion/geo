@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Geo.Domain
+﻿namespace Geo.Domain
 {
-	public class CountryIPv4
+	public class CountryIPv4Range
 	{
 		public string Network { get; set; }
-		public uint IpMin { get; set; }
-		public uint IpMax { get; set; }
+		public int IpMask { get; set; }
+		public int IpMin { get; set; }
+		public int IpMax { get; set; }
 		public int? GeonameId { get; set; }
 		public int? RegisteredCountryGeoNameId { get; set; }
 		public int? RepresentedCountryGeoNameId { get; set; }
