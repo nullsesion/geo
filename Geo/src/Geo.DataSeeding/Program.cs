@@ -1,4 +1,6 @@
-﻿using Geo.DataSeeding;
+﻿using Geo.Application.Interfaces;
+using Geo.DataAccess;
+using Geo.DataSeeding;
 using Geo.DataSeeding.Services;
 using Geo.DataSeeding.Services.CSV;
 using Geo.DataSeeding.Services.FileManager;
@@ -13,8 +15,8 @@ ServiceProvider CreateServiceProvider()
 	collection.AddScoped<Display>();
 	collection.AddScoped<DownloadManager>();
 	collection.AddScoped<CsvService>();
-	
-	//collection.AddDbContext<IGeoApiDbContext, GeoApiDbContext>(); ;
+	collection.AddDbContext<IGeoApiDbContext, GeoApiDbContext>(); 
+
 	//collection.AddScoped<IProductsRepository, ProductsRepository>();
 	//collection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateProductCommand).Assembly));
 	return collection.BuildServiceProvider();

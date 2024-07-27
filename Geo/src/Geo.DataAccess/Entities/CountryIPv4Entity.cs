@@ -3,8 +3,8 @@
 	public class CountryIPv4Entity
 	{
 		public string Network { get; set; }
-		public uint IpMin { get; set; }
-		public uint IpMax { get; set; }
+		public int IpMin { get; set; }
+		public int IpMax { get; set; }
 		public int? GeonameId { get; set; }
 		public int? RegisteredCountryGeoNameId { get; set; }
 		public int? RepresentedCountryGeoNameId { get; set; }
