@@ -1,6 +1,9 @@
-﻿namespace Geo.Domain
+﻿using Geo.DomainShared;
+using MediatR;
+
+namespace Geo.Application.CQRS.Country.CreateCountryRange
 {
-	public class CountryIPv4Range
+	public class CreateCountryIPv4Range :IRequest<ResponseEntity<string>>
 	{
 		public string Network { get; set; }
 		public int IpMin { get; set; }

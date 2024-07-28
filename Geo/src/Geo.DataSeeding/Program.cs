@@ -1,5 +1,7 @@
-﻿using Geo.Application.Interfaces;
+﻿using Geo.Application.CQRS.Country.CreateCountryRange;
+using Geo.Application.Interfaces;
 using Geo.DataAccess;
+using Geo.DataAccess.Repositories;
 using Geo.DataSeeding;
 using Geo.DataSeeding.Services;
 using Geo.DataSeeding.Services.CSV;
@@ -16,9 +18,8 @@ ServiceProvider CreateServiceProvider()
 	collection.AddScoped<DownloadManager>();
 	collection.AddScoped<CsvService>();
 	collection.AddDbContext<IGeoApiDbContext, GeoApiDbContext>(); 
-
-	//collection.AddScoped<IProductsRepository, ProductsRepository>();
-	//collection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateProductCommand).Assembly));
+	collection.AddScoped<ICountryIPv4Repository, CountryIPv4Repository>();
+	collection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateCountryIPv4Range).Assembly));
 	return collection.BuildServiceProvider();
 }
 
