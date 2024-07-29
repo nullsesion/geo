@@ -12,20 +12,25 @@ namespace Geo.Application.CQRS.Country.CreateCountryRange
 		public CreateCountryIPv4RangeHandler(ICountryIPv4Repository countryIPv4Repository) => _countryIPv4Repository = countryIPv4Repository;
 		public async Task<ResponseEntity<string>> Handle(CreateCountryIPv4Range request, CancellationToken cancellationToken)
 		{
-			//add mapper
-			await _countryIPv4Repository.InsertAsync(new CountryIPv4Range()
+			ResponseEntity<CountryIPv4Range> countryIPv4Range = CountryIPv4Range.Create(
+				request.Network,
+				request.GeonameId,
+				request.RegisteredCountryGeoNameId,
+				request.RepresentedCountryGeoNameId,
+				request.IsAnonymousProxy,
+				request.IsSatelliteProvider,
+				request.IsAnycast
+			);
+			if (!countryIPv4Range.IsSuccess)
 			{
-				Network = request.Network,
-				IpMin = request.IpMin,
-				IpMax = request.IpMax,
-				GeonameId = request.GeonameId,
-				RegisteredCountryGeoNameId = request.RegisteredCountryGeoNameId,
-				RepresentedCountryGeoNameId = request.RepresentedCountryGeoNameId,
-				IsAnonymousProxy = request.IsAnonymousProxy,
-				IsSatelliteProvider = request.IsSatelliteProvider,
-				IsAnycast = request.IsAnycast, 
+				return new ResponseEntity<string>()
+				{
+					ErrorDetail = countryIPv4Range.ErrorDetail,
+					IsSuccess = false,
+				};
+			}
 
-			}, cancellationToken);
+			await _countryIPv4Repository.InsertAsync(countryIPv4Range.Entity, cancellationToken);
 
 			await _countryIPv4Repository.SaveChangesAsync();
 

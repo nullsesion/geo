@@ -26,34 +26,6 @@ namespace Geo.DomainShared
 
 			return false;
 		}
-		
-		/*
-		public static bool TryIpV6ToInt(this string ip, out UInt128 number)
-		{
-			throw new NotImplementedException();
-			number = 0;
-			if (IPAddress.TryParse(ip, out IPAddress? iPAddress))
-			{
-				throw new NotImplementedException();
-				return true;
-			}
-
-			return false;
-		}
-
-
-		public static bool TryIpV6ToInt(this string ip, out Int128 number)
-		{
-			number = 0;
-			if (IPAddress.TryParse(ip, out IPAddress? iPAddress))
-			{
-				throw new NotImplementedException();
-				return true;
-			}
-
-			return false;
-		}
-		*/
 		public static bool TryIpV4GetMaxMinViaMask(this string ip, int mask, out UInt32 max, out UInt32 min)
 		{
 			max = min = 0;
@@ -96,6 +68,12 @@ namespace Geo.DomainShared
 		{
 			var bytes = BitConverter.GetBytes(n);
 			return BitConverter.ToUInt32(bytes);
+		}
+
+		public static Int32 ToInt32(this UInt32 n)
+		{
+			var bytes = BitConverter.GetBytes(n);
+			return BitConverter.ToInt32(bytes);
 		}
 
 		private static byte[] GetBytesFromIp(IPAddress? iPAddress)

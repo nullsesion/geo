@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Geo.DomainShared\Geo.DomainShared.csproj" />
+  </ItemGroup>
+
 </Project>

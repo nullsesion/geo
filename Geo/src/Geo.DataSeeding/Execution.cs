@@ -22,9 +22,6 @@ namespace Geo.DataSeeding
 		public async void Run(IConfiguration config)
 		{
 			//todo: change to string
-			//_csvHelper.FindFile(new GeoLite2CountryIPv4());
-			Console.WriteLine("------");
-
 			CreateCountryIPv4Range createCountryIPv4Range = new CreateCountryIPv4Range()
 			{
 				Network = "1.0.1.0/24",
