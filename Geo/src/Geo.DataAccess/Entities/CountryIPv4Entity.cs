@@ -1,6 +1,8 @@
-﻿namespace Geo.DataAccess.Entities
+﻿using Geo.DomainShared.Contracts;
+
+namespace Geo.DataAccess.Entities
 {
-	public class CountryIPv4Entity
+	public class CountryIPv4Entity: ICountryIPv4Range
 	{
 		public string Network { get; set; }
 		public int IpMin { get; set; }

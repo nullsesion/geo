@@ -12,15 +12,8 @@ namespace Geo.Application.CQRS.Country.CreateCountryRange
 		public CreateCountryIPv4RangeHandler(ICountryIPv4Repository countryIPv4Repository) => _countryIPv4Repository = countryIPv4Repository;
 		public async Task<ResponseEntity<string>> Handle(CreateCountryIPv4Range request, CancellationToken cancellationToken)
 		{
-			ResponseEntity<CountryIPv4Range> countryIPv4Range = CountryIPv4Range.Create(
-				request.Network,
-				request.GeonameId,
-				request.RegisteredCountryGeoNameId,
-				request.RepresentedCountryGeoNameId,
-				request.IsAnonymousProxy,
-				request.IsSatelliteProvider,
-				request.IsAnycast
-			);
+			ResponseEntity<CountryIPv4Range> countryIPv4Range = CountryIPv4Range.Create(request);
+
 			if (!countryIPv4Range.IsSuccess)
 			{
 				return new ResponseEntity<string>()

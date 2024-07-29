@@ -1,8 +1,9 @@
 ﻿using CsvHelper.Configuration.Attributes;
+using Geo.DomainShared.Contracts;
 
 namespace Geo.DataSeeding.Services.CSV.Models
 {
-	public class GeoLite2CountryIPv4: ICsvModel
+	public class GeoLite2CountryIPv4: ICsvModel, ICountryIPv4Range
 	{
 		[Name("network")]
 		public string Network { get; set; }

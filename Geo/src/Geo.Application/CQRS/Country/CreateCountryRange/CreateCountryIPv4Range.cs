@@ -1,13 +1,12 @@
 ﻿using Geo.DomainShared;
+using Geo.DomainShared.Contracts;
 using MediatR;
 
 namespace Geo.Application.CQRS.Country.CreateCountryRange
 {
-	public class CreateCountryIPv4Range :IRequest<ResponseEntity<string>>
+	public class CreateCountryIPv4Range :IRequest<ResponseEntity<string>>, ICountryIPv4Range
 	{
 		public string Network { get; set; }
-		public int IpMin { get; set; }
-		public int IpMax { get; set; }
 		public int? GeonameId { get; set; }
 		public int? RegisteredCountryGeoNameId { get; set; }
 		public int? RepresentedCountryGeoNameId { get; set; }

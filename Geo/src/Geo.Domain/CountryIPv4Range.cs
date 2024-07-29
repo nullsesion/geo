@@ -1,4 +1,5 @@
 ﻿using Geo.DomainShared;
+using Geo.DomainShared.Contracts;
 using System.Threading.Tasks;
 
 namespace Geo.Domain
@@ -6,6 +7,20 @@ namespace Geo.Domain
 	public class CountryIPv4Range
 	{
 		private const string ERROR_CREATE = "Error Create Country IPv4 Range";
+
+		public static ResponseEntity<CountryIPv4Range> Create(ICountryIPv4Range countryIPv4Range)
+		{
+			return Create(
+				countryIPv4Range.Network,
+				countryIPv4Range.GeonameId,
+				countryIPv4Range.RegisteredCountryGeoNameId,
+				countryIPv4Range.RepresentedCountryGeoNameId,
+				countryIPv4Range.IsAnonymousProxy,
+				countryIPv4Range.IsSatelliteProvider,
+				countryIPv4Range.IsAnycast
+			);
+		}
+
 		public static ResponseEntity<CountryIPv4Range> Create(
 			string network,
 			int? geonameId,

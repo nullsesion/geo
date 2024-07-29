@@ -25,8 +25,6 @@ namespace Geo.DataSeeding
 			CreateCountryIPv4Range createCountryIPv4Range = new CreateCountryIPv4Range()
 			{
 				Network = "1.0.1.0/24",
-				IpMin = 0,
-				IpMax = 0,
 				GeonameId = 1814991,
 				RegisteredCountryGeoNameId = 1814991,
 				RepresentedCountryGeoNameId = null,
@@ -36,7 +34,6 @@ namespace Geo.DataSeeding
 			};
 			ResponseEntity<string> res = _mediator.Send(createCountryIPv4Range, CancellationToken.None).Result;
 			Console.WriteLine($"n: {res.Entity}");
-
 		}
 
 		private async Task DownloadFiles(IConfiguration config)
