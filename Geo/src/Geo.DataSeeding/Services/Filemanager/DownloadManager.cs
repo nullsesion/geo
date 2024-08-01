@@ -1,12 +1,11 @@
-﻿using Spectre.Console;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 
 namespace Geo.DataSeeding.Services.FileManager
 {
 	public class DownloadManager
 	{
-		private string zip = "zip";
-		private Display _display;
+		private readonly string _zip = "_zip";
+		private readonly Display _display;
 		public DownloadManager(Display display) => _display = display;
 
 		public async Task<IEnumerable<string>> Run(IEnumerable<WebLoader> files)
@@ -23,7 +22,7 @@ namespace Geo.DataSeeding.Services.FileManager
 
 				if (load)
 				{
-					var isSuccess = fileLoder.DownloadFile();
+					var isSuccess = await fileLoder.DownloadFile();
 					if (isSuccess)
 						_display.Ok();
 					else
@@ -34,10 +33,10 @@ namespace Geo.DataSeeding.Services.FileManager
 				{
 					paths.Add(fileLoder.Path);
 
-					if(Directory.Exists(zip))
-						Directory.Delete(zip, true);
+					if(Directory.Exists(_zip))
+						Directory.Delete(_zip, true);
 
-					ZipFile.ExtractToDirectory(fileLoder.Path, zip);
+					ZipFile.ExtractToDirectory(fileLoder.Path, _zip);
 					_display.Ok("unpack " + fileLoder.Path);
 				}
 			}

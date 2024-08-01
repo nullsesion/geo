@@ -2,7 +2,7 @@
 
 namespace Geo.DataSeeding.Services.CSV.Models
 {
-	public class GeoLite2CityIPv4: ICsvModel
+	public class GeoLite2CityIPv4
 	{
 		[Name("network")]
 		public string Network { get; set; }
@@ -35,10 +35,5 @@ namespace Geo.DataSeeding.Services.CSV.Models
 
 		[Name("accuracy_radius")]
 		public int? AccuracyRadius { get; set; } = 0; //AccuracyRadius
-
-		public string GetPartFileName()
-		{
-			return "GeoLite2-City-Blocks-IPv4";
-		}
 	}
 }

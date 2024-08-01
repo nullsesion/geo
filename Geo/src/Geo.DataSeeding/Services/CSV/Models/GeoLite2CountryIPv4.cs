@@ -3,7 +3,7 @@ using Geo.DomainShared.Contracts;
 
 namespace Geo.DataSeeding.Services.CSV.Models
 {
-	public class GeoLite2CountryIPv4: ICsvModel, ICountryIPv4Range
+	public class GeoLite2CountryIPv4: ICountryIPv4Range
 	{
 		[Name("network")]
 		public string Network { get; set; }
@@ -25,11 +25,5 @@ namespace Geo.DataSeeding.Services.CSV.Models
 
 		[Name("is_anycast")]
 		public bool? IsAnycast { get; set; }
-
-
-		public string GetPartFileName()
-		{
-			return "GeoLite2-Country-Blocks-IPv4";
-		}
 	}
 }

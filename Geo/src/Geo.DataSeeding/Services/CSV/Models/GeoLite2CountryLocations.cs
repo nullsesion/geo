@@ -2,7 +2,7 @@
 
 namespace Geo.DataSeeding.Services.CSV.Models
 {
-	public class GeoLite2CountryLocations: ICsvModel
+	public class GeoLite2CountryLocations
 	{
 		[Name("geoname_id")]
 		public int GeonameId { get; set; }
@@ -24,10 +24,5 @@ namespace Geo.DataSeeding.Services.CSV.Models
 
 		[Name("is_in_european_union")]
 		public bool IsInEuropeanUnion { get; set; } = false;
-
-		public string GetPartFileName()
-		{
-			return "GeoLite2-Country-Locations";
-		}
 	}
 }

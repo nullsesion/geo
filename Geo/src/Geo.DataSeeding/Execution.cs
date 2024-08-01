@@ -1,11 +1,7 @@
-﻿using Geo.Application.CQRS.Country.CreateCountryRange;
-using Geo.DataSeeding.Services.CSV;
-using Geo.DataSeeding.Services.CSV.Models;
+﻿using Geo.DataSeeding.Services.CSV;
 using Geo.DataSeeding.Services.FileManager;
 using MediatR;
 using Microsoft.Extensions.Configuration;
-using System.Reflection.Metadata;
-using Geo.DomainShared;
 
 namespace Geo.DataSeeding
 {
@@ -19,24 +15,62 @@ namespace Geo.DataSeeding
 
 		public Execution(IMediator mediator, DownloadManager download, CsvService csvHelper) => (_download, _csvHelper, _mediator) = (download, csvHelper, mediator);
 		
-		public async void Run(IConfiguration config)
+		public void Run(IConfiguration config) //async Task
 		{
-			//todo: change to string
-			CreateCountryIPv4Range createCountryIPv4Range = new CreateCountryIPv4Range()
+			/*
+			List<string> files = config.GetSection("urlsCsvLoad")
+				.GetChildren()
+				.ToList()
+				.Where(x => x.Value != null)
+				.Select(x => x.Value)
+				.ToList()!;
+
+			IEnumerable<string> fileExistList = await _download.Run(files.Select(x => new WebLoader(x)));
+			foreach (string file in fileExistList)
 			{
-				Network = "1.0.1.0/24",
-				GeonameId = 1814991,
-				RegisteredCountryGeoNameId = 1814991,
-				RepresentedCountryGeoNameId = null,
-				IsAnonymousProxy = false,
-				IsSatelliteProvider = false,
-				IsAnycast = null,
+				Console.WriteLine(file);
+			}
+			*/
+
+			Dictionary<string, string> FileFragment = new Dictionary<string, string>()
+			{
+				{"GeoLite2CityIPv4"         ,"GeoLite2-City-Blocks-IPv4"},
+				{"GeoLite2CountryIPv4"      ,"GeoLite2-Country-Blocks-IPv4"},
+				{"GeoLite2CountryLocations" ,"GeoLite2-Country-Locations-en"}
 			};
-			ResponseEntity<string> res = _mediator.Send(createCountryIPv4Range, CancellationToken.None).Result;
-			Console.WriteLine($"n: {res.Entity}");
+
+			foreach (KeyValuePair<string, string> csv in FileFragment)
+			{
+				switch (csv.Key)
+				{
+					/*
+					case "GeoLite2CountryLocations":
+						//Console.WriteLine(csv.Value);
+						IEnumerable<FileInfo> geoLite2CountryLocations = _csvHelper.FindFile(csv.Value);
+						foreach (FileInfo file in geoLite2CountryLocations)
+						{
+							Console.WriteLine(file.Name);
+						}
+						break;
+					*/
+					case "GeoLite2CountryIPv4":
+						_csvHelper.Load(csv.Value, _mediator);
+						break;
+					/*
+					case "GeoLite2CityIPv4":
+						//Console.WriteLine(csv.Value);
+						_csvHelper.FindFile(csv.Value);
+						foreach (FileInfo file in geoLite2CityIPv4)
+						{
+							Console.WriteLine(file.Name);
+						}
+						break;
+					*/
+				}
+			}
 		}
 
-		private async Task DownloadFiles(IConfiguration config)
+		private async Task<IEnumerable<FileInfo>> DownloadFiles(IConfiguration config, string fragmentName)
 		{
 			List<string> files = config.GetSection("urlsCsvLoad")
 				.GetChildren()
@@ -46,21 +80,9 @@ namespace Geo.DataSeeding
 				.ToList()!;
 
 			IEnumerable<string> fileExistList = await _download.Run(files.Select(x => new WebLoader(x)));
-			var allFiles = _csvHelper.FindFile(new GeoLite2CountryLocations());
-			foreach (var item in allFiles)
-			{
-				/*
-				Console.WriteLine(item.GeonameId);
-				Console.WriteLine(item.LocaleCode);
-				Console.WriteLine(item.ContinentCode);
-				Console.WriteLine(item.ContinentName);
-				Console.WriteLine(item.CountryIsoCode);
-				Console.WriteLine(item.CountryName);
-				Console.WriteLine(item.IsInEuropeanUnion);
-				*/
-
-				break;
-			}
+			IEnumerable<FileInfo> allFiles = _csvHelper.FindFile(fragmentName); //"GeoLite2-Country-Blocks-IPv4"
+			
+			return allFiles;
 		}
 	}
 }

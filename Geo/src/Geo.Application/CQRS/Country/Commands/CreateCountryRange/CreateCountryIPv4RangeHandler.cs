@@ -3,9 +3,9 @@ using Geo.Domain;
 using Geo.DomainShared;
 using MediatR;
 
-namespace Geo.Application.CQRS.Country.CreateCountryRange
+namespace Geo.Application.CQRS.Country.Commands.CreateCountryRange
 {
-	public class CreateCountryIPv4RangeHandler: IRequestHandler<CreateCountryIPv4Range,ResponseEntity<string>>
+	public class CreateCountryIPv4RangeHandler : IRequestHandler<CreateCountryIPv4Range, ResponseEntity<string>>
 	{
 		private readonly ICountryIPv4Repository _countryIPv4Repository;
 
