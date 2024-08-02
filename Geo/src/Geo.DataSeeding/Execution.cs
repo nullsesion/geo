@@ -43,18 +43,13 @@ namespace Geo.DataSeeding
 			{
 				switch (csv.Key)
 				{
-					/*
+					
 					case "GeoLite2CountryLocations":
-						//Console.WriteLine(csv.Value);
-						IEnumerable<FileInfo> geoLite2CountryLocations = _csvHelper.FindFile(csv.Value);
-						foreach (FileInfo file in geoLite2CountryLocations)
-						{
-							Console.WriteLine(file.Name);
-						}
+						_csvHelper.LoadGeoLite2CountryLocations(csv.Value,_mediator);
 						break;
-					*/
+					
 					case "GeoLite2CountryIPv4":
-						_csvHelper.Load(csv.Value, _mediator);
+						//_csvHelper.LoadGeoLite2CountryIPv4(csv.Value, _mediator);
 						break;
 					/*
 					case "GeoLite2CityIPv4":

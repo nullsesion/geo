@@ -7,6 +7,8 @@ using MediatR;
 using Geo.Application.CQRS.Country.Commands.MultiCreateCountryRange;
 using Geo.DomainShared.Contracts;
 using Spectre.Console;
+using Geo.Application.CQRS.Country.Commands.CreateCountryLocation;
+using System.Collections.Generic;
 
 namespace Geo.DataSeeding.Services.CSV
 {
@@ -22,7 +24,36 @@ namespace Geo.DataSeeding.Services.CSV
 			
 			return fileList;
 		}
-		public void Load(string fragmentName, IMediator mediator)
+
+		public void LoadGeoLite2CountryLocations(string fragmentName, IMediator mediator)
+		{
+			Console.WriteLine(fragmentName);
+			IEnumerable<FileInfo> geoLite2CountryLocations = FindFile(fragmentName);
+			foreach (FileInfo file in geoLite2CountryLocations)
+			{
+				using (var reader = new StreamReader(file.FullName))
+				using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+				{
+					IEnumerable<GeoLite2CountryLocations> records = csv.GetRecords<GeoLite2CountryLocations>();
+					foreach (GeoLite2CountryLocations record in records)
+					{
+						CreateCountryLocation item = new CreateCountryLocation()
+						{
+							GeonameId = record.GeonameId,
+							ContinentCode = record.ContinentCode,
+							ContinentName = record.ContinentName,
+							CountryIsoCode = record.CountryIsoCode,
+							CountryName = record.CountryName,
+							IsInEuropeanUnion = record.IsInEuropeanUnion,
+						};
+						ResponseEntity<int> res = mediator.Send(item, CancellationToken.None).Result;
+						Console.WriteLine("*");
+					}
+				}
+			}
+		}
+
+		public void LoadGeoLite2CountryIPv4(string fragmentName, IMediator mediator)
 		{
 			DirectoryInfo dir = new DirectoryInfo("zip");
 			IEnumerable<FileInfo> fileList = dir

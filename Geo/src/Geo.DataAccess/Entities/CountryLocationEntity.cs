@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Geo.DomainShared.Contracts;
 
 namespace Geo.DataAccess.Entities
 {
-	public class CountryLocationEntity
+	public class CountryLocationEntity: ICountryLocation
 	{
 		public int GeonameId { get; set; }
 		//public string LocaleCode { get; set; }

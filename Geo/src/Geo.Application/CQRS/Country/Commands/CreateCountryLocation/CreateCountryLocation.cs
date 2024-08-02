@@ -1,9 +1,10 @@
-﻿using Geo.DomainShared.Contracts;
+﻿using Geo.DomainShared;
+using Geo.DomainShared.Contracts;
+using MediatR;
 
-namespace Geo.Domain
+namespace Geo.Application.CQRS.Country.Commands.CreateCountryLocation
 {
-	//todo: add validator, creator and private setters.
-	public class CountryLocation : ICountryLocation
+	public class CreateCountryLocation : IRequest<ResponseEntity<int>>, ICountryLocation
 	{
 		public int GeonameId { get; set; }
 		public string ContinentCode { get; set; }

@@ -15,17 +15,14 @@ ServiceProvider CreateServiceProvider()
 	var collection = new ServiceCollection();
 	collection.AddDbContext<IGeoApiDbContext, GeoApiDbContext>();
 	collection.AddScoped<ICountryIPv4Repository, CountryIPv4Repository>();
+	collection.AddScoped<ICountryLocationRepository, CountryLocationRepository>();
+	// collection.AddScoped<Execution>();       collection.AddScoped<Display>();
+	// collection.AddScoped<DownloadManager>(); collection.AddScoped<CsvService>();
 
-	/*
 	collection.AddScoped<Execution>();
 	collection.AddScoped<Display>();
 	collection.AddScoped<DownloadManager>();
 	collection.AddScoped<CsvService>();
-	*/
-	collection.AddSingleton<Execution>();
-	collection.AddSingleton<Display>();
-	collection.AddSingleton<DownloadManager>();
-	collection.AddSingleton<CsvService>();
 	
 	collection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateCountryIPv4Range).Assembly));
 	return collection.BuildServiceProvider();
