@@ -9,7 +9,7 @@ namespace Geo.DataAccess
 	{
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=geo2;User ID=postgres;Password=postgres")
+			optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=geo;User ID=postgres;Password=postgres")
 				//.LogTo(Console.WriteLine)
 				;
 		}

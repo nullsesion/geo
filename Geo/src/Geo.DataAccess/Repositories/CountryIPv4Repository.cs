@@ -1,4 +1,5 @@
 ﻿using Geo.Application.Interfaces;
+using Geo.DataAccess.Configuration;
 using Geo.DataAccess.Entities;
 using Geo.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,15 @@ namespace Geo.DataAccess.Repositories
 						IsAnycast = countryIPv4Range.IsAnycast,
 					})
 				;
+
+			return true;
+		}
+
+		public async Task<bool> Truncate()
+		{
+			await _dbContext
+				.CountryIPv4s
+				.Truncate();
 
 			return true;
 		}

@@ -1,4 +1,6 @@
-﻿using Geo.DataSeeding.Services.CSV;
+﻿using Geo.Application.CQRS.Country.Commands.TruncateCountryLocation;
+using Geo.Application.CQRS.Country.Commands.TruncateTable;
+using Geo.DataSeeding.Services.CSV;
 using Geo.DataSeeding.Services.FileManager;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +19,7 @@ namespace Geo.DataSeeding
 		
 		public void Run(IConfiguration config) //async Task
 		{
+			// TruncateCountryIPv4
 			/*
 			List<string> files = config.GetSection("urlsCsvLoad")
 				.GetChildren()
@@ -31,7 +34,7 @@ namespace Geo.DataSeeding
 				Console.WriteLine(file);
 			}
 			*/
-
+			
 			Dictionary<string, string> FileFragment = new Dictionary<string, string>()
 			{
 				{"GeoLite2CityIPv4"         ,"GeoLite2-City-Blocks-IPv4"},
@@ -49,21 +52,21 @@ namespace Geo.DataSeeding
 						break;
 					
 					case "GeoLite2CountryIPv4":
-						//_csvHelper.LoadGeoLite2CountryIPv4(csv.Value, _mediator);
+						_csvHelper.LoadGeoLite2CountryIPv4(csv.Value, _mediator);
 						break;
-					/*
+
 					case "GeoLite2CityIPv4":
-						//Console.WriteLine(csv.Value);
-						_csvHelper.FindFile(csv.Value);
-						foreach (FileInfo file in geoLite2CityIPv4)
-						{
-							Console.WriteLine(file.Name);
-						}
+						//_csvHelper.FindFile(csv.Value);
+						//foreach (FileInfo file in geoLite2CityIPv4)
+						//{
+						//Console.WriteLine(file.Name);
+						//}
 						break;
-					*/
 				}
 			}
+			
 		}
+
 
 		private async Task<IEnumerable<FileInfo>> DownloadFiles(IConfiguration config, string fragmentName)
 		{

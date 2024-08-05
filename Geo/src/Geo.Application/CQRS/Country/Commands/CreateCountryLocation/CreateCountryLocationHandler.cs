@@ -16,6 +16,7 @@ namespace Geo.Application.CQRS.Country.Commands.CreateCountryLocation
 			CountryLocation countryLocation = new CountryLocation()
 			{
 				GeonameId = request.GeonameId,
+				LocaleCode = request.LocaleCode,
 				ContinentCode = request.ContinentCode,
 				ContinentName = request.ContinentName,
 				CountryIsoCode = request.CountryIsoCode,

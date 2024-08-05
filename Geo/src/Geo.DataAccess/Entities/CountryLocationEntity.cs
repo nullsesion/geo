@@ -2,7 +2,7 @@
 
 namespace Geo.DataAccess.Entities
 {
-	public class CountryLocationEntity: ICountryLocation
+	public class CountryLocationEntity : ICountryLocation
 	{
 		public int GeonameId { get; set; }
 		//public string LocaleCode { get; set; }

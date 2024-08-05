@@ -1,4 +1,5 @@
 ﻿using Geo.Application.Interfaces;
+using Geo.DataAccess.Configuration;
 using Geo.DataAccess.Entities;
 using Geo.Domain;
 using Geo.DomainShared.Contracts;
@@ -21,11 +22,11 @@ namespace Geo.DataAccess.Repositories
 						GeonameId = countryLocationEntity.GeonameId,
 						ContinentCode = countryLocationEntity.ContinentCode,
 						ContinentName = JsonConvert.SerializeObject(new Dictionary<string, string>()
-								{{"en", countryLocationEntity.ContinentName}}
+								{{countryLocationEntity.LocaleCode, countryLocationEntity.ContinentName}}
 						),
 						CountryIsoCode = countryLocationEntity.CountryIsoCode,
 						CountryName = JsonConvert.SerializeObject(new Dictionary<string, string>()
-							{{"en", countryLocationEntity.CountryName}}
+							{{countryLocationEntity.LocaleCode, countryLocationEntity.CountryName}}
 						),
 						IsInEuropeanUnion = countryLocationEntity.IsInEuropeanUnion,
 					}
@@ -33,6 +34,15 @@ namespace Geo.DataAccess.Repositories
 				;
 
 			return countryLocationEntity.GeonameId;
+		}
+
+		public async Task<bool> Truncate()
+		{
+			await _dbContext
+				.CountryLocations
+				.Truncate();
+
+			return true;
 		}
 
 		public async Task SaveChangesAsync()

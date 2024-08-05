@@ -6,9 +6,9 @@ using System.Globalization;
 using MediatR;
 using Geo.Application.CQRS.Country.Commands.MultiCreateCountryRange;
 using Geo.DomainShared.Contracts;
-using Spectre.Console;
 using Geo.Application.CQRS.Country.Commands.CreateCountryLocation;
-using System.Collections.Generic;
+using Geo.Application.CQRS.Country.Commands.TruncateCountryLocation;
+using Geo.Application.CQRS.Country.Commands.TruncateTable;
 
 namespace Geo.DataSeeding.Services.CSV
 {
@@ -27,7 +27,7 @@ namespace Geo.DataSeeding.Services.CSV
 
 		public void LoadGeoLite2CountryLocations(string fragmentName, IMediator mediator)
 		{
-			Console.WriteLine(fragmentName);
+			mediator.Send(new TruncateCountryLocation(), CancellationToken.None);
 			IEnumerable<FileInfo> geoLite2CountryLocations = FindFile(fragmentName);
 			foreach (FileInfo file in geoLite2CountryLocations)
 			{
@@ -40,6 +40,7 @@ namespace Geo.DataSeeding.Services.CSV
 						CreateCountryLocation item = new CreateCountryLocation()
 						{
 							GeonameId = record.GeonameId,
+							LocaleCode = record.LocaleCode,
 							ContinentCode = record.ContinentCode,
 							ContinentName = record.ContinentName,
 							CountryIsoCode = record.CountryIsoCode,
@@ -47,7 +48,7 @@ namespace Geo.DataSeeding.Services.CSV
 							IsInEuropeanUnion = record.IsInEuropeanUnion,
 						};
 						ResponseEntity<int> res = mediator.Send(item, CancellationToken.None).Result;
-						Console.WriteLine("*");
+						Console.Write("*l*");
 					}
 				}
 			}
@@ -55,6 +56,7 @@ namespace Geo.DataSeeding.Services.CSV
 
 		public void LoadGeoLite2CountryIPv4(string fragmentName, IMediator mediator)
 		{
+			mediator.Send(new TruncateCountryIPv4(), CancellationToken.None);
 			DirectoryInfo dir = new DirectoryInfo("zip");
 			IEnumerable<FileInfo> fileList = dir
 					.GetFiles("*.csv", SearchOption.AllDirectories)
@@ -84,7 +86,7 @@ namespace Geo.DataSeeding.Services.CSV
 							IsAnycast = r.IsAnycast,
 						};
 						buffer.Add(createCountryIPv4Range);
-						if (i % 2000 == 0)
+						if (i % 4000 == 0) //2000
 						{
 							MultiCreateCountryRangeIRequest list = new MultiCreateCountryRangeIRequest()
 							{
@@ -93,7 +95,7 @@ namespace Geo.DataSeeding.Services.CSV
 							ResponseEntity<IEnumerable<string>> res = mediator.Send(list, CancellationToken.None).Result;
 							list.CountryIPv4Ranges = new List<ICountryIPv4Range>();
 							buffer = new List<ICountryIPv4Range>();
-							Console.WriteLine("*");
+							Console.Write("*4*");
 						}
 					}
 				}
