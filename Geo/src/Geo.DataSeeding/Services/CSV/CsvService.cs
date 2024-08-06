@@ -78,6 +78,11 @@ namespace Geo.DataSeeding.Services.CSV
 					int i = 0;
 					IEnumerable<GeoLite2CountryIPv4> records = csv.GetRecords<GeoLite2CountryIPv4>();
 					List<ICountryIPv4Range> buffer = new List<ICountryIPv4Range>();
+					MultiCreateCountryRangeIRequest list = new MultiCreateCountryRangeIRequest()
+					{
+						CountryIPv4Ranges = null,
+					};
+					ResponseEntity<IEnumerable<string>> res = new ResponseEntity<IEnumerable<string>>();
 					foreach (GeoLite2CountryIPv4 r in records)
 					{
 						i++;
@@ -94,17 +99,24 @@ namespace Geo.DataSeeding.Services.CSV
 						buffer.Add(createCountryIPv4Range);
 						if (i % 4000 == 0) //2000
 						{
-							MultiCreateCountryRangeIRequest list = new MultiCreateCountryRangeIRequest()
+							list = new MultiCreateCountryRangeIRequest()
 							{
 								CountryIPv4Ranges = buffer,
 							};
-							ResponseEntity<IEnumerable<string>>
-								res = mediator.Send(list, CancellationToken.None).Result;
+							res = mediator.Send(list, CancellationToken.None).Result;
 							list.CountryIPv4Ranges = new List<ICountryIPv4Range>();
 							buffer = new List<ICountryIPv4Range>();
 							Console.Write("*");
 						}
 					}
+					list = new MultiCreateCountryRangeIRequest()
+					{
+						CountryIPv4Ranges = buffer,
+					};
+					res = mediator.Send(list, CancellationToken.None).Result;
+					list.CountryIPv4Ranges = new List<ICountryIPv4Range>();
+					buffer = new List<ICountryIPv4Range>();
+					Console.Write("*");
 				}
 			}
 		}
@@ -127,7 +139,15 @@ namespace Geo.DataSeeding.Services.CSV
 					int i = 0;
 					IEnumerable<GeoLite2CityIPv4> records = csv.GetRecords<GeoLite2CityIPv4>();
 					List<CreateCityIPv4Range> buffer = new List<CreateCityIPv4Range>();
-
+					MultiCreateCityIPv4Range multiCreateCityIPv4Range = new MultiCreateCityIPv4Range
+					{
+						CityIPv4Ranges = null
+					};
+					MultiCreateCountryRangeIRequest list = new MultiCreateCountryRangeIRequest()
+					{
+						CountryIPv4Ranges = null,
+					};
+					ResponseEntity<IEnumerable<string>> res;
 					foreach (GeoLite2CityIPv4 geoLite2CityIPv4 in records)
 					{
 						i++;
@@ -148,15 +168,23 @@ namespace Geo.DataSeeding.Services.CSV
 						});
 						if (i % 4000 == 0)
 						{
-							MultiCreateCityIPv4Range multiCreateCityIPv4Range = new MultiCreateCityIPv4Range()
+							multiCreateCityIPv4Range = new MultiCreateCityIPv4Range()
 							{
 								CityIPv4Ranges = buffer
 							};
-							var res = mediator.Send(multiCreateCityIPv4Range, CancellationToken.None).Result;
+							res = mediator.Send(multiCreateCityIPv4Range, CancellationToken.None).Result;
 							buffer = new List<CreateCityIPv4Range>();
 							Console.Write("*");
 						}
 					}
+					multiCreateCityIPv4Range = new MultiCreateCityIPv4Range()
+					{
+						CityIPv4Ranges = buffer
+					};
+					res = mediator.Send(multiCreateCityIPv4Range, CancellationToken.None).Result;
+					buffer = new List<CreateCityIPv4Range>();
+					Console.Write("*");
+
 				}
 			}
 		}
