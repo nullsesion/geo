@@ -1,6 +1,5 @@
 ﻿using Geo.DomainShared;
 using Geo.DomainShared.Contracts;
-using System.Threading.Tasks;
 
 namespace Geo.Domain
 {
