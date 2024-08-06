@@ -1,19 +1,19 @@
 ﻿using CsvHelper;
-using Geo.Application.CQRS.Country.Commands.CreateCountryRange;
 using Geo.DataSeeding.Services.CSV.Models;
 using Geo.DomainShared;
+using Geo.DomainShared.Contracts;
 using System.Globalization;
 using MediatR;
+using Geo.Application.CQRS.Country.Commands.CreateCountryRange;
 using Geo.Application.CQRS.Country.Commands.MultiCreateCountryRange;
-using Geo.DomainShared.Contracts;
 using Geo.Application.CQRS.Country.Commands.CreateCountryLocation;
 using Geo.Application.CQRS.Country.Commands.TruncateCountryLocation;
 using Geo.Application.CQRS.Country.Commands.TruncateTable;
 using Geo.Application.CQRS.City.Commands.TruncateCityIPv4Range;
-using System.IO;
-using System.Collections.Generic;
 using Geo.Application.CQRS.City.Commands.CreateCityIPv4Range;
+using Geo.Application.CQRS.City.Commands.MultiCreateCityIPv4Range;
 using NpgsqlTypes;
+using Geo.Domain;
 
 namespace Geo.DataSeeding.Services.CSV
 {
@@ -32,6 +32,7 @@ namespace Geo.DataSeeding.Services.CSV
 
 		public void LoadGeoLite2CountryLocations(string fragmentName, string path, IMediator mediator)
 		{
+			Console.WriteLine("LoadGeoLite2CountryLocations");
 			mediator.Send(new TruncateCountryLocation(), CancellationToken.None);
 			IEnumerable<FileInfo> geoLite2CountryLocations = FindFile(fragmentName, path);
 			foreach (FileInfo file in geoLite2CountryLocations)
@@ -53,7 +54,7 @@ namespace Geo.DataSeeding.Services.CSV
 							IsInEuropeanUnion = record.IsInEuropeanUnion,
 						};
 						ResponseEntity<int> res = mediator.Send(item, CancellationToken.None).Result;
-						Console.Write("*l*");
+						Console.Write("*");
 					}
 				}
 			}
@@ -61,6 +62,7 @@ namespace Geo.DataSeeding.Services.CSV
 
 		public void LoadGeoLite2CountryIPv4(string fragmentName, string path, IMediator mediator)
 		{
+			Console.WriteLine("LoadGeoLite2CountryIPv4");
 			mediator.Send(new TruncateCountryIPv4(), CancellationToken.None);
 			DirectoryInfo dir = new DirectoryInfo(path);
 			IEnumerable<FileInfo> fileList = dir
@@ -70,7 +72,6 @@ namespace Geo.DataSeeding.Services.CSV
 
 			foreach (FileInfo item in fileList)
 			{
-				//Console.WriteLine(item.FullName);
 				using (var reader = new StreamReader(item.FullName))
 				using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
 				{
@@ -101,7 +102,7 @@ namespace Geo.DataSeeding.Services.CSV
 								res = mediator.Send(list, CancellationToken.None).Result;
 							list.CountryIPv4Ranges = new List<ICountryIPv4Range>();
 							buffer = new List<ICountryIPv4Range>();
-							Console.Write("*4*");
+							Console.Write("*");
 						}
 					}
 				}
@@ -110,6 +111,7 @@ namespace Geo.DataSeeding.Services.CSV
 
 		public void GeoLite2CityBlocksIPv4(string fragmentName, string path, IMediator mediator)
 		{
+			Console.WriteLine("GeoLite2CityBlocksIPv4");
 			mediator.Send(new TruncateCityIPv4Range(), CancellationToken.None);
 			DirectoryInfo dir = new DirectoryInfo(path);
 			IEnumerable<FileInfo> fileList = dir
@@ -124,12 +126,12 @@ namespace Geo.DataSeeding.Services.CSV
 				{
 					int i = 0;
 					IEnumerable<GeoLite2CityIPv4> records = csv.GetRecords<GeoLite2CityIPv4>();
-					//List<ICityIPv4Range> buffer = new List<ICityIPv4Range>();
-					//Console.WriteLine($"count: {records.Count()}");
+					List<CreateCityIPv4Range> buffer = new List<CreateCityIPv4Range>();
+
 					foreach (GeoLite2CityIPv4 geoLite2CityIPv4 in records)
 					{
 						i++;
-						var res = mediator.Send(new CreateCityIPv4Range()
+						buffer.Add(new CreateCityIPv4Range()
 						{
 							Network = geoLite2CityIPv4.Network,
 							GeonameId = geoLite2CityIPv4.GeonameId,
@@ -138,14 +140,22 @@ namespace Geo.DataSeeding.Services.CSV
 							IsAnonymousProxy = geoLite2CityIPv4.IsAnonymousProxy,
 							IsSatelliteProvider = geoLite2CityIPv4.IsSatelliteProvider,
 							IsAnycast = geoLite2CityIPv4.IsAnycast,
-							Location = 
+							Location =
 								geoLite2CityIPv4.Longitude == null || geoLite2CityIPv4.Latitude == null
-								? null
-								: new NpgsqlPoint( geoLite2CityIPv4.Longitude ?? 0, geoLite2CityIPv4.Latitude ?? 0),
+									? null
+									: new NpgsqlPoint(geoLite2CityIPv4.Longitude ?? 0, geoLite2CityIPv4.Latitude ?? 0),
 							AccuracyRadius = geoLite2CityIPv4.AccuracyRadius,
-						}, CancellationToken.None).Result;
-						if (i % 100 == 0) 
-							break;
+						});
+						if (i % 4000 == 0)
+						{
+							MultiCreateCityIPv4Range multiCreateCityIPv4Range = new MultiCreateCityIPv4Range()
+							{
+								CityIPv4Ranges = buffer
+							};
+							var res = mediator.Send(multiCreateCityIPv4Range, CancellationToken.None).Result;
+							buffer = new List<CreateCityIPv4Range>();
+							Console.Write("*");
+						}
 					}
 				}
 			}
