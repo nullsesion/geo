@@ -30,6 +30,7 @@ namespace Geo.DataSeeding.Services.CSV.Models
 
 		[Name("latitude")]
 		public double? Latitude { get; set; } //double
+
 		[Name("longitude")]
 		public double? Longitude { get; set; } //double
 

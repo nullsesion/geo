@@ -17,7 +17,6 @@ namespace Geo.DataAccess.Configuration
 					command.Connection.Open();
 				}
 				command.CommandText = cmd;
-				Console.WriteLine(cmd);
 				await command.ExecuteNonQueryAsync();
 			}
 			return cmd;

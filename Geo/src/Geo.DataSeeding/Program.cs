@@ -16,6 +16,7 @@ ServiceProvider CreateServiceProvider()
 	collection.AddDbContext<IGeoApiDbContext, GeoApiDbContext>();
 	collection.AddScoped<ICountryIPv4Repository, CountryIPv4Repository>();
 	collection.AddScoped<ICountryLocationRepository, CountryLocationRepository>();
+	collection.AddScoped<ICityIPv4Repository, CityIPv4Repository>();
 	// collection.AddScoped<Execution>();       collection.AddScoped<Display>();
 	// collection.AddScoped<DownloadManager>(); collection.AddScoped<CsvService>();
 

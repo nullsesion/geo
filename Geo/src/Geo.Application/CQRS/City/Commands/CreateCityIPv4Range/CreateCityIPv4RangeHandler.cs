@@ -23,7 +23,6 @@ namespace Geo.Application.CQRS.City.Commands.CreateCityIPv4Range
 				};
 			}
 
-
 			bool res = await _cityIPv4Repository
 					.InsertAsync(cityIPv4Range.Entity, CancellationToken.None)
 				;

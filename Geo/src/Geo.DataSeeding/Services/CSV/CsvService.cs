@@ -9,26 +9,31 @@ using Geo.DomainShared.Contracts;
 using Geo.Application.CQRS.Country.Commands.CreateCountryLocation;
 using Geo.Application.CQRS.Country.Commands.TruncateCountryLocation;
 using Geo.Application.CQRS.Country.Commands.TruncateTable;
+using Geo.Application.CQRS.City.Commands.TruncateCityIPv4Range;
+using System.IO;
+using System.Collections.Generic;
+using Geo.Application.CQRS.City.Commands.CreateCityIPv4Range;
+using NpgsqlTypes;
 
 namespace Geo.DataSeeding.Services.CSV
 {
 	public class CsvService
 	{
-		public IEnumerable<FileInfo> FindFile(string _fragmentName)
+		public IEnumerable<FileInfo> FindFile(string _fragmentName,string path)
 		{
-			DirectoryInfo dir = new DirectoryInfo("zip");
+			DirectoryInfo dir = new DirectoryInfo(path);
 			IEnumerable<FileInfo> fileList = dir
-				.GetFiles("*.csv", SearchOption.AllDirectories)
-				.Where(x => x.Name.Contains(_fragmentName))
+					.GetFiles("*.csv", SearchOption.AllDirectories)
+					.Where(x => x.Name.Contains(_fragmentName))
 				;
-			
+
 			return fileList;
 		}
 
-		public void LoadGeoLite2CountryLocations(string fragmentName, IMediator mediator)
+		public void LoadGeoLite2CountryLocations(string fragmentName, string path, IMediator mediator)
 		{
 			mediator.Send(new TruncateCountryLocation(), CancellationToken.None);
-			IEnumerable<FileInfo> geoLite2CountryLocations = FindFile(fragmentName);
+			IEnumerable<FileInfo> geoLite2CountryLocations = FindFile(fragmentName, path);
 			foreach (FileInfo file in geoLite2CountryLocations)
 			{
 				using (var reader = new StreamReader(file.FullName))
@@ -54,10 +59,10 @@ namespace Geo.DataSeeding.Services.CSV
 			}
 		}
 
-		public void LoadGeoLite2CountryIPv4(string fragmentName, IMediator mediator)
+		public void LoadGeoLite2CountryIPv4(string fragmentName, string path, IMediator mediator)
 		{
 			mediator.Send(new TruncateCountryIPv4(), CancellationToken.None);
-			DirectoryInfo dir = new DirectoryInfo("zip");
+			DirectoryInfo dir = new DirectoryInfo(path);
 			IEnumerable<FileInfo> fileList = dir
 					.GetFiles("*.csv", SearchOption.AllDirectories)
 					.Where(x => x.Name.Contains(fragmentName))
@@ -92,7 +97,8 @@ namespace Geo.DataSeeding.Services.CSV
 							{
 								CountryIPv4Ranges = buffer,
 							};
-							ResponseEntity<IEnumerable<string>> res = mediator.Send(list, CancellationToken.None).Result;
+							ResponseEntity<IEnumerable<string>>
+								res = mediator.Send(list, CancellationToken.None).Result;
 							list.CountryIPv4Ranges = new List<ICountryIPv4Range>();
 							buffer = new List<ICountryIPv4Range>();
 							Console.Write("*4*");
@@ -101,8 +107,50 @@ namespace Geo.DataSeeding.Services.CSV
 				}
 			}
 		}
-	}
 
+		public void GeoLite2CityBlocksIPv4(string fragmentName, string path, IMediator mediator)
+		{
+			mediator.Send(new TruncateCityIPv4Range(), CancellationToken.None);
+			DirectoryInfo dir = new DirectoryInfo(path);
+			IEnumerable<FileInfo> fileList = dir
+				.GetFiles("*.csv", SearchOption.AllDirectories)
+				.Where(x => x.Name.Contains(fragmentName))
+				;
+
+			foreach (FileInfo item in fileList)
+			{
+				using (var reader = new StreamReader(item.FullName))
+				using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+				{
+					int i = 0;
+					IEnumerable<GeoLite2CityIPv4> records = csv.GetRecords<GeoLite2CityIPv4>();
+					//List<ICityIPv4Range> buffer = new List<ICityIPv4Range>();
+					//Console.WriteLine($"count: {records.Count()}");
+					foreach (GeoLite2CityIPv4 geoLite2CityIPv4 in records)
+					{
+						i++;
+						var res = mediator.Send(new CreateCityIPv4Range()
+						{
+							Network = geoLite2CityIPv4.Network,
+							GeonameId = geoLite2CityIPv4.GeonameId,
+							RegisteredCountryGeoNameId = geoLite2CityIPv4.RegisteredCountryGeoNameId,
+							RepresentedCountryGeoNameId = geoLite2CityIPv4.RepresentedCountryGeoNameId,
+							IsAnonymousProxy = geoLite2CityIPv4.IsAnonymousProxy,
+							IsSatelliteProvider = geoLite2CityIPv4.IsSatelliteProvider,
+							IsAnycast = geoLite2CityIPv4.IsAnycast,
+							Location = 
+								geoLite2CityIPv4.Longitude == null || geoLite2CityIPv4.Latitude == null
+								? null
+								: new NpgsqlPoint( geoLite2CityIPv4.Longitude ?? 0, geoLite2CityIPv4.Latitude ?? 0),
+							AccuracyRadius = geoLite2CityIPv4.AccuracyRadius,
+						}, CancellationToken.None).Result;
+						if (i % 100 == 0) 
+							break;
+					}
+				}
+			}
+		}
+	}
 /*
 using (var context = new AppDbContext())
 using (var reader = new StreamReader("zip\\GeoLite2-City-CSV_20240712\\GeoLite2-City-Blocks-IPv4.csv"))

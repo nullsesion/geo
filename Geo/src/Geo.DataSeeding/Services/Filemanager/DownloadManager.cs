@@ -4,14 +4,21 @@ namespace Geo.DataSeeding.Services.FileManager
 {
 	public class DownloadManager
 	{
-		private readonly string _zip = "_zip";
+		public readonly string Zip = "_zip";
 		private readonly Display _display;
 		public DownloadManager(Display display) => _display = display;
 
+
+		public void Purge()
+		{
+			if (Directory.Exists(Zip))
+				Directory.Delete(Zip, true);
+		}
 		public async Task<IEnumerable<string>> Run(IEnumerable<WebLoader> files)
 		{
 			_display.ShowHead("Start load");
 			List<string> paths = new List<string>();
+
 			foreach (var fileLoder in files)
 			{
 				bool load = fileLoder.FileExist();
@@ -33,10 +40,7 @@ namespace Geo.DataSeeding.Services.FileManager
 				{
 					paths.Add(fileLoder.Path);
 
-					if(Directory.Exists(_zip))
-						Directory.Delete(_zip, true);
-
-					ZipFile.ExtractToDirectory(fileLoder.Path, _zip);
+					ZipFile.ExtractToDirectory(fileLoder.Path, Zip);
 					_display.Ok("unpack " + fileLoder.Path);
 				}
 			}

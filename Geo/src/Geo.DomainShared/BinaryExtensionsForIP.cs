@@ -31,7 +31,7 @@ namespace Geo.DomainShared
 			max = min = 0;
 			if (IPAddress.TryParse(ip, out IPAddress? iPAddress))
 			{
-				UInt32 bits = 0b_0000_0000_0000_0000_0000_0000_0000_0000;
+				UInt32 bits       = 0b_0000_0000_0000_0000_0000_0000_0000_0000;
 				UInt32 currentBit = 0b_0000_0000_0000_0000_0000_0000_0000_0001;
 				if (mask <= 32)
 				{

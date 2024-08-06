@@ -3,7 +3,7 @@ using NpgsqlTypes;
 
 namespace GeoLoad.Entities
 {
-	public class CityIPv4Entity//: ICityIPv4Range
+	public class CityIPv4Entity: ICityIPv4Range
 	{	
 		public string Network { get; set; }
 		public int IpMin { get; set; }

@@ -1,6 +1,4 @@
-﻿using Geo.Application.CQRS.Country.Commands.TruncateCountryLocation;
-using Geo.Application.CQRS.Country.Commands.TruncateTable;
-using Geo.DataSeeding.Services.CSV;
+﻿using Geo.DataSeeding.Services.CSV;
 using Geo.DataSeeding.Services.FileManager;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -19,8 +17,6 @@ namespace Geo.DataSeeding
 		
 		public void Run(IConfiguration config) //async Task
 		{
-			// TruncateCountryIPv4
-			/*
 			List<string> files = config.GetSection("urlsCsvLoad")
 				.GetChildren()
 				.ToList()
@@ -28,12 +24,12 @@ namespace Geo.DataSeeding
 				.Select(x => x.Value)
 				.ToList()!;
 
-			IEnumerable<string> fileExistList = await _download.Run(files.Select(x => new WebLoader(x)));
+			_download.Purge();
+			IEnumerable<string> fileExistList = _download.Run(files.Select(x => new WebLoader(x))).Result;
 			foreach (string file in fileExistList)
 			{
 				Console.WriteLine(file);
 			}
-			*/
 			
 			Dictionary<string, string> FileFragment = new Dictionary<string, string>()
 			{
@@ -48,39 +44,18 @@ namespace Geo.DataSeeding
 				{
 					
 					case "GeoLite2CountryLocations":
-						_csvHelper.LoadGeoLite2CountryLocations(csv.Value,_mediator);
+						_csvHelper.LoadGeoLite2CountryLocations(csv.Value, _download.Zip, _mediator);
 						break;
 					
 					case "GeoLite2CountryIPv4":
-						_csvHelper.LoadGeoLite2CountryIPv4(csv.Value, _mediator);
+						_csvHelper.LoadGeoLite2CountryIPv4(csv.Value, _download.Zip, _mediator);
 						break;
 
 					case "GeoLite2CityIPv4":
-						//_csvHelper.FindFile(csv.Value);
-						//foreach (FileInfo file in geoLite2CityIPv4)
-						//{
-						//Console.WriteLine(file.Name);
-						//}
+						_csvHelper.GeoLite2CityBlocksIPv4(csv.Value, _download.Zip, _mediator);
 						break;
 				}
 			}
-			
-		}
-
-
-		private async Task<IEnumerable<FileInfo>> DownloadFiles(IConfiguration config, string fragmentName)
-		{
-			List<string> files = config.GetSection("urlsCsvLoad")
-				.GetChildren()
-				.ToList()
-				.Where(x => x.Value != null)
-				.Select(x => x.Value)
-				.ToList()!;
-
-			IEnumerable<string> fileExistList = await _download.Run(files.Select(x => new WebLoader(x)));
-			IEnumerable<FileInfo> allFiles = _csvHelper.FindFile(fragmentName); //"GeoLite2-Country-Blocks-IPv4"
-			
-			return allFiles;
 		}
 	}
 }
