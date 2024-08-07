@@ -36,7 +36,7 @@ namespace Geo.DataAccess.Repositories
 			return countryLocationEntity.GeonameId;
 		}
 
-		public async Task<bool> Truncate()
+		public async Task<bool> TruncateAsync()
 		{
 			await _dbContext
 				.CountryLocations
@@ -44,12 +44,9 @@ namespace Geo.DataAccess.Repositories
 
 			return true;
 		}
-
 		public async Task SaveChangesAsync()
 		{
 			await _dbContext.SaveChangesAsync();
 		}
-		
-
 	}
 }

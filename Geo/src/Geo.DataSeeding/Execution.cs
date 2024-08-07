@@ -1,4 +1,5 @@
-﻿using Geo.DataSeeding.Services.CSV;
+﻿using Geo.DataAccess.Migrations;
+using Geo.DataSeeding.Services.CSV;
 using Geo.DataSeeding.Services.FileManager;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +18,7 @@ namespace Geo.DataSeeding
 		
 		public void Run(IConfiguration config) //async Task
 		{
+			/*
 			List<string> files = config.GetSection("urlsCsvLoad")
 				.GetChildren()
 				.ToList()
@@ -30,10 +32,12 @@ namespace Geo.DataSeeding
 			{
 				Console.WriteLine(file);
 			}
+			*/
 			
 			Dictionary<string, string> FileFragment = new Dictionary<string, string>()
 			{
 				{"GeoLite2CityIPv4"         ,"GeoLite2-City-Blocks-IPv4"},
+				{"GeoLite2CityLocations"    ,"GeoLite2-City-Locations-en"},
 				{"GeoLite2CountryIPv4"      ,"GeoLite2-Country-Blocks-IPv4"},
 				{"GeoLite2CountryLocations" ,"GeoLite2-Country-Locations-en"}
 			};
@@ -42,17 +46,20 @@ namespace Geo.DataSeeding
 			{
 				switch (csv.Key)
 				{
-					
-					case "GeoLite2CountryLocations":
-						_csvHelper.LoadGeoLite2CountryLocations(csv.Value, _download.Zip, _mediator);
-						break;
-					
 					case "GeoLite2CountryIPv4":
 						_csvHelper.LoadGeoLite2CountryIPv4(csv.Value, _download.Zip, _mediator);
 						break;
 
+					case "GeoLite2CountryLocations":
+						_csvHelper.LoadGeoLite2CountryLocations(csv.Value, _download.Zip, _mediator);
+						break;
+
 					case "GeoLite2CityIPv4":
 						_csvHelper.GeoLite2CityBlocksIPv4(csv.Value, _download.Zip, _mediator);
+						break;
+
+					case "GeoLite2CityLocations":
+						_csvHelper.GeoLite2CityLocations(csv.Value, _download.Zip, _mediator);
 						break;
 				}
 			}

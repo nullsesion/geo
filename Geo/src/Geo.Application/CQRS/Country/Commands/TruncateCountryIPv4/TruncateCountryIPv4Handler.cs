@@ -11,8 +11,8 @@ namespace Geo.Application.CQRS.Country.Commands.TruncateTable
 		public TruncateCountryIPv4Handler(ICountryIPv4Repository countryIPv4Repository) => _countryIPv4Repository = countryIPv4Repository;
 		public async Task<ResponseEntity<bool>> Handle(TruncateCountryIPv4 request, CancellationToken cancellationToken)
 		{
-			await _countryIPv4Repository.Truncate();
-			//await _countryIPv4Repository.SaveChangesAsync();
+			await _countryIPv4Repository.TruncateAsync();
+			await _countryIPv4Repository.SaveChangesAsync();
 			return new ResponseEntity<bool>()
 			{
 				IsSuccess = true,

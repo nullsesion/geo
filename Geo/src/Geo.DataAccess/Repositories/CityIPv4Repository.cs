@@ -35,7 +35,7 @@ namespace Geo.DataAccess.Repositories
 			return true;
 		}
 
-		public async Task<bool> Truncate()
+		public async Task<bool> TruncateAsync()
 		{
 			await _dbContext
 				.CityIPv4s

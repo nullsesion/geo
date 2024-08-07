@@ -21,7 +21,8 @@ namespace Geo.Application.CQRS.Country.Commands.TruncateCountryLocation
 
 		public async Task<ResponseEntity<bool>> Handle(TruncateCountryLocation request, CancellationToken cancellationToken)
 		{
-			await _countryLocationRepository.Truncate();
+			await _countryLocationRepository.TruncateAsync();
+			await _countryLocationRepository.SaveChangesAsync();
 			return new ResponseEntity<bool>()
 			{
 				IsSuccess = true,

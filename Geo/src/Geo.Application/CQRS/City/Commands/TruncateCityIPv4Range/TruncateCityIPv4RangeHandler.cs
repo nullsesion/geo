@@ -12,7 +12,8 @@ namespace Geo.Application.CQRS.City.Commands.TruncateCityIPv4Range
 
 		public async Task<ResponseEntity<bool>> Handle(TruncateCityIPv4Range request, CancellationToken cancellationToken)
 		{
-			await _cityIPv4Repository.Truncate();
+			await _cityIPv4Repository.TruncateAsync();
+			await _cityIPv4Repository.SaveChangesAsync();
 			return new ResponseEntity<bool>()
 			{
 				IsSuccess = true,

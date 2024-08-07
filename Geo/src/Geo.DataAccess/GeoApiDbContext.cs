@@ -20,11 +20,13 @@ namespace Geo.DataAccess
 			modelBuilder.ApplyConfiguration(new CountryIPv4EntityConfig());
 			modelBuilder.ApplyConfiguration(new CountryLocationEntityConfig());
 			modelBuilder.ApplyConfiguration(new CityIPv4EntityConfig());
+			modelBuilder.ApplyConfiguration(new CityLocationEntityConfig());
 			base.OnModelCreating(modelBuilder);
 		}
 
 		public DbSet<CountryIPv4Entity> CountryIPv4s { get; set; }
 		public DbSet<CountryLocationEntity> CountryLocations { get; set; }
 		public DbSet<CityIPv4Entity> CityIPv4s { get; set; }
+		public DbSet<CityLocationEntity> CityLocations { get; set; }
 	}
 }

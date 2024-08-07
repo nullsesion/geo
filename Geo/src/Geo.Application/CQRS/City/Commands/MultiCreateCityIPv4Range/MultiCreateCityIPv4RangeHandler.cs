@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Geo.Application.Interfaces;
+﻿using Geo.Application.Interfaces;
 using Geo.Domain;
 using Geo.DomainShared;
 using Geo.DomainShared.Contracts;
