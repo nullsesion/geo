@@ -17,7 +17,6 @@ namespace Geo.DataSeeding
 		
 		public void Run(IConfiguration config) //async Task
 		{
-			/*
 			List<string> files = config.GetSection("urlsCsvLoad")
 				.GetChildren()
 				.ToList()
@@ -31,7 +30,6 @@ namespace Geo.DataSeeding
 			{
 				Console.WriteLine(file);
 			}
-			*/
 			
 			Dictionary<string, string> FileFragment = new Dictionary<string, string>()
 			{
