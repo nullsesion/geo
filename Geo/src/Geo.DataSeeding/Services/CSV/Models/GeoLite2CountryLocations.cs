@@ -3,7 +3,7 @@ using Geo.DomainShared.Contracts;
 
 namespace Geo.DataSeeding.Services.CSV.Models
 {
-	public class GeoLite2CountryLocations: ICountryLocation, ILocaleCode
+	public class GeoLite2CountryLocations: ICountryLocation
 	{
 		[Name("geoname_id")]
 		public int GeonameId { get; set; }

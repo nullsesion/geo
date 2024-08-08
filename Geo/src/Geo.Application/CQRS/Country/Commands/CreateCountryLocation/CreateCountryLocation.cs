@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Geo.Application.CQRS.Country.Commands.CreateCountryLocation
 {
-	public class CreateCountryLocation : IRequest<ResponseEntity<int>>, ICountryLocation, ILocaleCode
+	public class CreateCountryLocation : IRequest<ResponseEntity<int>>, ICountryLocation
 	{
 		public int GeonameId { get; set; }
 		public string LocaleCode { get; set; }

@@ -1,5 +1,4 @@
-﻿using Geo.DataAccess.Migrations;
-using Geo.DataSeeding.Services.CSV;
+﻿using Geo.DataSeeding.Services.CSV;
 using Geo.DataSeeding.Services.FileManager;
 using MediatR;
 using Microsoft.Extensions.Configuration;

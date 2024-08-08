@@ -13,8 +13,8 @@ using NpgsqlTypes;
 namespace Geo.DataAccess.Migrations
 {
     [DbContext(typeof(GeoApiDbContext))]
-    [Migration("20240806110446_city")]
-    partial class city
+    [Migration("20240808100443_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,57 @@ namespace Geo.DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Geo.DataAccess.Entities.CityLocationEntity", b =>
+                {
+                    b.Property<int>("GeonameId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("GeonameId"));
+
+                    b.Property<string>("CityName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ContinentCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ContinentName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CountryIsoCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CountryName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsInEuropeanUnion")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LocaleCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("MetroCode")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Subdivision")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TimeZone")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("GeonameId");
+
+                    b.ToTable("CityLocations");
+                });
 
             modelBuilder.Entity("Geo.DataAccess.Entities.CountryIPv4Entity", b =>
                 {

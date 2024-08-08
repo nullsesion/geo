@@ -3,7 +3,7 @@
 namespace Geo.Domain
 {
 	//todo: add validator, creator and private setters.
-	public class CountryLocation : ICountryLocation, ILocaleCode
+	public class CountryLocation : ICountryLocation
 	{
 		public int GeonameId { get; set; }
 		public string LocaleCode { get; set; }

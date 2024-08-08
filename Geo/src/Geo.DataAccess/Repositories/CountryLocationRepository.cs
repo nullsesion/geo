@@ -2,7 +2,6 @@
 using Geo.DataAccess.Configuration;
 using Geo.DataAccess.Entities;
 using Geo.Domain;
-using Geo.DomainShared.Contracts;
 using Newtonsoft.Json;
 
 namespace Geo.DataAccess.Repositories
@@ -13,27 +12,23 @@ namespace Geo.DataAccess.Repositories
 		{
 		}
 
-		public async Task<int> InsertAsync(CountryLocation countryLocationEntity, CancellationToken cancellationToken)
+		public async Task<int> InsertAsync(CountryLocation countryLocation, CancellationToken cancellationToken)
 		{
 			var res = await _dbContext
 					.CountryLocations
 					.AddAsync(new CountryLocationEntity()
 					{
-						GeonameId = countryLocationEntity.GeonameId,
-						ContinentCode = countryLocationEntity.ContinentCode,
-						ContinentName = JsonConvert.SerializeObject(new Dictionary<string, string>()
-								{{countryLocationEntity.LocaleCode, countryLocationEntity.ContinentName}}
-						),
-						CountryIsoCode = countryLocationEntity.CountryIsoCode,
-						CountryName = JsonConvert.SerializeObject(new Dictionary<string, string>()
-							{{countryLocationEntity.LocaleCode, countryLocationEntity.CountryName}}
-						),
-						IsInEuropeanUnion = countryLocationEntity.IsInEuropeanUnion,
+						GeonameId = countryLocation.GeonameId,
+						ContinentCode = countryLocation.ContinentCode,
+						ContinentName = JsonConvert.SerializeObject(new Dictionary<string, string>() {{countryLocation.LocaleCode, countryLocation.ContinentName}} ),
+						CountryIsoCode = countryLocation.CountryIsoCode,
+						CountryName = JsonConvert.SerializeObject(new Dictionary<string, string>() {{countryLocation.LocaleCode, countryLocation.CountryName}} ),
+						IsInEuropeanUnion = countryLocation.IsInEuropeanUnion,
 					}
 					, cancellationToken)
 				;
 
-			return countryLocationEntity.GeonameId;
+			return countryLocation.GeonameId;
 		}
 
 		public async Task<bool> TruncateAsync()
