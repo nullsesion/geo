@@ -12,7 +12,7 @@ namespace Geo.Api.Controllers
 	public class IPController : ControllerBase
 	{
 		private readonly ILogger<IPController> _logger;
-		//private readonly IMediator _mediator;
+		private readonly IMediator _mediator;
 
 		
 		public IPController(ILogger<IPController> logger, IMediator mediator)
