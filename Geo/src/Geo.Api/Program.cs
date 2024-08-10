@@ -1,8 +1,8 @@
 
 using Geo.Application.CQRS.Country.Commands.CreateCountryRange;
 using Geo.Application.Interfaces;
-using Geo.DataAccess;
 using Geo.DataAccess.Repositories;
+using Geo.DataAccess;
 
 namespace Geo.Api
 {

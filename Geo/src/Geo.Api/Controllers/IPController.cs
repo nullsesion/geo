@@ -1,10 +1,9 @@
-using Geo.Application.CQRS.Country.Queries.GetCountry;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Net;
+using Geo.Application.CQRS.Country.Queries.GetCountry;
 using Geo.Domain;
 using Geo.DomainShared;
+using MediatR;
 
 namespace Geo.Api.Controllers
 {
@@ -13,11 +12,12 @@ namespace Geo.Api.Controllers
 	public class IPController : ControllerBase
 	{
 		private readonly ILogger<IPController> _logger;
-		private readonly IMediator _mediator;
+		//private readonly IMediator _mediator;
 
-		public IPController(ILogger<IPController> logger,IMediator mediator)
+		
+		public IPController(ILogger<IPController> logger, IMediator mediator)
 		{
-			(_logger, _mediator)  = (logger, mediator); 
+			(_logger, _mediator) = (logger, mediator);
 		}
 
 
@@ -39,5 +39,6 @@ namespace Geo.Api.Controllers
 			}
 			return Results.BadRequest("is not an IP address");
 		}
+		
 	}
 }
