@@ -22,4 +22,8 @@
     <ProjectReference Include="..\Geo.Domain\Geo.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CQRS\City\Queries\" />
+  </ItemGroup>
+
 </Project>

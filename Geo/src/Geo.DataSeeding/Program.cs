@@ -1,4 +1,4 @@
-﻿using Geo.Application.CQRS.Country.Commands.CreateCountryRange;
+﻿using Geo.Application.CQRS.Country.Queries.GetCountry;
 using Geo.Application.Interfaces;
 using Geo.DataAccess;
 using Geo.DataAccess.Repositories;
@@ -14,7 +14,7 @@ ServiceProvider CreateServiceProvider()
 	//IConfiguration config
 	var collection = new ServiceCollection();
 	collection.AddDbContext<IGeoApiDbContext, GeoApiDbContext>();
-	collection.AddScoped<ICountryIPv4Repository, CountryIPv4Repository>();
+	collection.AddScoped<ICountryRepository, CountryRepository>();
 	collection.AddScoped<ICountryLocationRepository, CountryLocationRepository>();
 	collection.AddScoped<ICityIPv4Repository, CityIPv4Repository>();
 	collection.AddScoped<ICityLocationRepository, CityLocationRepository>();
@@ -24,7 +24,7 @@ ServiceProvider CreateServiceProvider()
 	collection.AddScoped<DownloadManager>();
 	collection.AddScoped<CsvService>();
 	
-	collection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateCountryIPv4Range).Assembly));
+	collection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetCountry).Assembly));
 	return collection.BuildServiceProvider();
 }
 

@@ -44,7 +44,7 @@ namespace Geo.DataSeeding
 				switch (csv.Key)
 				{
 					case "GeoLite2CountryIPv4":
-						_csvHelper.LoadGeoLite2CountryIPv4(csv.Value, _download.Zip, _mediator);
+						_csvHelper.LoadGeoLite2CountryIPv4(     csv.Value, _download.Zip, _mediator);
 						break;
 
 					case "GeoLite2CountryLocations":
@@ -52,11 +52,11 @@ namespace Geo.DataSeeding
 						break;
 
 					case "GeoLite2CityIPv4":
-						_csvHelper.GeoLite2CityBlocksIPv4(csv.Value, _download.Zip, _mediator);
+						_csvHelper.GeoLite2CityBlocksIPv4(      csv.Value, _download.Zip, _mediator);
 						break;
 
 					case "GeoLite2CityLocations":
-						_csvHelper.GeoLite2CityLocations(csv.Value, _download.Zip, _mediator);
+						_csvHelper.GeoLite2CityLocations(       csv.Value, _download.Zip, _mediator);
 						break;
 				}
 			}

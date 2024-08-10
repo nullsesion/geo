@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Geo.DomainShared
 {
@@ -15,12 +16,32 @@ namespace Geo.DomainShared
 
 			return false;
 		}
+
+		public static bool IsIpV4(this string ip)
+		{
+			if (IPAddress.TryParse(ip, out IPAddress? iPAddress))
+			{
+				byte[] bytes = GetBytesFromIp(iPAddress);
+				if (bytes.Length > 4)
+				{
+					return false;
+				}
+				
+				return true;
+			}
+
+			return false;
+		}
 		public static bool TryIpV4ToInt(this string ip, out Int32 number)
 		{
 			number = 0;
 			if (IPAddress.TryParse(ip, out IPAddress? iPAddress))
 			{
-				number = BitConverter.ToInt32(GetBytesFromIp(iPAddress));
+				byte[] bytes = GetBytesFromIp(iPAddress);
+				if (bytes.Length > 4)
+					return false;
+
+				number = BitConverter.ToInt32(bytes);
 				return true;
 			}
 
@@ -31,6 +52,10 @@ namespace Geo.DomainShared
 			max = min = 0;
 			if (IPAddress.TryParse(ip, out IPAddress? iPAddress))
 			{
+				byte[] bytes = GetBytesFromIp(iPAddress);
+				if (bytes.Length > 4)
+					return false;
+
 				UInt32 bits       = 0b_0000_0000_0000_0000_0000_0000_0000_0000;
 				UInt32 currentBit = 0b_0000_0000_0000_0000_0000_0000_0000_0001;
 				if (mask <= 32)
@@ -42,7 +67,7 @@ namespace Geo.DomainShared
 						currentBit = currentBit << 1;
 					}
 				}
-				UInt32 number = BitConverter.ToUInt32(GetBytesFromIp(iPAddress));
+				UInt32 number = BitConverter.ToUInt32(bytes);
 				max = number | bits;
 				min = number & ~bits;
 

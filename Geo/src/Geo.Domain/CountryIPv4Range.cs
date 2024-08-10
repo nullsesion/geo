@@ -102,5 +102,8 @@ namespace Geo.Domain
 		public bool IsAnonymousProxy { get; private set; }
 		public bool IsSatelliteProvider { get; private set; }
 		public bool? IsAnycast { get; private set; }
+		public ICountryLocation? Geoname { get; set; }
+		public ICountryLocation? RegisteredCountryGeoName { get; set; }
+		public ICountryLocation? RepresentedCountryGeoName { get; set; }
 	}
 }

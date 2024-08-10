@@ -7,10 +7,10 @@ namespace Geo.Application.CQRS.Country.Commands.MultiCreateCountryRange
 {
 	public class MultiCreateCountryRangeHandler: IRequestHandler<MultiCreateCountryRangeIRequest, ResponseEntity<IEnumerable<string>>>
 	{
-		private readonly ICountryIPv4Repository _countryIPv4Repository;
+		private readonly ICountryRepository _countryRepository;
 
-		public MultiCreateCountryRangeHandler(ICountryIPv4Repository countryIPv4Repository) =>
-			_countryIPv4Repository = countryIPv4Repository;
+		public MultiCreateCountryRangeHandler(ICountryRepository countryRepository) =>
+			_countryRepository = countryRepository;
 		public async Task<ResponseEntity<IEnumerable<string>>> Handle(MultiCreateCountryRangeIRequest request, CancellationToken cancellationToken)
 		{
 			if (request.CountryIPv4Ranges.Any())
@@ -22,10 +22,10 @@ namespace Geo.Application.CQRS.Country.Commands.MultiCreateCountryRange
 					if (countryIPv4Range.IsSuccess)
 					{
 						successList.Add(countryIPv4Range.Entity.Network);
-						await _countryIPv4Repository.InsertAsync(countryIPv4Range.Entity, cancellationToken);
+						await _countryRepository.InsertCountryIPv4RangeAsync(countryIPv4Range.Entity, cancellationToken);
 					}
 				}
-				await _countryIPv4Repository.SaveChangesAsync();
+				await _countryRepository.SaveChangesAsync();
 			}
 			return new ResponseEntity<IEnumerable<string>>()
 			{

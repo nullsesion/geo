@@ -48,25 +48,6 @@ namespace Geo.DataSeeding.Services.CSV
 				using (var reader = new StreamReader(file.FullName))
 				using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
 				{
-					/*
-					IEnumerable<GeoLite2CountryLocations> records = csv.GetRecords<GeoLite2CountryLocations>();
-					foreach (GeoLite2CountryLocations record in records)
-					{
-						CreateCountryLocation item = new CreateCountryLocation()
-						{
-							GeonameId = record.GeonameId,
-							LocaleCode = record.LocaleCode,
-							ContinentCode = record.ContinentCode,
-							ContinentName = record.ContinentName,
-							CountryIsoCode = record.CountryIsoCode,
-							CountryName = record.CountryName,
-							IsInEuropeanUnion = record.IsInEuropeanUnion,
-						};
-						ResponseEntity<int> rs = mediator.Send(item, CancellationToken.None).Result;
-						Console.Write("*");
-					}
-					*/
-					
 					int i = 0;
 					IEnumerable<GeoLite2CountryLocations> records = csv.GetRecords<GeoLite2CountryLocations>();
 					MultiCreateCountryLocation buffer = new MultiCreateCountryLocation()
@@ -167,7 +148,6 @@ namespace Geo.DataSeeding.Services.CSV
 				}
 			}
 		}
-
 		public void GeoLite2CityBlocksIPv4(string fragmentName, string path, IMediator mediator)
 		{
 			Console.WriteLine("GeoLite2CityBlocksIPv4");
@@ -236,7 +216,6 @@ namespace Geo.DataSeeding.Services.CSV
 				}
 			}
 		}
-
 		public void GeoLite2CityLocations(string fragmentName, string path, IMediator mediator)
 		{
 			Console.WriteLine("GeoLite2CityLocations");

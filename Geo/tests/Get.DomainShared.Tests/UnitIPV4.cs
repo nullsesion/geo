@@ -58,7 +58,20 @@ namespace Get.DomainShared.Tests
 			}
 			else
 				Assert.Fail("an error occurred while parsing");
-
 		}
+
+		[TestMethod]
+		public void Try_Parse_IPV6_FromString_UsingIPV4_FalseReturned()
+		{
+			//arrange
+			string IP = "2001:db8:3333:4444:5555:6666:7777:8888";
+
+			//act
+			if (!IP.TryIpV4ToInt(out Int32 number))
+				Assert.IsTrue(true);
+			else
+				Assert.Fail("an error occurred while parsing");
+		}
+
 	}
 }

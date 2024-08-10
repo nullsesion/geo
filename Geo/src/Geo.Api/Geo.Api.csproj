@@ -9,7 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.4.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Geo.Application\Geo.Application.csproj" />
+    <ProjectReference Include="..\Geo.DataAccess\Geo.DataAccess.csproj" />
+    <ProjectReference Include="..\Geo.DomainShared\Geo.DomainShared.csproj" />
+    <ProjectReference Include="..\Geo.Domain\Geo.Domain.csproj" />
   </ItemGroup>
 
 </Project>

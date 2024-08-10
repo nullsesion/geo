@@ -6,13 +6,13 @@ namespace Geo.Application.CQRS.Country.Commands.TruncateTable
 {
 	public class TruncateCountryIPv4Handler:IRequestHandler<TruncateCountryIPv4, ResponseEntity<bool>>
 	{
-		private readonly ICountryIPv4Repository _countryIPv4Repository;
+		private readonly ICountryRepository _countryRepository;
 
-		public TruncateCountryIPv4Handler(ICountryIPv4Repository countryIPv4Repository) => _countryIPv4Repository = countryIPv4Repository;
+		public TruncateCountryIPv4Handler(ICountryRepository countryRepository) => _countryRepository = countryRepository;
 		public async Task<ResponseEntity<bool>> Handle(TruncateCountryIPv4 request, CancellationToken cancellationToken)
 		{
-			await _countryIPv4Repository.TruncateAsync();
-			await _countryIPv4Repository.SaveChangesAsync();
+			await _countryRepository.TruncateCountryIPv4RangeAsync();
+			await _countryRepository.SaveChangesAsync();
 			return new ResponseEntity<bool>()
 			{
 				IsSuccess = true,
