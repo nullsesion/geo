@@ -20,7 +20,6 @@ namespace Geo.Api.Controllers
 			(_logger, _mediator) = (logger, mediator);
 		}
 
-
 		[HttpGet(Name = "GetIP")]
 		public async Task<IResult> Get(string Ip, CancellationToken cancellationToken)
 		{
