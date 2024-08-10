@@ -8,10 +8,10 @@ namespace Geo.Application.CQRS.Country.Commands.MultiCreateCountryLocation
 {
 	public class MultiCreateCountryLocationHandler: IRequestHandler<MultiCreateCountryLocation,ResponseEntity<int>>
 	{
-		private readonly ICountryLocationRepository _countryLocationRepository;
+		private readonly ICountryRepository _countryRepository;
 
-		public MultiCreateCountryLocationHandler(ICountryLocationRepository countryLocationRepository) => 
-			_countryLocationRepository = countryLocationRepository;
+		public MultiCreateCountryLocationHandler(ICountryRepository countryRepository) => 
+			_countryRepository = countryRepository;
 
 		public async Task<ResponseEntity<int>> Handle(MultiCreateCountryLocation request, CancellationToken cancellationToken)
 		{
@@ -19,7 +19,7 @@ namespace Geo.Application.CQRS.Country.Commands.MultiCreateCountryLocation
 			{
 				foreach (ICountryLocation countryLocation in request.CountryLocations)
 				{
-					await _countryLocationRepository.InsertAsync(new CountryLocation()
+					await _countryRepository.InsertCountryLocationAsync(new CountryLocation()
 					{
 						GeonameId         = countryLocation.GeonameId,
 						LocaleCode        = countryLocation.LocaleCode,
@@ -31,7 +31,7 @@ namespace Geo.Application.CQRS.Country.Commands.MultiCreateCountryLocation
 					}, cancellationToken);
 				}
 
-				await _countryLocationRepository.SaveChangesAsync();
+				await _countryRepository.SaveChangesAsync();
 			}
 			return new ResponseEntity<int>()
 			{ 

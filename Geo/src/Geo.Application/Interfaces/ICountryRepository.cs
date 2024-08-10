@@ -8,5 +8,7 @@ public interface ICountryRepository
 	Task<bool> InsertCountryIPv4RangeAsync(CountryIPv4Range countryIPv4Range, CancellationToken cancellationToken);
 	Task<ResponseEntity<CountryIPv4Range>> GetCountryIPv4RangeByIp(string ip);
 	Task<bool> TruncateCountryIPv4RangeAsync();
+	Task<int> InsertCountryLocationAsync(CountryLocation countryLocation, CancellationToken cancellationToken);
+	Task<bool> TruncateCountryLocationAsync();
 	Task SaveChangesAsync();
 }

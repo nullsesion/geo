@@ -7,9 +7,9 @@ namespace Geo.Application.CQRS.Country.Commands.CreateCountryLocation
 {
 	public class CreateCountryLocationHandler: IRequestHandler<CreateCountryLocation, ResponseEntity<int>>
 	{
-		private readonly ICountryLocationRepository _countryLocationRepository;
+		private readonly ICountryRepository _countryRepository;
 
-		public CreateCountryLocationHandler(ICountryLocationRepository countryLocationRepository) => _countryLocationRepository = countryLocationRepository;
+		public CreateCountryLocationHandler(ICountryRepository countryRepository) => _countryRepository = countryRepository;
 
 		public async Task<ResponseEntity<int>> Handle(CreateCountryLocation request, CancellationToken cancellationToken)
 		{
@@ -24,9 +24,9 @@ namespace Geo.Application.CQRS.Country.Commands.CreateCountryLocation
 				IsInEuropeanUnion = request.IsInEuropeanUnion,
 			};
 
-			int geonameId = await _countryLocationRepository.InsertAsync(countryLocation, cancellationToken);
+			int geonameId = await _countryRepository.InsertCountryLocationAsync(countryLocation, cancellationToken);
 
-			await _countryLocationRepository.SaveChangesAsync();
+			await _countryRepository.SaveChangesAsync();
 
 			return new ResponseEntity<int>()
 			{

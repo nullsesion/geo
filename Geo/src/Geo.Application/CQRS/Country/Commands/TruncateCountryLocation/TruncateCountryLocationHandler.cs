@@ -12,17 +12,17 @@ namespace Geo.Application.CQRS.Country.Commands.TruncateCountryLocation
 {
 	public class TruncateCountryLocationHandler : IRequestHandler<TruncateCountryLocation, ResponseEntity<bool>>
 	{
-		private readonly ICountryLocationRepository _countryLocationRepository;
+		private readonly ICountryRepository _countryRepository;
 
-		public TruncateCountryLocationHandler(ICountryLocationRepository countryLocationRepository)
+		public TruncateCountryLocationHandler(ICountryRepository countryRepository)
 		{
-			_countryLocationRepository = countryLocationRepository;
+			_countryRepository = countryRepository;
 		}
 
 		public async Task<ResponseEntity<bool>> Handle(TruncateCountryLocation request, CancellationToken cancellationToken)
 		{
-			await _countryLocationRepository.TruncateAsync();
-			await _countryLocationRepository.SaveChangesAsync();
+			await _countryRepository.TruncateCountryLocationAsync();
+			await _countryRepository.SaveChangesAsync();
 			return new ResponseEntity<bool>()
 			{
 				IsSuccess = true,

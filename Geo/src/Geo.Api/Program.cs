@@ -17,8 +17,9 @@ namespace Geo.Api
 			builder.Services.AddControllers();
 
 			builder.Services.AddDbContext<IGeoApiDbContext, GeoApiDbContext>();
+
 			builder.Services.AddScoped<ICountryRepository, CountryRepository>();
-			builder.Services.AddScoped<ICountryLocationRepository, CountryLocationRepository>();
+
 			builder.Services.AddScoped<ICityIPv4Repository, CityIPv4Repository>();
 			builder.Services.AddScoped<ICityLocationRepository, CityLocationRepository>();
 

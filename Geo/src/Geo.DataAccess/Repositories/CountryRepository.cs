@@ -5,6 +5,7 @@ using Geo.DataAccess.Entities;
 using Geo.Domain;
 using Geo.DomainShared;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Geo.DataAccess.Repositories
 {
@@ -80,6 +81,34 @@ namespace Geo.DataAccess.Repositories
 				IsSuccess = false,
 				ErrorDetail = "Bad IP",
 			};
+		}
+
+		public async Task<int> InsertCountryLocationAsync(CountryLocation countryLocation, CancellationToken cancellationToken)
+		{
+			var res = await _dbContext
+					.CountryLocations
+					.AddAsync(new CountryLocationEntity()
+						{
+							GeonameId = countryLocation.GeonameId,
+							ContinentCode = countryLocation.ContinentCode,
+							ContinentName = JsonConvert.SerializeObject(new Dictionary<string, string>() { { countryLocation.LocaleCode, countryLocation.ContinentName } }),
+							CountryIsoCode = countryLocation.CountryIsoCode,
+							CountryName = JsonConvert.SerializeObject(new Dictionary<string, string>() { { countryLocation.LocaleCode, countryLocation.CountryName } }),
+							IsInEuropeanUnion = countryLocation.IsInEuropeanUnion,
+						}
+						, cancellationToken)
+				;
+
+			return countryLocation.GeonameId;
+		}
+
+		public async Task<bool> TruncateCountryLocationAsync()
+		{
+			await _dbContext
+				.CountryLocations
+				.Truncate();
+
+			return true;
 		}
 
 		public async Task<bool> TruncateCountryIPv4RangeAsync()
