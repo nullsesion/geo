@@ -1,8 +1,8 @@
-
 using Geo.Application.CQRS.Country.Commands.CreateCountryRange;
 using Geo.Application.Interfaces;
 using Geo.DataAccess.Repositories;
 using Geo.DataAccess;
+using Geo.Api.Middlewares;
 
 namespace Geo.Api
 {
@@ -36,8 +36,9 @@ namespace Geo.Api
 				app.UseSwaggerUI();
 			}
 
-			app.UseAuthorization();
+			app.UseMiddleware<RemoveTrailingSpaces>();
 
+			app.UseAuthorization();
 
 			app.MapControllers();
 

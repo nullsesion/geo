@@ -91,7 +91,23 @@ namespace Geo.Domain
 
 			return false;
 		}
-	
+
+		public CountryIPv4Range SetGeoname(ICountryLocation geoname)
+		{
+			Geoname = geoname;
+			return this;
+		}
+		public CountryIPv4Range SetRegisteredCountryGeoName(ICountryLocation registeredCountryGeoName)
+		{
+			RegisteredCountryGeoName = registeredCountryGeoName;
+			return this;
+		}
+		public CountryIPv4Range SetRepresentedCountryGeoName(ICountryLocation representedCountryGeoName)
+		{
+			RepresentedCountryGeoName = representedCountryGeoName;
+			return this;
+		}
+
 		public string Network { get; private set; }
 		public int Mask { get; private set; }
 		public int IpMin { get; private set; }
@@ -102,8 +118,8 @@ namespace Geo.Domain
 		public bool IsAnonymousProxy { get; private set; }
 		public bool IsSatelliteProvider { get; private set; }
 		public bool? IsAnycast { get; private set; }
-		public ICountryLocation? Geoname { get; set; }
-		public ICountryLocation? RegisteredCountryGeoName { get; set; }
-		public ICountryLocation? RepresentedCountryGeoName { get; set; }
+		public ICountryLocation? Geoname { get; private set; }
+		public ICountryLocation? RegisteredCountryGeoName { get; private set; }
+		public ICountryLocation? RepresentedCountryGeoName { get; private set; }
 	}
 }

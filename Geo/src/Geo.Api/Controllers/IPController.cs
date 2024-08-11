@@ -4,6 +4,7 @@ using Geo.Application.CQRS.Country.Queries.GetCountry;
 using Geo.Domain;
 using Geo.DomainShared;
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 
 namespace Geo.Api.Controllers
 {
@@ -21,7 +22,7 @@ namespace Geo.Api.Controllers
 		}
 
 		[HttpGet(Name = "GetIP")]
-		public async Task<IResult> Get(string Ip, CancellationToken cancellationToken)
+		public async Task<IResult> Get([Required] string Ip, CancellationToken cancellationToken)
 		{
 			if (IPAddress.TryParse(Ip, out IPAddress? iPAddress))
 			{
