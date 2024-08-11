@@ -1,10 +1,5 @@
 ﻿using Geo.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Geo.DataAccess.Configuration
@@ -20,6 +15,10 @@ namespace Geo.DataAccess.Configuration
 			builder.Property(x => x.Network).IsRequired();
 			builder.Property(x => x.IpMax).IsRequired();
 			builder.Property(x => x.IpMin).IsRequired();
+
+			builder.HasOne(x => x.Geoname);
+			builder.HasOne(x => x.RegisteredCountryGeoName);
+			builder.HasOne(x => x.RepresentedCountryGeoName);
 		}
 	}
 }

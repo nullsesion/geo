@@ -13,5 +13,9 @@ namespace Geo.DataAccess.Entities
 		public bool IsAnonymousProxy { get; set; }
 		public bool IsSatelliteProvider { get; set; }
 		public bool? IsAnycast { get; set; }
+
+		public CountryLocationEntity Geoname { get; set; }
+		public CountryLocationEntity? RegisteredCountryGeoName { get; set; }
+		public CountryLocationEntity? RepresentedCountryGeoName { get; set; }
 	}
 }

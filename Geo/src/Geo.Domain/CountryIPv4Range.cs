@@ -92,17 +92,17 @@ namespace Geo.Domain
 			return false;
 		}
 
-		public CountryIPv4Range SetGeoname(ICountryLocation geoname)
+		public CountryIPv4Range SetGeoname(ICountryLocation? geoname)
 		{
 			Geoname = geoname;
 			return this;
 		}
-		public CountryIPv4Range SetRegisteredCountryGeoName(ICountryLocation registeredCountryGeoName)
+		public CountryIPv4Range SetRegisteredCountryGeoName(ICountryLocation? registeredCountryGeoName)
 		{
 			RegisteredCountryGeoName = registeredCountryGeoName;
 			return this;
 		}
-		public CountryIPv4Range SetRepresentedCountryGeoName(ICountryLocation representedCountryGeoName)
+		public CountryIPv4Range SetRepresentedCountryGeoName(ICountryLocation? representedCountryGeoName)
 		{
 			RepresentedCountryGeoName = representedCountryGeoName;
 			return this;

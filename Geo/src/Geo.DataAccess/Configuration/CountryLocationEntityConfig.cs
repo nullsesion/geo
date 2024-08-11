@@ -1,4 +1,4 @@
-﻿  using Geo.DataAccess.Entities;
+﻿using Geo.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

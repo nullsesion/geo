@@ -41,6 +41,9 @@ namespace Geo.DataAccess.Repositories
 			{
 				CountryIPv4Entity? countryIPv4s = await _dbContext
 					.CountryIPv4s
+					.Include(x=>x.Geoname)
+					.Include(x => x.RegisteredCountryGeoName)
+					.Include(x => x.RepresentedCountryGeoName)
 					.FirstOrDefaultAsync( x =>
 						x.IpMin < number && x.IpMax > number 
 						|| x.IpMin > number && x.IpMax < number
@@ -62,13 +65,22 @@ namespace Geo.DataAccess.Repositories
 					countryIPv4s.IsAnycast
 				);
 
-				if(!entity.IsSuccess)
+				if (!entity.IsSuccess)
+				{
 					return new ResponseEntity<CountryIPv4Range>()
 					{
 						IsSuccess = false,
 						ErrorDetail = entity.ErrorDetail,
 					};
-
+				}
+					
+				/*
+				entity.Entity
+					.SetGeoname(countryIPv4s.Geoname)
+					.SetRegisteredCountryGeoName(countryIPv4s.RegisteredCountryGeoName)
+					.SetRepresentedCountryGeoName(countryIPv4s.RepresentedCountryGeoName)
+					;
+				*/
 				return new ResponseEntity<CountryIPv4Range>()
 				{
 					IsSuccess = true,
