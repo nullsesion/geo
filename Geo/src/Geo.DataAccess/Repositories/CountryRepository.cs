@@ -74,13 +74,43 @@ namespace Geo.DataAccess.Repositories
 					};
 				}
 					
-				/*
+				
 				entity.Entity
-					.SetGeoname(countryIPv4s.Geoname)
-					.SetRegisteredCountryGeoName(countryIPv4s.RegisteredCountryGeoName)
-					.SetRepresentedCountryGeoName(countryIPv4s.RepresentedCountryGeoName)
+					.SetGeoname(countryIPv4s.Geoname == null
+						?null
+						:new CountryLocation()
+						{
+							GeonameId = countryIPv4s.Geoname.GeonameId,
+							ContinentCode = countryIPv4s.Geoname.ContinentCode,
+							ContinentName = countryIPv4s.Geoname.ContinentName,
+							CountryIsoCode = countryIPv4s.Geoname.CountryIsoCode,
+							CountryName = countryIPv4s.Geoname.CountryName,
+							IsInEuropeanUnion = countryIPv4s.Geoname.IsInEuropeanUnion,
+						})
+					.SetRegisteredCountryGeoName(countryIPv4s.RegisteredCountryGeoName == null
+						? null
+						: new CountryLocation()
+						{
+							GeonameId = countryIPv4s.RegisteredCountryGeoName.GeonameId,
+							ContinentCode = countryIPv4s.RegisteredCountryGeoName.ContinentCode,
+							ContinentName = countryIPv4s.RegisteredCountryGeoName.ContinentName,
+							CountryIsoCode = countryIPv4s.RegisteredCountryGeoName.CountryIsoCode,
+							CountryName = countryIPv4s.RegisteredCountryGeoName.CountryName,
+							IsInEuropeanUnion = countryIPv4s.RegisteredCountryGeoName.IsInEuropeanUnion,
+						})
+					.SetRepresentedCountryGeoName(entity.Entity.RepresentedCountryGeoName == null
+						? null
+						: new CountryLocation()
+						{
+							GeonameId = countryIPv4s.RepresentedCountryGeoName.GeonameId,
+							ContinentCode = countryIPv4s.RepresentedCountryGeoName.ContinentCode,
+							ContinentName = countryIPv4s.RepresentedCountryGeoName.ContinentName,
+							CountryIsoCode = countryIPv4s.RepresentedCountryGeoName.CountryIsoCode,
+							CountryName = countryIPv4s.RepresentedCountryGeoName.CountryName,
+							IsInEuropeanUnion = countryIPv4s.RepresentedCountryGeoName.IsInEuropeanUnion,
+						})
 					;
-				*/
+				
 				return new ResponseEntity<CountryIPv4Range>()
 				{
 					IsSuccess = true,
