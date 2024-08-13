@@ -1,4 +1,7 @@
-﻿using System.Linq.Expressions;
+﻿using System.Linq;
+using System.Linq.Expressions;
+using AutoMapper;
+using Geo.Application.CQRS.Country.Queries.GetCountry;
 using Geo.Application.Interfaces;
 using Geo.DataAccess.Configuration;
 using Geo.DataAccess.Entities;
@@ -11,13 +14,17 @@ namespace Geo.DataAccess.Repositories
 {
 	public class CountryRepository: AbstractRepository, ICountryRepository
 	{
-		public CountryRepository(GeoApiDbContext dbContext) : base(dbContext)
-		{ }
+		private readonly IMapper _mapper;
+
+		public CountryRepository(GeoApiDbContext dbContext, IMapper mapper) : base(dbContext)
+		{
+			_mapper = mapper;
+		}
 
 		public async Task<bool> InsertCountryIPv4RangeAsync(CountryIPv4Range countryIPv4Range, CancellationToken cancellationToken)
 		{
 			var res = await _dbContext
-					.CountryIPv4s
+					.CountryIPv4s  
 					.AddAsync(new CountryIPv4Entity()
 					{
 						Network = countryIPv4Range.Network,
@@ -35,10 +42,31 @@ namespace Geo.DataAccess.Repositories
 			return true;
 		}
 
-		public async Task<ResponseEntity<CountryIPv4Range>> GetCountryIPv4RangeByIp(string ip)
+		public async Task<ResponseEntity<CountryIPv4Range>> GetCountryIPv4RangeByIp(GetCountry ip)
 		{
-			if (ip.TryIpV4ToInt(out int number))
+
+			if (ip.Ip.TryIpV4ToInt(out int number))
 			{
+				//todo: use linq2db
+				/*
+				var list = await _dbContext
+					.CountryIPv4s
+					.Where(x =>
+						x.IpMin < number && x.IpMax > number ||
+						x.IpMin > number && x.IpMax < number
+					)
+					.SelectMany(
+						countryIPv4S => _dbContext.CountryLocations
+							.Where(o =>
+								o.GeonameId == countryIPv4S.GeonameId
+								|| o.GeonameId == countryIPv4S.RegisteredCountryGeoNameId
+								|| o.GeonameId == countryIPv4S.RepresentedCountryGeoNameId
+							).DefaultIfEmpty()
+						, (countryIPv4S, countryLocation)
+							=> new { countryIPv4S, countryLocation }
+					).ToListAsync();
+				*/
+				
 				CountryIPv4Entity? countryIPv4s = await _dbContext
 					.CountryIPv4s
 					.Include(x=>x.Geoname)
@@ -47,7 +75,9 @@ namespace Geo.DataAccess.Repositories
 					.FirstOrDefaultAsync( x =>
 						x.IpMin < number && x.IpMax > number 
 						|| x.IpMin > number && x.IpMax < number
-					);
+					)
+				;
+
 				if (countryIPv4s == null)
 					return new ResponseEntity<CountryIPv4Range>()
 					{
@@ -55,6 +85,8 @@ namespace Geo.DataAccess.Repositories
 						ErrorDetail = "Not Found",
 					};
 
+				ResponseEntity<CountryIPv4Range> entity = CountryIPv4Range.Create(countryIPv4s);
+				/*
 				ResponseEntity<CountryIPv4Range> entity = CountryIPv4Range.Create(
 					countryIPv4s.Network,
 					countryIPv4s.GeonameId,
@@ -64,7 +96,7 @@ namespace Geo.DataAccess.Repositories
 					countryIPv4s.IsSatelliteProvider,
 					countryIPv4s.IsAnycast
 				);
-
+				*/
 				if (!entity.IsSuccess)
 				{
 					return new ResponseEntity<CountryIPv4Range>()
@@ -74,41 +106,16 @@ namespace Geo.DataAccess.Repositories
 					};
 				}
 					
-				
 				entity.Entity
 					.SetGeoname(countryIPv4s.Geoname == null
-						?null
-						:new CountryLocation()
-						{
-							GeonameId = countryIPv4s.Geoname.GeonameId,
-							ContinentCode = countryIPv4s.Geoname.ContinentCode,
-							ContinentName = countryIPv4s.Geoname.ContinentName,
-							CountryIsoCode = countryIPv4s.Geoname.CountryIsoCode,
-							CountryName = countryIPv4s.Geoname.CountryName,
-							IsInEuropeanUnion = countryIPv4s.Geoname.IsInEuropeanUnion,
-						})
-					.SetRegisteredCountryGeoName(countryIPv4s.RegisteredCountryGeoName == null
 						? null
-						: new CountryLocation()
-						{
-							GeonameId = countryIPv4s.RegisteredCountryGeoName.GeonameId,
-							ContinentCode = countryIPv4s.RegisteredCountryGeoName.ContinentCode,
-							ContinentName = countryIPv4s.RegisteredCountryGeoName.ContinentName,
-							CountryIsoCode = countryIPv4s.RegisteredCountryGeoName.CountryIsoCode,
-							CountryName = countryIPv4s.RegisteredCountryGeoName.CountryName,
-							IsInEuropeanUnion = countryIPv4s.RegisteredCountryGeoName.IsInEuropeanUnion,
-						})
-					.SetRepresentedCountryGeoName(entity.Entity.RepresentedCountryGeoName == null
+						:_mapper.Map<CountryLocation>(countryIPv4s.Geoname))
+				.SetRegisteredCountryGeoName(countryIPv4s.RegisteredCountryGeoName == null
 						? null
-						: new CountryLocation()
-						{
-							GeonameId = countryIPv4s.RepresentedCountryGeoName.GeonameId,
-							ContinentCode = countryIPv4s.RepresentedCountryGeoName.ContinentCode,
-							ContinentName = countryIPv4s.RepresentedCountryGeoName.ContinentName,
-							CountryIsoCode = countryIPv4s.RepresentedCountryGeoName.CountryIsoCode,
-							CountryName = countryIPv4s.RepresentedCountryGeoName.CountryName,
-							IsInEuropeanUnion = countryIPv4s.RepresentedCountryGeoName.IsInEuropeanUnion,
-						})
+						:_mapper.Map<CountryLocation>(countryIPv4s.RegisteredCountryGeoName))
+				.SetRepresentedCountryGeoName(countryIPv4s.RepresentedCountryGeoName == null
+						? null
+						: _mapper.Map<CountryLocation>(countryIPv4s.RepresentedCountryGeoName))
 					;
 				
 				return new ResponseEntity<CountryIPv4Range>()
@@ -123,6 +130,7 @@ namespace Geo.DataAccess.Repositories
 				IsSuccess = false,
 				ErrorDetail = "Bad IP",
 			};
+			
 		}
 
 		public async Task<int> InsertCountryLocationAsync(CountryLocation countryLocation, CancellationToken cancellationToken)

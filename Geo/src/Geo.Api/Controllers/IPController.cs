@@ -5,6 +5,9 @@ using Geo.Domain;
 using Geo.DomainShared;
 using MediatR;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection.Metadata;
+using AutoMapper;
+using Geo.Api.Models;
 
 namespace Geo.Api.Controllers
 {
@@ -14,11 +17,12 @@ namespace Geo.Api.Controllers
 	{
 		private readonly ILogger<IPController> _logger;
 		private readonly IMediator _mediator;
+		private readonly IMapper _mapper;
 
-		
-		public IPController(ILogger<IPController> logger, IMediator mediator)
+
+		public IPController(ILogger<IPController> logger, IMediator mediator, IMapper mapper)
 		{
-			(_logger, _mediator) = (logger, mediator);
+			(_logger, _mediator, _mapper) = (logger, mediator, mapper);
 		}
 
 		[HttpGet(Name = "GetIP")]
@@ -28,11 +32,13 @@ namespace Geo.Api.Controllers
 			{
 				ResponseEntity<CountryIPv4Range> response = await _mediator.Send(new GetCountry()
 				{
-					Ip = Ip
-				}, cancellationToken);
+					Ip = Ip,
+					LocaleCode = "en"
+				}
+				, cancellationToken);
 				if (response.IsSuccess)
 				{
-					return Results.Json(response.Entity);
+					return Results.Json(_mapper.Map<Country>(response.Entity) );
 				}
 				else
 					return Results.BadRequest(response.ErrorDetail);

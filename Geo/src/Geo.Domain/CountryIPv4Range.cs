@@ -20,7 +20,7 @@ namespace Geo.Domain
 			);
 		}
 
-		public static ResponseEntity<CountryIPv4Range> Create(
+		private static ResponseEntity<CountryIPv4Range> Create(
 			string network,
 			int? geonameId,
 			int? registeredCountryGeoNameId,
