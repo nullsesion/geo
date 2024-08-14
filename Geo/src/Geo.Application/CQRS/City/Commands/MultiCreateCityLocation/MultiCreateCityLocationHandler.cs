@@ -8,9 +8,9 @@ namespace Geo.Application.CQRS.City.Commands.MultiCreateCityLocation
 {
 	public class MultiCreateCityLocationHandler: IRequestHandler<MultiCreateCityLocation, ResponseEntity<IEnumerable<int>>>
 	{
-		private readonly ICityLocationRepository _cityLocationRepository;
+		private readonly ICityIPv4Repository _cityIPv4Repository;
 
-		public MultiCreateCityLocationHandler(ICityLocationRepository cityLocationRepository) => _cityLocationRepository = cityLocationRepository;
+		public MultiCreateCityLocationHandler(ICityIPv4Repository cityIPv4Repository) => _cityIPv4Repository = cityIPv4Repository;
 
 		public async Task<ResponseEntity<IEnumerable<int>>> Handle(MultiCreateCityLocation request, CancellationToken cancellationToken)
 		{
@@ -18,7 +18,7 @@ namespace Geo.Application.CQRS.City.Commands.MultiCreateCityLocation
 			foreach (ICityLocation cityLocation in request.CityLocations)
 			{
 				//cityLocation
-				var id = await _cityLocationRepository.InsertAsync(new CityLocation()
+				var id = await _cityIPv4Repository.InsertCityLocationAsync(new CityLocation()
 				{
 					GeonameId = cityLocation.GeonameId,
 					LocaleCode = cityLocation.LocaleCode,
@@ -38,7 +38,7 @@ namespace Geo.Application.CQRS.City.Commands.MultiCreateCityLocation
 				listResult.Add(id);
 			}
 
-			await _cityLocationRepository.SaveChangesAsync();
+			await _cityIPv4Repository.SaveChangesAsync();
 			return new ResponseEntity<IEnumerable<int>>()
 			{
 				IsSuccess = true,

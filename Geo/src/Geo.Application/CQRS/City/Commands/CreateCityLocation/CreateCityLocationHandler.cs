@@ -1,20 +1,19 @@
 ﻿using Geo.Application.Interfaces;
 using Geo.Domain;
 using Geo.DomainShared;
-using Geo.DomainShared.Contracts;
 using MediatR;
 
 namespace Geo.Application.CQRS.City.Commands.CreateCityLocation
 {
 	public class CreateCityLocationHandler: IRequestHandler<CreateCityLocation, ResponseEntity<int>>
 	{
-		private readonly ICityLocationRepository _cityLocationRepository;
+		private readonly ICityIPv4Repository _cityIPv4Repository;
 
-		public CreateCityLocationHandler(ICityLocationRepository cityLocationRepository) => _cityLocationRepository = cityLocationRepository;
+		public CreateCityLocationHandler(ICityIPv4Repository cityIPv4Repository) => _cityIPv4Repository = cityIPv4Repository;
 
 		public async Task<ResponseEntity<int>> Handle(CreateCityLocation request, CancellationToken cancellationToken)
 		{
-			var res = await _cityLocationRepository.InsertAsync(new CityLocation()
+			var res = await _cityIPv4Repository.InsertCityLocationAsync(new CityLocation()
 			{
 				GeonameId = request.GeonameId,
 				LocaleCode = request.LocaleCode,
@@ -32,7 +31,7 @@ namespace Geo.Application.CQRS.City.Commands.CreateCityLocation
 				IsInEuropeanUnion = request.IsInEuropeanUnion,
 			}, cancellationToken);
 
-			await _cityLocationRepository.SaveChangesAsync();
+			await _cityIPv4Repository.SaveChangesAsync();
 
 			return new ResponseEntity<int>()
 			{

@@ -22,7 +22,7 @@ namespace Geo.Application.CQRS.City.Commands.MultiCreateCityIPv4Range
 					ResponseEntity<CityIPv4Range> cityIPv4Range = CityIPv4Range.Create(cityIPv4Request);
 					if (cityIPv4Range.IsSuccess)
 					{
-						await _cityIPv4Repository.InsertAsync(cityIPv4Range.Entity, cancellationToken);
+						await _cityIPv4Repository.InsertCityIPv4RangeAsync(cityIPv4Range.Entity, cancellationToken);
 						successList.Add(cityIPv4Range.Entity.Network);
 					}
 				}

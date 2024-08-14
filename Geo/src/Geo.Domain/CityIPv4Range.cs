@@ -91,7 +91,7 @@ namespace Geo.Domain
 		public bool IsAnonymousProxy { get; private set; }
 		public bool IsSatelliteProvider { get; private set; }
 		public bool? IsAnycast { get; private set; } = false;
-		public NpgsqlPoint? Location { get; private set; }
+		public Coordinate? Location { get; private set; }
 		public int? AccuracyRadius { get; private set; }
 	}
 }

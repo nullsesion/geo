@@ -6,18 +6,14 @@ namespace Geo.Application.CQRS.City.Commands.TruncateCityLocation
 {
 	public class TruncateCityLocationHandler: IRequestHandler<TruncateCityLocation, ResponseEntity<bool>>
 	{
-		private readonly ICityLocationRepository _cityLocationRepository;
-
-		public TruncateCityLocationHandler(ICityLocationRepository cityLocationRepository)
-		{
-			_cityLocationRepository = cityLocationRepository;
-		}
+		private readonly ICityIPv4Repository _cityIPv4Repository;
+		public TruncateCityLocationHandler(ICityIPv4Repository cityIPv4Repository) => _cityIPv4Repository = cityIPv4Repository;
 
 		public async Task<ResponseEntity<bool>> Handle(TruncateCityLocation request, CancellationToken cancellationToken)
 		{
-			await _cityLocationRepository
-			.TruncateAsync();
-			await _cityLocationRepository.SaveChangesAsync();
+			await _cityIPv4Repository
+			.TruncateCityLocationAsync();
+			await _cityIPv4Repository.SaveChangesAsync();
 			return new ResponseEntity<bool>()
 			{
 				IsSuccess = true,

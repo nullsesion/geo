@@ -4,6 +4,7 @@ using Geo.Domain;
 using GeoLoad.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NpgsqlTypes;
 
 namespace Geo.DataAccess.MapperConfig
 {
@@ -45,9 +46,28 @@ namespace Geo.DataAccess.MapperConfig
 								{ "Subdivision2Name",    src.Subdivision2Name },
 							}
 						)))
+				.ForMember(dest => dest.ContinentName
+					, opt => opt.MapFrom(src
+						=> JsonConvert.SerializeObject(
+							new Dictionary<string, string>() { { src.LocaleCode, src.ContinentName } }
+						)))
+				.ForMember(dest => dest.CountryName
+					, opt => opt.MapFrom(src
+						=> JsonConvert.SerializeObject(
+							new Dictionary<string, string>() { { src.LocaleCode, src.CountryName } }
+						)))
+				.ForMember(dest => dest.CityName
+					, opt => opt.MapFrom(src
+						=> JsonConvert.SerializeObject(
+							new Dictionary<string, string>() { { src.LocaleCode, src.CityName } }
+						)))
 				;
 
-			CreateMap<CityIPv4Range, CityIPv4Entity>();
+			CreateMap<CityIPv4Range, CityIPv4Entity>()
+				.ForMember(dest => dest.Location
+					, opt => opt.MapFrom(src
+						=> new NpgsqlPoint(src.Location.Longitude,src.Location.Latilude) 
+						));
 
 			//
 		}

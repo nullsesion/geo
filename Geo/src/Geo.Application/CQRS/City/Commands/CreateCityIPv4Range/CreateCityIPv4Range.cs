@@ -14,7 +14,7 @@ namespace Geo.Application.CQRS.City.Commands.CreateCityIPv4Range
 		public bool IsAnonymousProxy { get; set; }
 		public bool IsSatelliteProvider { get; set; }
 		public bool? IsAnycast { get; set; }
-		public NpgsqlPoint? Location { get; set; }
+		public Coordinate? Location { get; set; }
 		public int? AccuracyRadius { get; set; }
 	}
 }

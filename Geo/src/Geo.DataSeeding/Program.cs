@@ -11,17 +11,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-ServiceProvider CreateServiceProvider(IConfigurationBuilder builder)
+ServiceProvider CreateServiceProvider(IConfiguration config)
 {
 	//IConfiguration config
 	var collection = new ServiceCollection();
-	//collection.AddDbContext<IGeoApiDbContext, GeoApiDbContext>();
+
+	//builder.Build().GetConnectionString()
+
 	collection.AddDbContext<IGeoApiDbContext, GeoApiDbContext>(
-		options => options.UseNpgsql("Host=localhost;Port=5432;Database=geo;User ID=postgres;Password=postgres")//
+		options => options.UseNpgsql(config.GetConnectionString(nameof(GeoApiDbContext)))//"Host=localhost;Port=5432;Database=geo;User ID=postgres;Password=postgres"
 	);
 	collection.AddScoped<ICountryRepository, CountryRepository>();
 	collection.AddScoped<ICityIPv4Repository, CityIPv4Repository>();
-	collection.AddScoped<ICityLocationRepository, CityLocationRepository>();
 
 	collection.AddScoped<Execution>();
 	collection.AddScoped<Display>();
@@ -41,7 +42,8 @@ ServiceProvider CreateServiceProvider(IConfigurationBuilder builder)
 IConfigurationBuilder builder = new ConfigurationBuilder()
 	.SetBasePath(Directory.GetCurrentDirectory())
 	.AddJsonFile("appsettings.json", optional: false);
-IConfiguration config = builder.Build();
 
-ServiceProvider serviceProvider = CreateServiceProvider(builder); //config
+	IConfiguration config = builder.Build();
+
+ServiceProvider serviceProvider = CreateServiceProvider(config); //config
 serviceProvider.GetRequiredService<Execution>().Run(config);
