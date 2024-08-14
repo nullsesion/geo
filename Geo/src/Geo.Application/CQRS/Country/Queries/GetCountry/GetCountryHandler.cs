@@ -9,10 +9,8 @@ namespace Geo.Application.CQRS.Country.Queries.GetCountry
 	{
 		private readonly ICountryRepository _countryRepository;
 
-		public GetCountryHandler(ICountryRepository countryRepository)
-		{
-			_countryRepository = countryRepository;
-		}
+		public GetCountryHandler(ICountryRepository countryRepository) 
+			=> _countryRepository = countryRepository;
 
 		public async Task<ResponseEntity<CountryIPv4Range>> Handle(GetCountry request, CancellationToken cancellationToken)
 		{

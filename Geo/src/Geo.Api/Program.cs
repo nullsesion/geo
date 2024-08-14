@@ -5,6 +5,7 @@ using Geo.DataAccess;
 using Geo.Api.Middlewares;
 using System.Reflection;
 using Geo.Api.MapperConfig;
+using Microsoft.EntityFrameworkCore;
 
 namespace Geo.Api
 {
@@ -18,7 +19,10 @@ namespace Geo.Api
 			builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateCountryIPv4Range).Assembly));
 			builder.Services.AddControllers();
 
-			builder.Services.AddDbContext<IGeoApiDbContext, GeoApiDbContext>();
+			//builder.Services.AddDbContext<IGeoApiDbContext, GeoApiDbContext>();
+			builder.Services.AddDbContext<IGeoApiDbContext, GeoApiDbContext>(
+				options => options.UseNpgsql(builder.Configuration.GetConnectionString(nameof(GeoApiDbContext)))
+			);
 
 			builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 
@@ -30,6 +34,8 @@ namespace Geo.Api
 				cfg.AddProfile(typeof(AppMappingProfile));
 				cfg.AddProfile(typeof(Geo.DataAccess.MapperConfig.AppMappingProfile));
 			});
+
+
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();

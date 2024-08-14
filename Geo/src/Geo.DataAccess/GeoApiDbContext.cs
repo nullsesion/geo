@@ -8,12 +8,17 @@ namespace Geo.DataAccess
 {
 	public class GeoApiDbContext : DbContext, IGeoApiDbContext
 	{
+		public GeoApiDbContext(DbContextOptions options) : base(options)
+		{
+		}
+		/*
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
 			optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=geo;User ID=postgres;Password=postgres")
 				//.LogTo(Console.WriteLine)
 				;
 		}
+		*/
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

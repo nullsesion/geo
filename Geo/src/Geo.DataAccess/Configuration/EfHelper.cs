@@ -9,7 +9,7 @@ namespace Geo.DataAccess.Configuration
 		public static async Task<string> Truncate<T>(this DbSet<T> dbSet) where T : class
 		{
 			var context = dbSet.GetService<ICurrentDbContext>().Context;
-			string cmd = $"TRUNCATE TABLE {AnnotationHelper.TableName(dbSet)}"; //TABLE
+			string cmd = $"TRUNCATE TABLE {AnnotationHelper.TableName(dbSet)} CASCADE"; //TABLE
 			using (var command = context.Database.GetDbConnection().CreateCommand())
 			{
 				if (command.Connection.State != ConnectionState.Open)

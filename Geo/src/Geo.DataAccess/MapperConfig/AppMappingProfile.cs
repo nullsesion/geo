@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Geo.DataAccess.Entities;
 using Geo.Domain;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using GeoLoad.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -18,6 +18,38 @@ namespace Geo.DataAccess.MapperConfig
 				.ForMember(dest => dest.CountryName
 					, opt => opt.MapFrom(src 
 						=> (string)JObject.Parse(src.ContinentName)["en"]));
+
+			CreateMap<CountryIPv4Range, CountryIPv4Entity>();
+
+			CreateMap<CountryLocation, CountryLocationEntity>()
+				.ForMember(dest => dest.ContinentName
+					, opt => opt.MapFrom(src
+						=> JsonConvert.SerializeObject(
+							new Dictionary<string, string>() { { src.LocaleCode, src.ContinentName } }
+						)))
+				.ForMember(dest => dest.CountryName
+					, opt => opt.MapFrom(src
+						=> JsonConvert.SerializeObject(
+							new Dictionary<string, string>() { { src.LocaleCode, src.CountryName } }
+						)))
+				;
+
+			CreateMap<CityLocation, CityLocationEntity>()
+				.ForMember(dest => dest.Subdivision
+					, opt => opt.MapFrom(src
+						=> JsonConvert.SerializeObject(new Dictionary<string, string>()
+							{
+								{ "Subdivision1IsoCode", src.Subdivision1IsoCode },
+								{ "Subdivision1Name",    src.Subdivision1Name },
+								{ "Subdivision2IsoCode", src.Subdivision2IsoCode },
+								{ "Subdivision2Name",    src.Subdivision2Name },
+							}
+						)))
+				;
+
+			CreateMap<CityIPv4Range, CityIPv4Entity>();
+
+			//
 		}
 	}
 }

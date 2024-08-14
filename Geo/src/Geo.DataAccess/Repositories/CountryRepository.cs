@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Linq.Expressions;
-using AutoMapper;
+﻿using AutoMapper;
 using Geo.Application.CQRS.Country.Queries.GetCountry;
 using Geo.Application.Interfaces;
 using Geo.DataAccess.Configuration;
@@ -25,18 +23,7 @@ namespace Geo.DataAccess.Repositories
 		{
 			var res = await _dbContext
 					.CountryIPv4s  
-					.AddAsync(new CountryIPv4Entity()
-					{
-						Network = countryIPv4Range.Network,
-						IpMin = countryIPv4Range.IpMin,
-						IpMax = countryIPv4Range.IpMax,
-						GeonameId = countryIPv4Range.GeonameId,
-						RegisteredCountryGeoNameId = countryIPv4Range.RegisteredCountryGeoNameId,
-						RepresentedCountryGeoNameId = countryIPv4Range.RepresentedCountryGeoNameId,
-						IsAnonymousProxy = countryIPv4Range.IsAnonymousProxy,
-						IsSatelliteProvider = countryIPv4Range.IsSatelliteProvider,
-						IsAnycast = countryIPv4Range.IsAnycast,
-					})
+					.AddAsync(_mapper.Map<CountryIPv4Entity>(countryIPv4Range))
 				;
 
 			return true;
@@ -86,17 +73,7 @@ namespace Geo.DataAccess.Repositories
 					};
 
 				ResponseEntity<CountryIPv4Range> entity = CountryIPv4Range.Create(countryIPv4s);
-				/*
-				ResponseEntity<CountryIPv4Range> entity = CountryIPv4Range.Create(
-					countryIPv4s.Network,
-					countryIPv4s.GeonameId,
-					countryIPv4s.RegisteredCountryGeoNameId,
-					countryIPv4s.RepresentedCountryGeoNameId,
-					countryIPv4s.IsAnonymousProxy,
-					countryIPv4s.IsSatelliteProvider,
-					countryIPv4s.IsAnycast
-				);
-				*/
+
 				if (!entity.IsSuccess)
 				{
 					return new ResponseEntity<CountryIPv4Range>()
@@ -137,15 +114,7 @@ namespace Geo.DataAccess.Repositories
 		{
 			var res = await _dbContext
 					.CountryLocations
-					.AddAsync(new CountryLocationEntity()
-						{
-							GeonameId = countryLocation.GeonameId,
-							ContinentCode = countryLocation.ContinentCode,
-							ContinentName = JsonConvert.SerializeObject(new Dictionary<string, string>() { { countryLocation.LocaleCode, countryLocation.ContinentName } }),
-							CountryIsoCode = countryLocation.CountryIsoCode,
-							CountryName = JsonConvert.SerializeObject(new Dictionary<string, string>() { { countryLocation.LocaleCode, countryLocation.CountryName } }),
-							IsInEuropeanUnion = countryLocation.IsInEuropeanUnion,
-						}
+					.AddAsync(_mapper.Map<CountryLocationEntity>(countryLocation)
 						, cancellationToken)
 				;
 

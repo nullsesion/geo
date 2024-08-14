@@ -1,19 +1,24 @@
 ﻿using Geo.Application.CQRS.Country.Queries.GetCountry;
 using Geo.Application.Interfaces;
 using Geo.DataAccess;
+using Geo.DataAccess.MapperConfig;
 using Geo.DataAccess.Repositories;
 using Geo.DataSeeding;
 using Geo.DataSeeding.Services;
 using Geo.DataSeeding.Services.CSV;
 using Geo.DataSeeding.Services.FileManager;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-ServiceProvider CreateServiceProvider()
+ServiceProvider CreateServiceProvider(IConfigurationBuilder builder)
 {
 	//IConfiguration config
 	var collection = new ServiceCollection();
-	collection.AddDbContext<IGeoApiDbContext, GeoApiDbContext>();
+	//collection.AddDbContext<IGeoApiDbContext, GeoApiDbContext>();
+	collection.AddDbContext<IGeoApiDbContext, GeoApiDbContext>(
+		options => options.UseNpgsql("Host=localhost;Port=5432;Database=geo;User ID=postgres;Password=postgres")//
+	);
 	collection.AddScoped<ICountryRepository, CountryRepository>();
 	collection.AddScoped<ICityIPv4Repository, CityIPv4Repository>();
 	collection.AddScoped<ICityLocationRepository, CityLocationRepository>();
@@ -24,6 +29,11 @@ ServiceProvider CreateServiceProvider()
 	collection.AddScoped<CsvService>();
 	
 	collection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetCountry).Assembly));
+	collection.AddAutoMapper(cfg =>
+	{
+		cfg.AddProfile(typeof(AppMappingProfile));
+	});
+
 	return collection.BuildServiceProvider();
 }
 
@@ -33,5 +43,5 @@ IConfigurationBuilder builder = new ConfigurationBuilder()
 	.AddJsonFile("appsettings.json", optional: false);
 IConfiguration config = builder.Build();
 
-ServiceProvider serviceProvider = CreateServiceProvider(); //config
+ServiceProvider serviceProvider = CreateServiceProvider(builder); //config
 serviceProvider.GetRequiredService<Execution>().Run(config);

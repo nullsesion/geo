@@ -13,12 +13,10 @@ using Geo.Application.CQRS.City.Commands.TruncateCityIPv4Range;
 using Geo.Application.CQRS.City.Commands.MultiCreateCityLocation;
 using Geo.Application.CQRS.City.Commands.MultiCreateCityIPv4Range;
 using Geo.Application.CQRS.Country.Commands.CreateCountryRange;
-using Geo.Application.CQRS.Country.Commands.CreateCountryLocation;
 using Geo.Application.CQRS.Country.Commands.MultiCreateCountryRange;
 using Geo.Application.CQRS.Country.Commands.TruncateCountryLocation;
 using Geo.Application.CQRS.Country.Commands.MultiCreateCountryLocation;
 using Geo.Domain;
-using Spectre.Console;
 
 
 namespace Geo.DataSeeding.Services.CSV
@@ -76,6 +74,7 @@ namespace Geo.DataSeeding.Services.CSV
 								CountryLocations = new List<CountryLocation>()
 							};
 							Console.Write("*");
+							//break;
 						}
 					}
 					res = mediator.Send(buffer, CancellationToken.None).Result;
@@ -133,6 +132,7 @@ namespace Geo.DataSeeding.Services.CSV
 							list.CountryIPv4Ranges = new List<ICountryIPv4Range>();
 							buffer = new List<ICountryIPv4Range>();
 							Console.Write("*");
+							//break;
 						}
 					}
 					list = new MultiCreateCountryRangeIRequest()
@@ -202,6 +202,7 @@ namespace Geo.DataSeeding.Services.CSV
 							res = mediator.Send(multiCreateCityIPv4Range, CancellationToken.None).Result;
 							buffer = new List<CreateCityIPv4Range>();
 							Console.Write("*");
+							//break;
 						}
 					}
 					multiCreateCityIPv4Range = new MultiCreateCityIPv4Range()
@@ -265,8 +266,8 @@ namespace Geo.DataSeeding.Services.CSV
 							}, CancellationToken.None).Result;
 							buffer = new List<CreateCityLocation>();
 							Console.Write("*");
+							//break;
 						}
-
 					}
 					ResponseEntity<IEnumerable<int>> t2 = mediator.Send(new MultiCreateCityLocation()
 					{
