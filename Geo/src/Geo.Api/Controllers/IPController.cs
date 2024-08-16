@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Reflection.Metadata;
 using AutoMapper;
 using Geo.Api.Models;
+using Geo.Application.CQRS.City.Queries;
 
 namespace Geo.Api.Controllers
 {
@@ -19,7 +20,6 @@ namespace Geo.Api.Controllers
 		private readonly IMediator _mediator;
 		private readonly IMapper _mapper;
 
-
 		public IPController(ILogger<IPController> logger, IMediator mediator, IMapper mapper)
 		{
 			(_logger, _mediator, _mapper) = (logger, mediator, mapper);
@@ -28,22 +28,30 @@ namespace Geo.Api.Controllers
 		[HttpGet(Name = "GetIP")]
 		public async Task<IResult> Get([Required] string Ip, CancellationToken cancellationToken)
 		{
-			if (IPAddress.TryParse(Ip, out IPAddress? iPAddress))
+			ResponseEntity<CityIPv4Range> response = await _mediator.Send(new GetCity()
 			{
-				ResponseEntity<CountryIPv4Range> response = await _mediator.Send(new GetCountry()
-				{
-					Ip = Ip,
-					LocaleCode = "en"
-				}
-				, cancellationToken);
-				if (response.IsSuccess)
-				{
-					return Results.Json(_mapper.Map<Country>(response.Entity) );
-				}
-				else
-					return Results.BadRequest(response.ErrorDetail);
+				Ip = Ip,
+				LocaleCode = "en"
+			}, cancellationToken);
+
+			if (response.IsSuccess)
+			{
+				return Results.Json(_mapper.Map<City>(response.Entity));
 			}
-			return Results.BadRequest("is not an IP address");
+			/*
+			ResponseEntity<CountryIPv4Range> response = await _mediator.Send(new GetCountry()
+			{
+				Ip = Ip,
+				LocaleCode = "en"
+			}
+			, cancellationToken);
+			if (response.IsSuccess)
+			{
+				return Results.Json(_mapper.Map<Country>(response.Entity) );
+			}
+			return Results.BadRequest(response.ErrorDetail);
+			*/
+			return Results.BadRequest(response.ErrorDetail);
 		}
 		
 	}

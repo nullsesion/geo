@@ -1,1 +1,1 @@
-dotnet ef database update -s .\Geo\src\Geo.DataSeeding -p .\Geo\src\Geo.DataAccess
+dotnet ef database update -s .\Geo\src\Geo.Api -p .\Geo\src\Geo.DataAccess

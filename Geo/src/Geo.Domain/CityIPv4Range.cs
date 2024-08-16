@@ -12,6 +12,61 @@ namespace Geo.Domain
 		{
 		}
 
+		
+		public static ResponseEntity<CityIPv4Range> Create(string network
+															,int? geonameId
+															,int? registeredCountryGeoNameId
+															,int? representedCountryGeoNameId
+															,bool isAnonymousProxy
+															,bool isSatelliteProvider
+															,bool? isAnycast
+															,Coordinate? location
+															,int? accuracyRadius)
+		{
+			if (geonameId == null
+			    && registeredCountryGeoNameId == null
+			    && representedCountryGeoNameId == null)
+			{
+				return new ResponseEntity<CityIPv4Range>()
+				{
+					IsSuccess = false,
+					ErrorDetail = ERROR_CREATE
+				};
+			}
+
+
+
+			if (GetFromString(network, out int mask, out int ipMin, out int ipMax))
+			{
+				CityIPv4Range _cityIPv4Range = new CityIPv4Range()
+				{
+					Network = network,
+					IpMin = ipMin,
+					IpMax = ipMax,
+					GeonameId = geonameId,
+					RegisteredCountryGeoNameId = registeredCountryGeoNameId,
+					RepresentedCountryGeoNameId = representedCountryGeoNameId,
+					IsAnonymousProxy = isAnonymousProxy,
+					IsSatelliteProvider = isSatelliteProvider,
+					IsAnycast = isAnycast,
+					Location = location,
+					AccuracyRadius = accuracyRadius
+				};
+
+				return new ResponseEntity<CityIPv4Range>()
+				{
+					IsSuccess = true,
+					Entity = _cityIPv4Range,
+				};
+			}
+
+			return new ResponseEntity<CityIPv4Range>()
+			{
+				IsSuccess = false,
+				ErrorDetail = ERROR_CREATE
+			};
+		}
+		
 		public static ResponseEntity<CityIPv4Range> Create(ICityIPv4Range cityIPv4Range)
 		{
 			if (cityIPv4Range.GeonameId == null
@@ -82,6 +137,21 @@ namespace Geo.Domain
 			return false;
 		}
 
+		public CityIPv4Range SetGeoname(ICityLocation? geoname)
+		{
+			Geoname = geoname;
+			return this;
+		}
+		public CityIPv4Range SetRegisteredCountryGeoName(ICityLocation? registeredCountryGeoName)
+		{
+			RegisteredCountryGeoName = registeredCountryGeoName;
+			return this;
+		}
+		public CityIPv4Range SetRepresentedCountryGeoName(ICityLocation? representedCountryGeoName)
+		{
+			RepresentedCountryGeoName = representedCountryGeoName;
+			return this;
+		}
 		public string Network { get; private set; }
 		public int IpMin { get; private set; }
 		public int IpMax { get; private set; }
@@ -93,5 +163,8 @@ namespace Geo.Domain
 		public bool? IsAnycast { get; private set; } = false;
 		public Coordinate? Location { get; private set; }
 		public int? AccuracyRadius { get; private set; }
+		public ICityLocation? Geoname { get; private set; }
+		public ICityLocation? RegisteredCountryGeoName { get; private set; }
+		public ICityLocation? RepresentedCountryGeoName { get; private set; }
 	}
 }

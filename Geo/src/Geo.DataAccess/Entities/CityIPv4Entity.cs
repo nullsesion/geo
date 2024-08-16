@@ -1,4 +1,5 @@
-﻿using Geo.DomainShared.Contracts;
+﻿using Geo.DataAccess.Entities;
+using Geo.DomainShared.Contracts;
 using NpgsqlTypes;
 
 namespace GeoLoad.Entities
@@ -16,6 +17,8 @@ namespace GeoLoad.Entities
 		public bool? IsAnycast { get; set; } = false;
 		public NpgsqlPoint? Location { get; set; }
 		public int? AccuracyRadius { get; set; }
-
+		public CityLocationEntity Geoname { get; set; }
+		public CityLocationEntity? RegisteredCountryGeoName { get; set; }
+		public CityLocationEntity? RepresentedCountryGeoName { get; set; }
 	}
 }

@@ -5,7 +5,6 @@ namespace Geo.DataAccess.Entities
 	public class CityLocationEntity
 	{
 		public int GeonameId { get; set; }
-		public string LocaleCode { get; set; }
 		public string ContinentCode { get; set; }
 		public string ContinentName { get; set; }
 		public string CountryIsoCode { get; set; }

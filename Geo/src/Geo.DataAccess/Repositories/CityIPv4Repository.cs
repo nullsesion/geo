@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
+using Geo.Application.CQRS.City.Queries;
 using Geo.Application.Interfaces;
 using Geo.DataAccess.Configuration;
 using Geo.DataAccess.Entities;
 using Geo.Domain;
+using Geo.DomainShared;
+using Geo.DomainShared.Contracts;
 using GeoLoad.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Geo.DataAccess.Repositories
 {
@@ -52,6 +56,72 @@ namespace Geo.DataAccess.Repositories
 				.Truncate();
 
 			return true;
+		}
+		public async Task<ResponseEntity<CityIPv4Range>> GetCityIPv4RangeByIp(GetCity ip)
+		{
+			if (ip.Ip.TryIpV4ToInt(out int number))
+			{
+				CityIPv4Entity? cityIPv4s = await _dbContext
+					.CityIPv4s
+					.Include(x => x.Geoname)
+					.Include(x => x.RegisteredCountryGeoName)
+					.Include(x => x.RepresentedCountryGeoName)
+					.FirstOrDefaultAsync(x =>
+							x.IpMin < number && x.IpMax > number
+							|| x.IpMin > number && x.IpMax < number
+						)
+					;
+
+				if (cityIPv4s == null)
+					return new ResponseEntity<CityIPv4Range>()
+					{
+						IsSuccess = false,
+						ErrorDetail = "Not Found",
+					};
+
+				ResponseEntity<CityIPv4Range> entity = CityIPv4Range.Create(cityIPv4s.Network
+					, cityIPv4s.GeonameId
+					, cityIPv4s.RegisteredCountryGeoNameId
+					, cityIPv4s.RepresentedCountryGeoNameId
+					, cityIPv4s.IsAnonymousProxy
+					, cityIPv4s.IsSatelliteProvider
+					, cityIPv4s.IsAnycast
+					, new Coordinate(cityIPv4s.Location.Value.X, cityIPv4s.Location.Value.Y)
+					, cityIPv4s.AccuracyRadius);
+
+				if (!entity.IsSuccess)
+				{
+					return new ResponseEntity<CityIPv4Range>()
+					{
+						IsSuccess = false,
+						ErrorDetail = entity.ErrorDetail,
+					};
+				}
+
+				entity.Entity
+					.SetGeoname(cityIPv4s.Geoname == null
+						? null
+						: _mapper.Map<CityLocation>(cityIPv4s.Geoname))
+					.SetRegisteredCountryGeoName(cityIPv4s.RegisteredCountryGeoName == null
+						? null
+						: _mapper.Map<CityLocation>(cityIPv4s.RegisteredCountryGeoName))
+					.SetRepresentedCountryGeoName(cityIPv4s.RepresentedCountryGeoName == null
+						? null
+						: _mapper.Map<CityLocation>(cityIPv4s.RepresentedCountryGeoName))
+					;
+
+				return new ResponseEntity<CityIPv4Range>()
+				{
+					IsSuccess = true,
+					Entity = entity.Entity
+				};
+			}
+
+			return new ResponseEntity<CityIPv4Range>()
+			{
+				IsSuccess = false,
+				ErrorDetail = "Bad IP",
+			};
 		}
 
 		public async Task SaveChangesAsync()

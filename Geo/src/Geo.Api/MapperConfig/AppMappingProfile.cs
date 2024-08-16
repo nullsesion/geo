@@ -11,6 +11,9 @@ namespace Geo.Api.MapperConfig
 		{
 			CreateMap<ICountryLocation, CountryInfo>();
 			CreateMap<CountryIPv4Range, Country>();
+
+			CreateMap<CityLocation, CityInfo>();
+			CreateMap<CityIPv4Range, City>();
 		}
 	}
 }

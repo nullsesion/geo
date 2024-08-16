@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Geo.DataAccess.Entities;
 using Geo.Domain;
+using Geo.DomainShared;
+using Geo.DomainShared.Contracts;
 using GeoLoad.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -62,14 +64,36 @@ namespace Geo.DataAccess.MapperConfig
 							new Dictionary<string, string>() { { src.LocaleCode, src.CityName } }
 						)))
 				;
+			
+			CreateMap<CityLocationEntity,CityLocation>()
+				.ForMember(dest => dest.ContinentName
+					, opt => opt.MapFrom(src
+						=> (string)JObject.Parse(src.ContinentName)["en"]))
+				.ForMember(dest => dest.CountryName
+					, opt => opt.MapFrom(src
+						=> (string)JObject.Parse(src.ContinentName)["en"]))
+				.ForMember(dest => dest.CityName
+				, opt => opt.MapFrom(src
+					=> (string)JObject.Parse(src.CityName)["en"]))
+				;
 
 			CreateMap<CityIPv4Range, CityIPv4Entity>()
 				.ForMember(dest => dest.Location
 					, opt => opt.MapFrom(src
-						=> new NpgsqlPoint(src.Location.Longitude,src.Location.Latilude) 
-						));
+						=> new NpgsqlPoint(src.Location.Longitude, src.Location.Latilude)
+					));
 
-			//
+			CreateMap<ICityIPv4Range, CityIPv4Entity>()
+				.ForMember(dest => dest.Location
+					, opt => opt.MapFrom(src
+						=> new NpgsqlPoint(src.Location.Longitude, src.Location.Latilude)
+					));
+
+			CreateMap<CityIPv4Entity, ICityIPv4Range>()
+				.ForMember(dest => dest.Location
+					, opt => opt.MapFrom(src
+						=> new Coordinate(src.Location.Value.X, src.Location.Value.Y)
+					));
 		}
 	}
 }

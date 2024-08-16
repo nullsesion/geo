@@ -11,9 +11,9 @@ namespace Geo.Application.CQRS.City.Queries
 		public GetCityHandler(ICityIPv4Repository cityIPv4Repository) 
 			=> _cityIPv4Repository = cityIPv4Repository;
 
-		public Task<ResponseEntity<CityIPv4Range>> Handle(GetCity request, CancellationToken cancellationToken)
+		public async Task<ResponseEntity<CityIPv4Range>> Handle(GetCity request, CancellationToken cancellationToken)
 		{
-			throw new NotImplementedException();
+			return await _cityIPv4Repository.GetCityIPv4RangeByIp(request);
 		}
 	}
 }

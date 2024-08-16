@@ -34,10 +34,10 @@ namespace Geo.DataSeeding
 			
 			Dictionary<string, string> FileFragment = new Dictionary<string, string>()
 			{
-				{"GeoLite2CityLocations"    ,"GeoLite2-City-Locations-en"},
-				{"GeoLite2CityIPv4"         ,"GeoLite2-City-Blocks-IPv4"},
-				{"GeoLite2CountryLocations" ,"GeoLite2-Country-Locations-en"},
+				//{"GeoLite2CityIPv4"         ,"GeoLite2-City-Blocks-IPv4"},
+				//{"GeoLite2CityLocations"    ,"GeoLite2-City-Locations-en"},
 				{"GeoLite2CountryIPv4"      ,"GeoLite2-Country-Blocks-IPv4"},
+				{"GeoLite2CountryLocations" ,"GeoLite2-Country-Locations-en"},
 				
 			};
 
