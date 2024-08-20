@@ -1,5 +1,4 @@
 using Geo.DomainShared;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Get.DomainShared.Tests
 {

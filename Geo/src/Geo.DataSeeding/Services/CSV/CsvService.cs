@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using CsvHelper;
-using NpgsqlTypes;
 using Geo.DomainShared;
 using System.Globalization;
 using Geo.DomainShared.Contracts;

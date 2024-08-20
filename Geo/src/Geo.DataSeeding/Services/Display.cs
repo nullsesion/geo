@@ -19,21 +19,9 @@ namespace Geo.DataSeeding.Services
 		{
 			AnsiConsole.MarkupLine("[red]Fail[/] " + message);
 		}
-		/*
-		public bool Confirm(string message)
-		{
-			return AnsiConsole.Confirm(message);
-		}
-		*/
 		public bool Confirm(string message, bool def)
 		{
 			return AnsiConsole.Confirm(message,def);
 		}
-		/*
-		public T ShowAsk<T>(string question)
-		{
-			return AnsiConsole.Ask<T>(question);
-		}
-		*/
 	}
 }
