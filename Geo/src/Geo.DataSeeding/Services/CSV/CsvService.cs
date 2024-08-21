@@ -22,6 +22,10 @@ namespace Geo.DataSeeding.Services.CSV
 {
 	public class CsvService
 	{
+		private readonly Display _display;
+
+		public CsvService(Display display) => _display = display;
+
 		public IEnumerable<FileInfo> FindFile(string _fragmentName,string path)
 		{
 			DirectoryInfo dir = new DirectoryInfo(path);

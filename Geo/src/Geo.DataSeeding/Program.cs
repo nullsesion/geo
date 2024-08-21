@@ -28,6 +28,7 @@ ServiceProvider CreateServiceProvider(IConfiguration config)
 	collection.AddScoped<IStepPrepareUnzip,UnzipFiles>();
 	collection.AddScoped<IInstall2Db, Install2Db>();
 	collection.AddScoped<IStepFinish, Seeding>();
+	collection.AddScoped<CsvService>();
 
 	collection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetCountry).Assembly));
 	collection.AddAutoMapper(cfg =>

@@ -1,7 +1,5 @@
 ﻿using Geo.DataSeeding.Interfaces;
 using Microsoft.Extensions.Configuration;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace Geo.DataSeeding.Services
 {
@@ -11,7 +9,7 @@ namespace Geo.DataSeeding.Services
 
 		public DownloadManager(Display display) => _display = display;
 
-		public void RunStep(IConfiguration config)
+		public List<string> RunStep(IConfiguration config)
 		{
 			//get url from DB
 			Dictionary<string, string> urls = GetUrlsFromConfig(config);
@@ -22,18 +20,22 @@ namespace Geo.DataSeeding.Services
 				if (File.Exists(fileLoder))
 					if (!_display.Confirm($"file {fileLoder} already exist. Download again?", false))
 						continue;
-
-				Console.WriteLine(File.Exists(fileLoder));
 				tasks.Add(DownloadFileAsynk(url.Value));
 			}
 			Task.WaitAll(tasks.ToArray());
+
+			List<string> listFiles = new List<string>();
+			foreach (KeyValuePair<string, string> url in urls)
+			{
+				string fileLoder = GetFileNameByUrl(url.Value);
+				if (File.Exists(fileLoder))
+				{
+					listFiles.Add(fileLoder);
+				}
+			}
+
+			return listFiles;
 		}
-		/*
-		private void DownloadFile(string url)
-		{
-			DownloadFileAsynk(url);
-		}
-		*/
 		private Dictionary<string, string> GetUrlsFromConfig(IConfiguration config)
 		{
 			Dictionary<string, string> urls = config.GetSection("urlsCsvLoad")

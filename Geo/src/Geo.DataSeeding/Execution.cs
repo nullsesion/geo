@@ -11,6 +11,7 @@ namespace Geo.DataSeeding
 		public void Run(IConfiguration config) //async Task
 		{
 			_seeding.RunStep(config);
+
 		}
 	}
 }

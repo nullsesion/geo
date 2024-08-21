@@ -4,5 +4,5 @@ namespace Geo.DataSeeding.Interfaces;
 
 public interface IStepPrepareDownload
 {
-	public void RunStep(IConfiguration config);
+	public List<string> RunStep(IConfiguration config);
 }
