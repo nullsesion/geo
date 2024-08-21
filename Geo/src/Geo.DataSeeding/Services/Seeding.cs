@@ -10,7 +10,7 @@ namespace Geo.DataSeeding.Services
 
 		public void RunStep(IConfiguration config)
 		{
-			throw new NotImplementedException();
+			_install2Db.RunStep(config);
 		}
 	}
 }

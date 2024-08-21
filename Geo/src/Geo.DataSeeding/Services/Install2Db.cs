@@ -11,7 +11,7 @@ namespace Geo.DataSeeding.Services
 
 		public void RunStep(IConfiguration config)
 		{
-			throw new NotImplementedException();
+			_prepareDownload.RunStep(config);
 		}
 	}
 }
