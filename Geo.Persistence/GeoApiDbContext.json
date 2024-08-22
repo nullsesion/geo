@@ -1,5 +1,0 @@
-{
-    "ConnectionStrings": {
-        "GeoApiDbContext": "Host=localhost;Port=5432;Database=GeoLocation;User ID=postgresql;Password=postgresql"
-    }
-}
