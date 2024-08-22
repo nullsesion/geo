@@ -1,1 +1,1 @@
-dotnet ef database update --project Geo.Persistence 
+dotnet ef database update -s .\Geo\src\Geo.Api -p .\Geo\src\Geo.DataAccess
