@@ -1,0 +1,1 @@
+docker exec webapi /app/buildcli/Geo.DataSeeding

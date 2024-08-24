@@ -11,7 +11,7 @@ services:
       - postgres
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings=Server=postgres;Port=5432;Database=geo;User Id=postgres;Password=postgres
+      - ConnectionStrings=Server=postgres_container;Port=5432;Database=geo;User Id=postgres;Password=postgres
     ports:
       - 5080:8080
     restart: on-failure

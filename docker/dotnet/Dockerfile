@@ -17,13 +17,27 @@ RUN dotnet tool install -g dotnet-ef
 
 RUN dotnet build "./src/Geo.Api/Geo.Api.csproj" -c $BUILD_CONFIGURATION -o /app/buildapi
 RUN dotnet build "./src/Geo.DataSeeding/Geo.DataSeeding.csproj" -c $BUILD_CONFIGURATION -o /app/buildcli
-RUN sed -i 's/localhost/postgres/'  /app/buildcli/appsettings.json
+
+#
+#RUN echo "sed -i 's/__GeoApiDbContext__: __.*__/__GeoApiDbContext__: __'__###ConnectionStrings__'__/'  /app/buildcli/appsettings.json" > /app/buildcli/migrationrun.sh \
+#	&& echo "sed -i 's/__GeoApiDbContext__: __.*__/__GeoApiDbContext__: __'__###ConnectionStrings__'__/'  /app/buildapi/appsettings.Development.json" >> /app/buildcli/migrationrun.sh \
+#	&& sed -i 's/__/"/g' /app/buildcli/migrationrun.sh \
+#	&& sed -i 's/###/\$/g' /app/buildcli/migrationrun.sh \
+#	&& chmod ugo+x /app/buildcli/migrationrun.sh 
+#
+
+RUN echo "#!/bin/bash\n" > /app/buildcli/migrationrun.sh \
+	&& echo "eval __/root/.dotnet/tools/dotnet-ef database update -s /src/src/Geo.Api --connection \__###ConnectionStrings\____" >> /app/buildcli/migrationrun.sh \
+	&& sed -i 's/__/"/g' /app/buildcli/migrationrun.sh \
+	&& sed -i 's/###/\$/g' /app/buildcli/migrationrun.sh \
+	&& chmod ugo+x /app/buildcli/migrationrun.sh 
 
 WORKDIR /app/buildcli/.
 #RUN /app/buildcli/Geo.DataSeeding
 
 #RUN apt-get update 
 #RUN yes | apt-get install nginx
+#RUN apt-get install nginx -y
 
 #todo: make a clean build in the future 
 #FROM build AS publish
