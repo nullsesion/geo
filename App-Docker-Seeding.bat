@@ -1,1 +1,1 @@
-docker exec webapi /app/buildcli/Geo.DataSeeding
+docker exec webapi /app/buildcli/seeding.sh

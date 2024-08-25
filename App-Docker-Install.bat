@@ -5,10 +5,10 @@ docker-compose -f docker/docker-compose.yml build
 TIMEOUT /T 10
 docker-compose -f docker/docker-compose.yml up -d
 TIMEOUT /T 10
-docker exec -it webapi /app/buildcli/setconnectstring.sh
+docker exec webapi /app/buildcli/setconnectstring.sh
 TIMEOUT /T 10
-docker exec -it webapi /app/buildcli/migrationrun.sh 
+docker exec webapi /app/buildcli/migrationrun.sh 
 TIMEOUT /T 10
-docker exec -it webapi /app/buildcli/Geo.DataSeeding 
+docker exec webapi /app/buildcli/seeding.sh
 TIMEOUT /T 10
 start "" http://localhost:5080/swagger/index.html

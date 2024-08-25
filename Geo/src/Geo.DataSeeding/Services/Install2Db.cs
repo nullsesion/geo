@@ -22,15 +22,12 @@ namespace Geo.DataSeeding.Services
 			{
 				{"GeoLite2CountryLocations" ,"GeoLite2-Country-Locations-en"},
 				{"GeoLite2CountryIPv4"      ,"GeoLite2-Country-Blocks-IPv4"},
-				{"GeoLite2CityLocations"    ,"GeoLite2-City-Locations-en"},
 				{"GeoLite2CityIPv4"         ,"GeoLite2-City-Blocks-IPv4"},
+				{"GeoLite2CityLocations"    ,"GeoLite2-City-Locations-en"},
 			};
 
-			Console.WriteLine(tmpDir);
-			
 			foreach (KeyValuePair<string, string> csv in FileFragment)
 			{
-				
 				switch (csv.Key)
 				{
 					case "GeoLite2CountryIPv4":
@@ -49,7 +46,6 @@ namespace Geo.DataSeeding.Services
 						_csvHelper.GeoLite2CityLocations(csv.Value, tmpDir, _mediator);
 						break;
 				}
-				
 			}
 		}
 	}

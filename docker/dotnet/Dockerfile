@@ -21,8 +21,9 @@ RUN find /app/buildapi -type d -print0|xargs -0 chmod ugo+w
 RUN find /app/buildcli -type d -print0|xargs -0 chmod ugo+w
 
 
-RUN echo "sed -i 's/__GeoApiDbContext__: __.*__/__GeoApiDbContext__: __'__###ConnectionStrings__'__/'  /app/buildcli/appsettings.json" > /app/buildcli/migrationrun0.sh \
-	&& echo "sed -i 's/__GeoApiDbContext__: __.*__/__GeoApiDbContext__: __'__###ConnectionStrings__'__/'  /app/buildapi/appsettings.Development.json" >> /app/buildcli/migrationrun0.sh \
+RUN echo "#!/bin/bash\n" > /app/buildcli/setconnectstring.sh \
+	&& echo "sed -i 's/__GeoApiDbContext__: __.*__/__GeoApiDbContext__: __'__###ConnectionStrings__'__/'  /app/buildcli/appsettings.json" >> /app/buildcli/setconnectstring.sh \
+	&& echo "sed -i 's/__GeoApiDbContext__: __.*__/__GeoApiDbContext__: __'__###ConnectionStrings__'__/'  /app/buildapi/appsettings.Development.json" >> /app/buildcli/setconnectstring.sh \
 	&& sed -i 's/__/"/g' /app/buildcli/setconnectstring.sh \
 	&& sed -i 's/###/\$/g' /app/buildcli/setconnectstring.sh \
 	&& chmod ugo+x /app/buildcli/setconnectstring.sh 
@@ -33,6 +34,11 @@ RUN echo "#!/bin/bash\n" > /app/buildcli/migrationrun.sh \
 	&& sed -i 's/__/"/g' /app/buildcli/migrationrun.sh \
 	&& sed -i 's/###/\$/g' /app/buildcli/migrationrun.sh \
 	&& chmod ugo+x /app/buildcli/migrationrun.sh 
+
+RUN echo "#!/bin/bash\n" > /app/buildcli/seeding.sh \
+	&& echo "cd /app/buildcli/" >> /app/buildcli/seeding.sh \
+	&& echo "/app/buildcli/Geo.DataSeeding" >> /app/buildcli/seeding.sh \
+	&& chmod ugo+x /app/buildcli/seeding.sh 
 
 WORKDIR /app/buildcli/.
 #RUN /app/buildcli/Geo.DataSeeding
