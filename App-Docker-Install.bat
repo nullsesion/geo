@@ -5,6 +5,8 @@ docker-compose -f docker/docker-compose.yml build
 TIMEOUT /T 10
 docker-compose -f docker/docker-compose.yml up -d
 TIMEOUT /T 10
+docker exec -it webapi /app/buildcli/setconnectstring.sh
+TIMEOUT /T 10
 docker exec -it webapi /app/buildcli/migrationrun.sh 
 TIMEOUT /T 10
 docker exec -it webapi /app/buildcli/Geo.DataSeeding 
