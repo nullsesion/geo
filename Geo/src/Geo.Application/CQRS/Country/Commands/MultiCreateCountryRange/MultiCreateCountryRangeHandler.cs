@@ -1,33 +1,29 @@
 ﻿using Geo.Application.Interfaces;
 using Geo.Domain;
 using Geo.DomainShared;
+using Geo.DomainShared.Contracts;
 using MediatR;
 
 namespace Geo.Application.CQRS.Country.Commands.MultiCreateCountryRange
 {
-	public class MultiCreateCountryRangeHandler: IRequestHandler<MultiCreateCountryRangeIRequest, ResponseEntity<IEnumerable<string>>>
+	public class MultiCreateCountryRangeHandler: IRequestHandler<MultiCreateCountryRangeIRequest, ResponseEntity<bool>>
 	{
 		private readonly ICountryRepository _countryRepository;
 
 		public MultiCreateCountryRangeHandler(ICountryRepository countryRepository) =>
 			_countryRepository = countryRepository;
-		public async Task<ResponseEntity<IEnumerable<string>>> Handle(MultiCreateCountryRangeIRequest request, CancellationToken cancellationToken)
+		public async Task<ResponseEntity<bool>> Handle(MultiCreateCountryRangeIRequest request, CancellationToken cancellationToken)
 		{
 			if (request.CountryIPv4Ranges.Any())
 			{
-				List<string> successList = new List<string>();
-				foreach (var countryIPv4RangeRequest in request.CountryIPv4Ranges)
+				await _countryRepository.MultiInsertCountryIPv4RangeAsync(request.CountryIPv4Ranges, cancellationToken);
+				return new ResponseEntity<bool>()
 				{
-					ResponseEntity<CountryIPv4Range> countryIPv4Range = CountryIPv4Range.Create(countryIPv4RangeRequest);
-					if (countryIPv4Range.IsSuccess)
-					{
-						successList.Add(countryIPv4Range.Entity.Network);
-						await _countryRepository.InsertCountryIPv4RangeAsync(countryIPv4Range.Entity, cancellationToken);
-					}
-				}
-				await _countryRepository.SaveChangesAsync();
+					Entity = true,
+					IsSuccess = true,
+				};
 			}
-			return new ResponseEntity<IEnumerable<string>>()
+			return new ResponseEntity<bool>()
 			{
 				ErrorDetail = "Empty List",
 				IsSuccess = false,

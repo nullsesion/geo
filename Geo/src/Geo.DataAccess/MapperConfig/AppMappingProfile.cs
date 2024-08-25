@@ -23,8 +23,23 @@ namespace Geo.DataAccess.MapperConfig
 						=> (string)JObject.Parse(src.ContinentName)["en"]));
 
 			CreateMap<CountryIPv4Range, CountryIPv4Entity>();
+			CreateMap<ICountryIPv4Range, CountryIPv4Entity>();
+			
 
 			CreateMap<CountryLocation, CountryLocationEntity>()
+				.ForMember(dest => dest.ContinentName
+					, opt => opt.MapFrom(src
+						=> JsonConvert.SerializeObject(
+							new Dictionary<string, string>() { { src.LocaleCode, src.ContinentName } }
+						)))
+				.ForMember(dest => dest.CountryName
+					, opt => opt.MapFrom(src
+						=> JsonConvert.SerializeObject(
+							new Dictionary<string, string>() { { src.LocaleCode, src.CountryName } }
+						)))
+				;
+
+			CreateMap<ICountryLocation, CountryLocationEntity>()
 				.ForMember(dest => dest.ContinentName
 					, opt => opt.MapFrom(src
 						=> JsonConvert.SerializeObject(

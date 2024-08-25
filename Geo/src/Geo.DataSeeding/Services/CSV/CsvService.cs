@@ -41,7 +41,7 @@ namespace Geo.DataSeeding.Services.CSV
 		{
 			Console.WriteLine("LoadGeoLite2CountryLocations");
 			var response = mediator.Send(new TruncateCountryLocation(), CancellationToken.None).Result;
-			ResponseEntity<int> res = new ResponseEntity<int>();
+			ResponseEntity<bool> res = new ();
 
 			IEnumerable <FileInfo> geoLite2CountryLocations = FindFile(fragmentName, path);
 			foreach (FileInfo file in geoLite2CountryLocations)
@@ -51,14 +51,16 @@ namespace Geo.DataSeeding.Services.CSV
 				{
 					int i = 0;
 					IEnumerable<GeoLite2CountryLocations> records = csv.GetRecords<GeoLite2CountryLocations>();
+					List<ICountryLocation> countryLocations = new List<ICountryLocation>();
 					MultiCreateCountryLocation buffer = new MultiCreateCountryLocation()
 					{
-						CountryLocations = new List<CountryLocation>()
+						CountryLocations = (new List<ICountryLocation>()) as IEnumerable<ICountryLocation>
 					};
 					foreach (GeoLite2CountryLocations record in records)
 					{
 						i++;
-						buffer.CountryLocations.Add(new CountryLocation()
+						//todo: add automapper
+						countryLocations.Add(new CountryLocation()
 						{
 							GeonameId = record.GeonameId,
 							LocaleCode = record.LocaleCode,
@@ -71,15 +73,17 @@ namespace Geo.DataSeeding.Services.CSV
 
 						if (i % 100 == 0)
 						{
+							buffer.CountryLocations = countryLocations;
 							res = mediator.Send(buffer, CancellationToken.None).Result;
 							buffer = new MultiCreateCountryLocation()
 							{
-								CountryLocations = new List<CountryLocation>()
+								CountryLocations = (new List<ICountryLocation>()) as IEnumerable<ICountryLocation>
 							};
 							Console.Write("*");
 						}
 					}
 					res = mediator.Send(buffer, CancellationToken.None).Result;
+					
 					Console.Write("*");
 					Console.WriteLine();
 					Console.WriteLine("---------------------------------------");
@@ -109,7 +113,7 @@ namespace Geo.DataSeeding.Services.CSV
 					{
 						CountryIPv4Ranges = null,
 					};
-					ResponseEntity<IEnumerable<string>> res = new ResponseEntity<IEnumerable<string>>();
+					ResponseEntity<bool> res = new ();
 					foreach (GeoLite2CountryIPv4 r in records)
 					{
 						i++;
@@ -171,7 +175,7 @@ namespace Geo.DataSeeding.Services.CSV
 					{
 						CityIPv4Ranges = null
 					};
-					ResponseEntity<IEnumerable<string>> res;
+					ResponseEntity<bool> res;
 					foreach (GeoLite2CityIPv4 geoLite2CityIPv4 in records)
 					{
 						i++;
@@ -255,7 +259,7 @@ namespace Geo.DataSeeding.Services.CSV
 						buffer.Add(cityLocation);
 						if (i % 4000 == 0)//4000
 						{
-							ResponseEntity<IEnumerable<int>> t = mediator.Send(new MultiCreateCityLocation()
+							ResponseEntity<bool> t = mediator.Send(new MultiCreateCityLocation()
 							{
 								CityLocations = buffer,
 							}, CancellationToken.None).Result;
@@ -264,7 +268,7 @@ namespace Geo.DataSeeding.Services.CSV
 						}
 					}
 					
-					ResponseEntity<IEnumerable<int>> t2 = mediator.Send(new MultiCreateCityLocation()
+					ResponseEntity<bool> t2 = mediator.Send(new MultiCreateCityLocation()
 					{
 						CityLocations = buffer,
 					}, CancellationToken.None).Result;
