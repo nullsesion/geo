@@ -39,7 +39,7 @@ namespace Geo.DataSeeding.Services.CSV
 
 		public void LoadGeoLite2CountryLocations(string fragmentName, string path, IMediator mediator)
 		{
-			Console.WriteLine("LoadGeoLite2CountryLocations");
+			_display.WriteLine("LoadGeoLite2CountryLocations");
 			ResponseEntity<bool> res = new ();
 
 			IEnumerable <FileInfo> geoLite2CountryLocations = FindFile(fragmentName, path);
@@ -77,18 +77,18 @@ namespace Geo.DataSeeding.Services.CSV
 							{
 								CountryLocations = (new List<ICountryLocation>()) as IEnumerable<ICountryLocation>
 							};
-							Console.Write("*");
+							_display.Write("*");
 						}
 					}
-					Console.WriteLine();
-					Console.WriteLine("---------------------------------------");
+					_display.WriteLine();
+					_display.WriteLine("---------------------------------------");
 				}
 			}
 		}
 
 		public void LoadGeoLite2CountryIPv4(string fragmentName, string path, IMediator mediator)
 		{
-			Console.WriteLine("LoadGeoLite2CountryIPv4");
+			_display.WriteLine("LoadGeoLite2CountryIPv4");
 			DirectoryInfo dir = new DirectoryInfo(path);
 			IEnumerable<FileInfo> fileList = dir
 					.GetFiles("*.csv", SearchOption.AllDirectories)
@@ -131,7 +131,7 @@ namespace Geo.DataSeeding.Services.CSV
 							res = mediator.Send(list, CancellationToken.None).Result;
 							list.CountryIPv4Ranges = new List<ICountryIPv4Range>();
 							buffer = new List<ICountryIPv4Range>();
-							Console.Write("*");
+							_display.Write("*");
 						}
 					}
 					list = new MultiCreateCountryRangeIRequest()
@@ -140,16 +140,15 @@ namespace Geo.DataSeeding.Services.CSV
 					};
 					res = mediator.Send(list, CancellationToken.None).Result;
 					list.CountryIPv4Ranges = new List<ICountryIPv4Range>();
-					buffer = new List<ICountryIPv4Range>();
-					Console.Write("*");
-					Console.WriteLine();
-					Console.WriteLine("---------------------------------------");
+					_display.Write("*");
+					_display.WriteLine();
+					_display.WriteLine("---------------------------------------");
 				}
 			}
 		}
 		public void GeoLite2CityBlocksIPv4(string fragmentName, string path, IMediator mediator)
 		{
-			Console.WriteLine("GeoLite2CityBlocksIPv4");
+			_display.WriteLine("GeoLite2CityBlocksIPv4");
 			DirectoryInfo dir = new DirectoryInfo(path);
 			IEnumerable<FileInfo> fileList = dir
 				.GetFiles("*.csv", SearchOption.AllDirectories)
@@ -196,7 +195,7 @@ namespace Geo.DataSeeding.Services.CSV
 							};
 							res = mediator.Send(multiCreateCityIPv4Range, CancellationToken.None).Result;
 							buffer = new List<CreateCityIPv4Range>();
-							Console.Write("*");
+							_display.Write("*");
 						}
 					}
 					multiCreateCityIPv4Range = new MultiCreateCityIPv4Range()
@@ -205,15 +204,15 @@ namespace Geo.DataSeeding.Services.CSV
 					};
 					res = mediator.Send(multiCreateCityIPv4Range, CancellationToken.None).Result;
 					buffer = new List<CreateCityIPv4Range>();
-					Console.Write("*");
-					Console.WriteLine();
-					Console.WriteLine("---------------------------------------");
+					_display.Write("*");
+					_display.WriteLine();
+					_display.WriteLine("---------------------------------------");
 				}
 			}
 		}
 		public void GeoLite2CityLocations(string fragmentName, string path, IMediator mediator)
 		{
-			Console.WriteLine("GeoLite2CityLocations");
+			_display.WriteLine("GeoLite2CityLocations");
 			DirectoryInfo dir = new DirectoryInfo(path);
 			IEnumerable<FileInfo> fileList = dir
 				.GetFiles("*.csv", SearchOption.AllDirectories)
@@ -222,7 +221,7 @@ namespace Geo.DataSeeding.Services.CSV
 
 			foreach (FileInfo item in fileList)
 			{
-				Console.WriteLine(item.Name);
+				_display.WriteLine(item.Name);
 				using (var reader = new StreamReader(item.FullName))
 				using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
 				{
@@ -257,7 +256,7 @@ namespace Geo.DataSeeding.Services.CSV
 								CityLocations = buffer,
 							}, CancellationToken.None).Result;
 							buffer = new List<CreateCityLocation>();
-							Console.Write("*");
+							_display.Write("*");
 						}
 					}
 					
@@ -265,10 +264,10 @@ namespace Geo.DataSeeding.Services.CSV
 					{
 						CityLocations = buffer,
 					}, CancellationToken.None).Result;
-					
-					Console.Write("*");
-					Console.WriteLine();
-					Console.WriteLine("---------------------------------------");
+
+					_display.Write("*");
+					_display.WriteLine();
+					_display.WriteLine("---------------------------------------");
 					mediator.Send(new MultiCreateCityLocation()
 					{
 						CityLocations = buffer,

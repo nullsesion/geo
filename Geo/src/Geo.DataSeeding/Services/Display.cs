@@ -15,6 +15,17 @@ namespace Geo.DataSeeding.Services
 		{
 			AnsiConsole.MarkupLine("[green]Ok[/] " + message);
 		}
+
+		public void Write(string message = "")
+		{
+			AnsiConsole.Write(message);
+		}
+
+		public void WriteLine(string message = "")
+		{
+			AnsiConsole.WriteLine(message);
+		}
+
 		public void Fail(string message = "")
 		{
 			AnsiConsole.MarkupLine("[red]Fail[/] " + message);
