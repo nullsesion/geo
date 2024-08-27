@@ -125,34 +125,20 @@ namespace Geo.DataAccess.Repositories
 			};
 		}
 
-		public async Task<bool> MultiInsertCityLocationAsync(IEnumerable<ICityLocation> cityLocations, CancellationToken cancellationToken)
+		public bool MultiInsertCityLocationAsync(IEnumerable<ICityLocation> cityLocations, CancellationToken cancellationToken)
 		{
-			try
-			{
-				await _dbContext.TruncateAsync<CityIPv4Entity>();
-				await _dbContext.BulkInsertAsync(cityLocations.Select(x => _mapper.Map<CityLocationEntity>(x)));
-				_dbContext.BulkSaveChanges();
-				return true;
-			}
-			catch (Exception e)
-			{
-				return false;
-			}
+			_dbContext.BulkInsertOrUpdateAsync(cityLocations.Select(x => _mapper.Map<CityLocationEntity>(x))).Wait();
+			_dbContext.BulkSaveChanges();
+			return true;
 		}
 
-		public async Task<bool> MultiInsertCityIPv4RangeAsync(IEnumerable<ICityIPv4Range> cityIPv4Ranges, CancellationToken cancellationToken)
+		public async Task<bool> MultiInsertCityIPv4RangeAsync(IEnumerable<CityIPv4Range> cityIPv4Ranges, CancellationToken cancellationToken)
 		{
-			try
-			{
-				await _dbContext.TruncateAsync<CityIPv4Entity>();
-				await _dbContext.BulkInsertAsync(cityIPv4Ranges.Select(x => _mapper.Map<CityIPv4Entity>(x)));
-				_dbContext.BulkSaveChanges();
-				return true;
-			}
-			catch (Exception e)
-			{
-				return false;
-			}
+			
+			await _dbContext.BulkInsertAsync(cityIPv4Ranges.Select(x => _mapper.Map<CityIPv4Entity>(x)));
+			_dbContext.BulkSaveChanges();
+			
+			return true;
 		}
 
 		public async Task SaveChangesAsync()

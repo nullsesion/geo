@@ -17,10 +17,10 @@ namespace Geo.Application.CQRS.Country.Commands.MultiCreateCountryLocation
 		{
 			if (request.CountryLocations.Any())
 			{
-				await _countryRepository.MultiInsertCountryLocationAsync(request.CountryLocations, cancellationToken);
+				bool res = await _countryRepository.MultiInsertCountryLocationAsync(request.CountryLocations, cancellationToken);
 				return new ResponseEntity<bool>()
 				{
-					Entity = true,
+					Entity = res,
 					IsSuccess = true,
 				};
 			}

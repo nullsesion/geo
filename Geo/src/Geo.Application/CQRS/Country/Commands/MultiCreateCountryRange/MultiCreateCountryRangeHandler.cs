@@ -1,4 +1,5 @@
-﻿using Geo.Application.Interfaces;
+﻿using System.Net.WebSockets;
+using Geo.Application.Interfaces;
 using Geo.Domain;
 using Geo.DomainShared;
 using Geo.DomainShared.Contracts;
@@ -16,10 +17,15 @@ namespace Geo.Application.CQRS.Country.Commands.MultiCreateCountryRange
 		{
 			if (request.CountryIPv4Ranges.Any())
 			{
-				await _countryRepository.MultiInsertCountryIPv4RangeAsync(request.CountryIPv4Ranges, cancellationToken);
+				IEnumerable<CountryIPv4Range> countryIPv4Ranges = request.CountryIPv4Ranges
+					.Select(x => CountryIPv4Range.Create(x))
+					.Where(x => x.IsSuccess && x.Entity != null)
+					.Select(x => x.Entity);
+
+				bool res = _countryRepository.MultiInsertCountryIPv4RangeAsync(countryIPv4Ranges, cancellationToken);
 				return new ResponseEntity<bool>()
 				{
-					Entity = true,
+					Entity = res,
 					IsSuccess = true,
 				};
 			}

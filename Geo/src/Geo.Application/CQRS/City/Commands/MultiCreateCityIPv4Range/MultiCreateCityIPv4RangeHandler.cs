@@ -16,7 +16,12 @@ namespace Geo.Application.CQRS.City.Commands.MultiCreateCityIPv4Range
 		{
 			if (request.CityIPv4Ranges.Any())
 			{
-				bool res = await _cityIPv4Repository.MultiInsertCityIPv4RangeAsync(request.CityIPv4Ranges, cancellationToken);
+				IEnumerable<CityIPv4Range?> cityIPv4Ranges = request.CityIPv4Ranges
+					.Select(x => CityIPv4Range.Create(x))
+					.Where(x => x.IsSuccess && x.Entity != null)
+					.Select(x => x.Entity);
+
+				bool res = await _cityIPv4Repository.MultiInsertCityIPv4RangeAsync(cityIPv4Ranges, cancellationToken);
 				return new ResponseEntity<bool>()
 				{
 					IsSuccess = true,

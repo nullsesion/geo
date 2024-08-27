@@ -13,10 +13,10 @@ public interface ICityIPv4Repository
 	Task<bool> TruncateCityLocationAsync();
 	Task<ResponseEntity<CityIPv4Range>> GetCityIPv4RangeByIp(GetCity ip);
 
-	Task<bool> MultiInsertCityLocationAsync(IEnumerable<ICityLocation> cityLocations,
+	bool MultiInsertCityLocationAsync(IEnumerable<ICityLocation> cityLocations,
 		CancellationToken cancellationToken);
 
-	Task<bool> MultiInsertCityIPv4RangeAsync(IEnumerable<ICityIPv4Range> cityIPv4Ranges,
+	Task<bool> MultiInsertCityIPv4RangeAsync(IEnumerable<CityIPv4Range> cityIPv4Ranges,
 		CancellationToken cancellationToken);
 
 	Task SaveChangesAsync();
