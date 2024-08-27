@@ -37,6 +37,25 @@ namespace Geo.DataSeeding.Services.CSV
 			return fileList;
 		}
 
+		//todo refactor this
+		/*
+		public void Load2DbFromCsv<TRequest>(string fragmentName, string path, IMediator mediator) where TRequest : MultiCreateCountryLocation
+		{
+			_display.WriteLine("LoadGeoLite2CountryLocations");
+			ResponseEntity<bool> res = new();
+			IEnumerable<FileInfo> csvFiles = FindFile(fragmentName, path);
+			if (!csvFiles.Any())
+				return;
+
+			var file = csvFiles.First();
+			using (var reader = new StreamReader(file.FullName))
+			using (var csvData = new CsvReader(reader, CultureInfo.InvariantCulture))
+			{
+				
+
+			}
+		}
+		*/
 		public void LoadGeoLite2CountryLocations(string fragmentName, string path, IMediator mediator)
 		{
 			_display.WriteLine("LoadGeoLite2CountryLocations");
