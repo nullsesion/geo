@@ -8,8 +8,6 @@ using Geo.Domain;
 using Geo.DomainShared;
 using Geo.DomainShared.Contracts;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using System;
 
 namespace Geo.DataAccess.Repositories
 {
@@ -126,32 +124,17 @@ namespace Geo.DataAccess.Repositories
 
 		public async Task<bool> MultiInsertCountryLocationAsync(IEnumerable<ICountryLocation> countryLocations, CancellationToken cancellationToken)
 		{
-			try
-			{
-				await _dbContext.TruncateAsync<CountryLocationEntity>();
-				await _dbContext.BulkInsertAsync(countryLocations.Select(x => _mapper.Map<CountryLocationEntity>(x)));
-				_dbContext.BulkSaveChanges();
-				return true;
-			}
-			catch (Exception e)
-			{
-				return false;
-			}
+			IEnumerable<CountryLocationEntity> r = countryLocations.Select(x => _mapper.Map<CountryLocationEntity>(x));
+			await _dbContext.BulkInsertOrUpdateAsync(r);
+			_dbContext.BulkSaveChanges();
+			return true;
 		}
 
-		public async Task<bool> MultiInsertCountryIPv4RangeAsync(IEnumerable<ICountryIPv4Range> countryIPv4Ranges, CancellationToken cancellationToken)
+		public bool MultiInsertCountryIPv4RangeAsync(IEnumerable<ICountryIPv4Range> countryIPv4Ranges, CancellationToken cancellationToken)
 		{
-			try
-			{
-				await _dbContext.TruncateAsync<CountryIPv4Entity>();
-				await _dbContext.BulkInsertAsync(countryIPv4Ranges.Select(x => _mapper.Map<CountryIPv4Entity>(x)));
-				_dbContext.BulkSaveChanges();
-				return true;
-			}
-			catch (Exception e)
-			{
-				return false;
-			}
+			_dbContext.BulkInsertAsync(countryIPv4Ranges.Select(x => _mapper.Map<CountryIPv4Entity>(x))).Wait();
+			_dbContext.BulkSaveChanges();
+			return true;
 		}
 
 		public async Task<bool> TruncateCountryLocationAsync()
