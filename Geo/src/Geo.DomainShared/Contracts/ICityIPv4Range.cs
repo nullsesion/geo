@@ -1,6 +1,4 @@
-﻿using NpgsqlTypes;
-
-namespace Geo.DomainShared.Contracts;
+﻿namespace Geo.DomainShared.Contracts;
 
 public interface ICityIPv4Range
 {
@@ -11,6 +9,6 @@ public interface ICityIPv4Range
 	public bool IsAnonymousProxy { get; set; }
 	public bool IsSatelliteProvider { get; set; }
 	public bool? IsAnycast { get; set; }
-	public Coordinate? Location { get; set; }
+	public Coordinate? Location { get; set; } 
 	public int? AccuracyRadius { get; set; }
 }

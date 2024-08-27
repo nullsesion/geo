@@ -1,4 +1,8 @@
-﻿using Geo.DataSeeding.Interfaces;
+﻿using Geo.Application.CQRS.City.Commands.TruncateCityIPv4Range;
+using Geo.Application.CQRS.City.Commands.TruncateCityLocation;
+using Geo.Application.CQRS.Country.Commands.TruncateCountryLocation;
+using Geo.Application.CQRS.Country.Commands.TruncateTable;
+using Geo.DataSeeding.Interfaces;
 using Geo.DataSeeding.Services.CSV;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -21,16 +25,18 @@ namespace Geo.DataSeeding.Services
 			Dictionary<string, string> FileFragment = new Dictionary<string, string>()
 			{
 				{"GeoLite2CountryLocations" ,"GeoLite2-Country-Locations-en"},
-				{"GeoLite2CountryIPv4"      ,"GeoLite2-Country-Blocks-IPv4"},
 				{"GeoLite2CityLocations"    ,"GeoLite2-City-Locations-en"},
 				{"GeoLite2CityIPv4"         ,"GeoLite2-City-Blocks-IPv4"},
+				{"GeoLite2CountryIPv4"      ,"GeoLite2-Country-Blocks-IPv4"},
 			};
 
-			Console.WriteLine(tmpDir);
-			
+			var truncateCountryLocation = _mediator.Send(new TruncateCountryLocation(), CancellationToken.None).Result;
+			var truncateCityLocation = _mediator.Send(new TruncateCityLocation(), CancellationToken.None).Result;
+			var truncateCountryIPv4 = _mediator.Send(new TruncateCountryIPv4(), CancellationToken.None).Result;
+			var truncateCityIPv4Range = _mediator.Send(new TruncateCityIPv4Range(), CancellationToken.None).Result;
+
 			foreach (KeyValuePair<string, string> csv in FileFragment)
 			{
-				
 				switch (csv.Key)
 				{
 					case "GeoLite2CountryIPv4":
@@ -49,7 +55,6 @@ namespace Geo.DataSeeding.Services
 						_csvHelper.GeoLite2CityLocations(csv.Value, tmpDir, _mediator);
 						break;
 				}
-				
 			}
 		}
 	}

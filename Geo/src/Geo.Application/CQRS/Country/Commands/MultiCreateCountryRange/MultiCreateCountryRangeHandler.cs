@@ -1,33 +1,35 @@
-﻿using Geo.Application.Interfaces;
+﻿using System.Net.WebSockets;
+using Geo.Application.Interfaces;
 using Geo.Domain;
 using Geo.DomainShared;
+using Geo.DomainShared.Contracts;
 using MediatR;
 
 namespace Geo.Application.CQRS.Country.Commands.MultiCreateCountryRange
 {
-	public class MultiCreateCountryRangeHandler: IRequestHandler<MultiCreateCountryRangeIRequest, ResponseEntity<IEnumerable<string>>>
+	public class MultiCreateCountryRangeHandler: IRequestHandler<MultiCreateCountryRangeIRequest, ResponseEntity<bool>>
 	{
 		private readonly ICountryRepository _countryRepository;
 
 		public MultiCreateCountryRangeHandler(ICountryRepository countryRepository) =>
 			_countryRepository = countryRepository;
-		public async Task<ResponseEntity<IEnumerable<string>>> Handle(MultiCreateCountryRangeIRequest request, CancellationToken cancellationToken)
+		public async Task<ResponseEntity<bool>> Handle(MultiCreateCountryRangeIRequest request, CancellationToken cancellationToken)
 		{
 			if (request.CountryIPv4Ranges.Any())
 			{
-				List<string> successList = new List<string>();
-				foreach (var countryIPv4RangeRequest in request.CountryIPv4Ranges)
+				IEnumerable<CountryIPv4Range> countryIPv4Ranges = request.CountryIPv4Ranges
+					.Select(x => CountryIPv4Range.Create(x))
+					.Where(x => x.IsSuccess && x.Entity != null)
+					.Select(x => x.Entity);
+
+				bool res = _countryRepository.MultiInsertCountryIPv4RangeAsync(countryIPv4Ranges, cancellationToken);
+				return new ResponseEntity<bool>()
 				{
-					ResponseEntity<CountryIPv4Range> countryIPv4Range = CountryIPv4Range.Create(countryIPv4RangeRequest);
-					if (countryIPv4Range.IsSuccess)
-					{
-						successList.Add(countryIPv4Range.Entity.Network);
-						await _countryRepository.InsertCountryIPv4RangeAsync(countryIPv4Range.Entity, cancellationToken);
-					}
-				}
-				await _countryRepository.SaveChangesAsync();
+					Entity = res,
+					IsSuccess = true,
+				};
 			}
-			return new ResponseEntity<IEnumerable<string>>()
+			return new ResponseEntity<bool>()
 			{
 				ErrorDetail = "Empty List",
 				IsSuccess = false,

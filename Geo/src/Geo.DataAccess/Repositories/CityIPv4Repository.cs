@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EFCore.BulkExtensions;
 using Geo.Application.CQRS.City.Queries;
 using Geo.Application.Interfaces;
 using Geo.DataAccess.Configuration;
@@ -122,6 +123,22 @@ namespace Geo.DataAccess.Repositories
 				IsSuccess = false,
 				ErrorDetail = "Bad IP",
 			};
+		}
+
+		public bool MultiInsertCityLocationAsync(IEnumerable<ICityLocation> cityLocations, CancellationToken cancellationToken)
+		{
+			_dbContext.BulkInsertOrUpdateAsync(cityLocations.Select(x => _mapper.Map<CityLocationEntity>(x))).Wait();
+			_dbContext.BulkSaveChanges();
+			return true;
+		}
+
+		public async Task<bool> MultiInsertCityIPv4RangeAsync(IEnumerable<CityIPv4Range> cityIPv4Ranges, CancellationToken cancellationToken)
+		{
+			
+			await _dbContext.BulkInsertAsync(cityIPv4Ranges.Select(x => _mapper.Map<CityIPv4Entity>(x)));
+			_dbContext.BulkSaveChanges();
+			
+			return true;
 		}
 
 		public async Task SaveChangesAsync()

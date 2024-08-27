@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
+using EFCore.BulkExtensions;
 using Geo.Application.CQRS.Country.Queries.GetCountry;
 using Geo.Application.Interfaces;
 using Geo.DataAccess.Configuration;
 using Geo.DataAccess.Entities;
 using Geo.Domain;
 using Geo.DomainShared;
+using Geo.DomainShared.Contracts;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace Geo.DataAccess.Repositories
 {
@@ -119,6 +120,21 @@ namespace Geo.DataAccess.Repositories
 				;
 
 			return countryLocation.GeonameId;
+		}
+
+		public async Task<bool> MultiInsertCountryLocationAsync(IEnumerable<ICountryLocation> countryLocations, CancellationToken cancellationToken)
+		{
+			IEnumerable<CountryLocationEntity> r = countryLocations.Select(x => _mapper.Map<CountryLocationEntity>(x));
+			await _dbContext.BulkInsertOrUpdateAsync(r);
+			_dbContext.BulkSaveChanges();
+			return true;
+		}
+
+		public bool MultiInsertCountryIPv4RangeAsync(IEnumerable<CountryIPv4Range> countryIPv4Ranges, CancellationToken cancellationToken)
+		{
+			_dbContext.BulkInsertAsync(countryIPv4Ranges.Select(x => _mapper.Map<CountryIPv4Entity>(x))).Wait();
+			_dbContext.BulkSaveChanges();
+			return true;
 		}
 
 		public async Task<bool> TruncateCountryLocationAsync()
