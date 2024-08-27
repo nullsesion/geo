@@ -5,16 +5,8 @@ API
 
 
 ##Запуск 
-Запустить postgresql в docker при помощи StartDB.bat
-Применить Миграции при помощи App-Update-Database.bat
-
-
-Выполнить посев данных при помощи Geo.DataSeeding сделав его стартовым проектом
-![](seeding.jpg)
-F5
-
-сделать Geo.Api стартовым проектом
-![](apistart.jpg)
+Выполнить App-Docker-InstallOrReinstall-And-Start.bat
+Дождатся открытия в браузере
 
 Использовать API
 ![](swagger.jpg)
