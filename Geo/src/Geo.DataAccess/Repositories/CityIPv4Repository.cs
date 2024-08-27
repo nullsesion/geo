@@ -132,10 +132,12 @@ namespace Geo.DataAccess.Repositories
 			return true;
 		}
 
-		public async Task<bool> MultiInsertCityIPv4RangeAsync(IEnumerable<ICityIPv4Range> cityIPv4Ranges, CancellationToken cancellationToken)
+		public async Task<bool> MultiInsertCityIPv4RangeAsync(IEnumerable<CityIPv4Range> cityIPv4Ranges, CancellationToken cancellationToken)
 		{
+			
 			await _dbContext.BulkInsertAsync(cityIPv4Ranges.Select(x => _mapper.Map<CityIPv4Entity>(x)));
 			_dbContext.BulkSaveChanges();
+			
 			return true;
 		}
 

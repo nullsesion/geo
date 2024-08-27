@@ -23,9 +23,7 @@ namespace Geo.DataAccess.MapperConfig
 						=> (string)JObject.Parse(src.ContinentName)["en"]));
 
 			CreateMap<CountryIPv4Range, CountryIPv4Entity>();
-			CreateMap<ICountryIPv4Range, CountryIPv4Entity>();
 			
-
 			CreateMap<CountryLocation, CountryLocationEntity>()
 				.ForMember(dest => dest.ContinentName
 					, opt => opt.MapFrom(src
@@ -120,12 +118,6 @@ namespace Geo.DataAccess.MapperConfig
 				;
 
 			CreateMap<CityIPv4Range, CityIPv4Entity>()
-				.ForMember(dest => dest.Location
-					, opt => opt.MapFrom(src
-						=> new NpgsqlPoint(src.Location.Longitude, src.Location.Latilude)
-					));
-
-			CreateMap<ICityIPv4Range, CityIPv4Entity>()
 				.ForMember(dest => dest.Location
 					, opt => opt.MapFrom(src
 						=> new NpgsqlPoint(src.Location.Longitude, src.Location.Latilude)

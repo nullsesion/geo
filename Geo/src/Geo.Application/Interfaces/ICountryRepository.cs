@@ -15,7 +15,7 @@ public interface ICountryRepository
 	Task<bool> MultiInsertCountryLocationAsync(IEnumerable<ICountryLocation> cityLocations,
 		CancellationToken cancellationToken);
 
-	bool MultiInsertCountryIPv4RangeAsync(IEnumerable<ICountryIPv4Range> cityIPv4Ranges,
+	bool MultiInsertCountryIPv4RangeAsync(IEnumerable<CountryIPv4Range> cityIPv4Ranges,
 		CancellationToken cancellationToken);
 
 	Task<bool> TruncateCountryLocationAsync();

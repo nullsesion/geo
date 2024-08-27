@@ -16,7 +16,7 @@ public interface ICityIPv4Repository
 	bool MultiInsertCityLocationAsync(IEnumerable<ICityLocation> cityLocations,
 		CancellationToken cancellationToken);
 
-	Task<bool> MultiInsertCityIPv4RangeAsync(IEnumerable<ICityIPv4Range> cityIPv4Ranges,
+	Task<bool> MultiInsertCityIPv4RangeAsync(IEnumerable<CityIPv4Range> cityIPv4Ranges,
 		CancellationToken cancellationToken);
 
 	Task SaveChangesAsync();

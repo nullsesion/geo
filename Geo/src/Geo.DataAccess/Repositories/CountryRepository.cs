@@ -130,7 +130,7 @@ namespace Geo.DataAccess.Repositories
 			return true;
 		}
 
-		public bool MultiInsertCountryIPv4RangeAsync(IEnumerable<ICountryIPv4Range> countryIPv4Ranges, CancellationToken cancellationToken)
+		public bool MultiInsertCountryIPv4RangeAsync(IEnumerable<CountryIPv4Range> countryIPv4Ranges, CancellationToken cancellationToken)
 		{
 			_dbContext.BulkInsertAsync(countryIPv4Ranges.Select(x => _mapper.Map<CountryIPv4Entity>(x))).Wait();
 			_dbContext.BulkSaveChanges();
