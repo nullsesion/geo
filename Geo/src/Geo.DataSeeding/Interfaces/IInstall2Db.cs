@@ -4,5 +4,5 @@ namespace Geo.DataSeeding.Interfaces;
 
 public interface IInstall2Db
 {
-	public void RunStep(IConfiguration config);
+	public Task RunStep(IConfiguration config);
 }
