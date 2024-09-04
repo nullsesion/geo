@@ -8,9 +8,9 @@ namespace Geo.DataSeeding.Services
 		private readonly IInstall2Db _install2Db;
 		public Seeding(IInstall2Db install2Db) => _install2Db = install2Db;
 
-		public void RunStep(IConfiguration config)
+		public async Task RunStep(IConfiguration config)
 		{
-			_install2Db.RunStep(config);
+			await _install2Db.RunStep(config);
 		}
 	}
 }

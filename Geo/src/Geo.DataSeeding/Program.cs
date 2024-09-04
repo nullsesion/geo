@@ -12,39 +12,43 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 
-ServiceProvider CreateServiceProvider(IConfiguration config)
+public class Program
 {
-	var collection = new ServiceCollection();
-
-	collection.AddDbContext<IGeoApiDbContext, GeoApiDbContext>(
-		options => options.UseNpgsql(config.GetConnectionString(nameof(GeoApiDbContext)))
-	);
-	collection.AddScoped<ICountryRepository, CountryRepository>();
-	collection.AddScoped<ICityIPv4Repository, CityIPv4Repository>();
-
-	collection.AddScoped<Execution>();
-	collection.AddTransient<Display>();
-	collection.AddScoped<IStepPrepareDownload, DownloadManager>();
-	collection.AddScoped<IStepPrepareUnzip,UnzipFiles>();
-	collection.AddScoped<IInstall2Db, Install2Db>();
-	collection.AddScoped<IStepFinish, Seeding>();
-	collection.AddScoped<CsvService>();
-
-	collection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetCountry).Assembly));
-	collection.AddAutoMapper(cfg =>
+	static async Task Main(string[] args)
 	{
-		cfg.AddProfile(typeof(AppMappingProfile));
-	});
+		IConfigurationBuilder builder = new ConfigurationBuilder()
+			.SetBasePath(Directory.GetCurrentDirectory())
+			.AddJsonFile("appsettings.json", optional: false);
 
-	return collection.BuildServiceProvider();
+		IConfiguration config = builder.Build();
+
+		ServiceProvider serviceProvider = CreateServiceProvider(config); //config
+		await serviceProvider.GetRequiredService<Execution>().Run(config);
+	}
+	static ServiceProvider CreateServiceProvider(IConfiguration config)
+	{
+		var collection = new ServiceCollection();
+
+		collection.AddDbContext<IGeoApiDbContext, GeoApiDbContext>(
+			options => options.UseNpgsql(config.GetConnectionString(nameof(GeoApiDbContext)))
+		);
+		collection.AddScoped<ICountryRepository, CountryRepository>();
+		collection.AddScoped<ICityIPv4Repository, CityIPv4Repository>();
+
+		collection.AddScoped<Execution>();
+		collection.AddTransient<Display>();
+		collection.AddScoped<IStepPrepareDownload, DownloadManager>();
+		collection.AddScoped<IStepPrepareUnzip, UnzipFiles>();
+		collection.AddScoped<IInstall2Db, Install2Db>();
+		collection.AddScoped<IStepFinish, Seeding>();
+		collection.AddScoped<CsvService>();
+
+		collection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetCountry).Assembly));
+		collection.AddAutoMapper(cfg =>
+		{
+			cfg.AddProfile(typeof(AppMappingProfile));
+		});
+
+		return collection.BuildServiceProvider();
+	}
 }
-
-
-IConfigurationBuilder builder = new ConfigurationBuilder()
-	.SetBasePath(Directory.GetCurrentDirectory())
-	.AddJsonFile("appsettings.json", optional: false);
-
-	IConfiguration config = builder.Build();
-
-ServiceProvider serviceProvider = CreateServiceProvider(config); //config
-serviceProvider.GetRequiredService<Execution>().Run(config);

@@ -36,27 +36,8 @@ namespace Geo.DataSeeding.Services.CSV
 
 			return fileList;
 		}
-
-		//todo refactor this
-		/*
-		public void Load2DbFromCsv<TRequest>(string fragmentName, string path, IMediator mediator) where TRequest : MultiCreateCountryLocation
-		{
-			_display.WriteLine("LoadGeoLite2CountryLocations");
-			ResponseEntity<bool> res = new();
-			IEnumerable<FileInfo> csvFiles = FindFile(fragmentName, path);
-			if (!csvFiles.Any())
-				return;
-
-			var file = csvFiles.First();
-			using (var reader = new StreamReader(file.FullName))
-			using (var csvData = new CsvReader(reader, CultureInfo.InvariantCulture))
-			{
-				
-
-			}
-		}
-		*/
-		public void LoadGeoLite2CountryLocations(string fragmentName, string path, IMediator mediator)
+		
+		public async Task LoadGeoLite2CountryLocations(string fragmentName, string path, IMediator mediator)
 		{
 			_display.WriteLine("LoadGeoLite2CountryLocations");
 			ResponseEntity<bool> res = new ();
@@ -91,7 +72,7 @@ namespace Geo.DataSeeding.Services.CSV
 						if ((i % 100 == 0 && i > 1) || (i + 1) == total )
 						{
 							buffer.CountryLocations = countryLocations;
-							res = mediator.Send(buffer, CancellationToken.None).Result;
+							res = await mediator.Send(buffer, CancellationToken.None);
 							buffer = new MultiCreateCountryLocation()
 							{
 								CountryLocations = (new List<ICountryLocation>()) as IEnumerable<ICountryLocation>
@@ -105,7 +86,7 @@ namespace Geo.DataSeeding.Services.CSV
 			}
 		}
 
-		public void LoadGeoLite2CountryIPv4(string fragmentName, string path, IMediator mediator)
+		public async Task LoadGeoLite2CountryIPv4(string fragmentName, string path, IMediator mediator)
 		{
 			_display.WriteLine("LoadGeoLite2CountryIPv4");
 			DirectoryInfo dir = new DirectoryInfo(path);
@@ -147,7 +128,7 @@ namespace Geo.DataSeeding.Services.CSV
 							{
 								CountryIPv4Ranges = buffer,
 							};
-							res = mediator.Send(list, CancellationToken.None).Result;
+							res = await mediator.Send(list, CancellationToken.None);
 							list.CountryIPv4Ranges = new List<ICountryIPv4Range>();
 							buffer = new List<ICountryIPv4Range>();
 							_display.Write("*");
@@ -157,7 +138,7 @@ namespace Geo.DataSeeding.Services.CSV
 					{
 						CountryIPv4Ranges = buffer,
 					};
-					res = mediator.Send(list, CancellationToken.None).Result;
+					res = await mediator.Send(list, CancellationToken.None);
 					list.CountryIPv4Ranges = new List<ICountryIPv4Range>();
 					_display.Write("*");
 					_display.WriteLine();
@@ -165,7 +146,7 @@ namespace Geo.DataSeeding.Services.CSV
 				}
 			}
 		}
-		public void GeoLite2CityBlocksIPv4(string fragmentName, string path, IMediator mediator)
+		public async Task GeoLite2CityBlocksIPv4(string fragmentName, string path, IMediator mediator)
 		{
 			_display.WriteLine("GeoLite2CityBlocksIPv4");
 			DirectoryInfo dir = new DirectoryInfo(path);
@@ -212,7 +193,7 @@ namespace Geo.DataSeeding.Services.CSV
 							{
 								CityIPv4Ranges = buffer
 							};
-							res = mediator.Send(multiCreateCityIPv4Range, CancellationToken.None).Result;
+							res = await mediator.Send(multiCreateCityIPv4Range, CancellationToken.None);
 							buffer = new List<CreateCityIPv4Range>();
 							_display.Write("*");
 						}
@@ -221,7 +202,7 @@ namespace Geo.DataSeeding.Services.CSV
 					{
 						CityIPv4Ranges = buffer
 					};
-					res = mediator.Send(multiCreateCityIPv4Range, CancellationToken.None).Result;
+					res = await mediator.Send(multiCreateCityIPv4Range, CancellationToken.None);
 					buffer = new List<CreateCityIPv4Range>();
 					_display.Write("*");
 					_display.WriteLine();
@@ -229,7 +210,7 @@ namespace Geo.DataSeeding.Services.CSV
 				}
 			}
 		}
-		public void GeoLite2CityLocations(string fragmentName, string path, IMediator mediator)
+		public async Task GeoLite2CityLocations(string fragmentName, string path, IMediator mediator)
 		{
 			_display.WriteLine("GeoLite2CityLocations");
 			DirectoryInfo dir = new DirectoryInfo(path);
@@ -270,24 +251,24 @@ namespace Geo.DataSeeding.Services.CSV
 						buffer.Add(cityLocation);
 						if (i % 4000 == 0)//4000
 						{
-							ResponseEntity<bool> t = mediator.Send(new MultiCreateCityLocation()
+							ResponseEntity<bool> t = await mediator.Send(new MultiCreateCityLocation()
 							{
 								CityLocations = buffer,
-							}, CancellationToken.None).Result;
+							}, CancellationToken.None);
 							buffer = new List<CreateCityLocation>();
 							_display.Write("*");
 						}
 					}
 					
-					ResponseEntity<bool> t2 = mediator.Send(new MultiCreateCityLocation()
+					ResponseEntity<bool> t2 = await mediator.Send(new MultiCreateCityLocation()
 					{
 						CityLocations = buffer,
-					}, CancellationToken.None).Result;
+					}, CancellationToken.None);
 
 					_display.Write("*");
 					_display.WriteLine();
 					_display.WriteLine("---------------------------------------");
-					mediator.Send(new MultiCreateCityLocation()
+					await mediator.Send(new MultiCreateCityLocation()
 					{
 						CityLocations = buffer,
 					}, CancellationToken.None);
