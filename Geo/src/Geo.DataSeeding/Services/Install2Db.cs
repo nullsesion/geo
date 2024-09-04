@@ -18,7 +18,7 @@ namespace Geo.DataSeeding.Services
 		public Install2Db(IStepPrepareUnzip stepPrepareUnzip, IMediator mediator, CsvService csvHelper) 
 			=> (_stepPrepareUnzip, _mediator, _csvHelper) = (stepPrepareUnzip, mediator, csvHelper);
 
-		public void RunStep(IConfiguration config)
+		public async Task RunStep(IConfiguration config)
 		{
 			string tmpDir = _stepPrepareUnzip.RunStep(config);
 
@@ -30,29 +30,29 @@ namespace Geo.DataSeeding.Services
 				{"GeoLite2CountryIPv4"      ,"GeoLite2-Country-Blocks-IPv4"},
 			};
 
-			var truncateCountryLocation = _mediator.Send(new TruncateCountryLocation(), CancellationToken.None).Result;
-			var truncateCityLocation = _mediator.Send(new TruncateCityLocation(), CancellationToken.None).Result;
-			var truncateCountryIPv4 = _mediator.Send(new TruncateCountryIPv4(), CancellationToken.None).Result;
-			var truncateCityIPv4Range = _mediator.Send(new TruncateCityIPv4Range(), CancellationToken.None).Result;
+			var truncateCountryLocation = await _mediator.Send(new TruncateCountryLocation(), CancellationToken.None);
+			var truncateCityLocation = await _mediator.Send(new TruncateCityLocation(), CancellationToken.None);
+			var truncateCountryIPv4 = await _mediator.Send(new TruncateCountryIPv4(), CancellationToken.None);
+			var truncateCityIPv4Range = await _mediator.Send(new TruncateCityIPv4Range(), CancellationToken.None);
 
 			foreach (KeyValuePair<string, string> csv in FileFragment)
 			{
 				switch (csv.Key)
 				{
 					case "GeoLite2CountryIPv4":
-						_csvHelper.LoadGeoLite2CountryIPv4(csv.Value, tmpDir, _mediator);
+						await _csvHelper.LoadGeoLite2CountryIPv4(csv.Value, tmpDir, _mediator);
 						break;
 
 					case "GeoLite2CountryLocations":
-						_csvHelper.LoadGeoLite2CountryLocations(csv.Value, tmpDir, _mediator);
+						await _csvHelper.LoadGeoLite2CountryLocations(csv.Value, tmpDir, _mediator);
 						break;
 
 					case "GeoLite2CityIPv4":
-						_csvHelper.GeoLite2CityBlocksIPv4(csv.Value, tmpDir, _mediator);
+						await _csvHelper.GeoLite2CityBlocksIPv4(csv.Value, tmpDir, _mediator);
 						break;
 
 					case "GeoLite2CityLocations":
-						_csvHelper.GeoLite2CityLocations(csv.Value, tmpDir, _mediator);
+						await _csvHelper.GeoLite2CityLocations(csv.Value, tmpDir, _mediator);
 						break;
 				}
 			}

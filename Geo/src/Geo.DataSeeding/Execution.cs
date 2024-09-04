@@ -8,9 +8,9 @@ namespace Geo.DataSeeding
 		private readonly IStepFinish _seeding;
 		public Execution(IStepFinish seeding) => _seeding = seeding;
 
-		public void Run(IConfiguration config) //async Task
+		public async Task Run(IConfiguration config) //async Task
 		{
-			_seeding.RunStep(config);
+			await _seeding.RunStep(config);
 
 		}
 	}
