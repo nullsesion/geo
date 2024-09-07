@@ -32,16 +32,16 @@ public class Program
 		collection.AddDbContext<IGeoApiDbContext, GeoApiDbContext>(
 			options => options.UseNpgsql(config.GetConnectionString(nameof(GeoApiDbContext)))
 		);
-		collection.AddScoped<ICountryRepository, CountryRepository>();
-		collection.AddScoped<ICityIPv4Repository, CityIPv4Repository>();
+		collection.AddSingleton<ICountryRepository, CountryRepository>();
+		collection.AddSingleton<ICityIPv4Repository, CityIPv4Repository>();
 
-		collection.AddScoped<Execution>();
+		collection.AddSingleton<Execution>();
 		collection.AddTransient<Display>();
-		collection.AddScoped<IStepPrepareDownload, DownloadManager>();
-		collection.AddScoped<IStepPrepareUnzip, UnzipFiles>();
-		collection.AddScoped<IInstall2Db, Install2Db>();
-		collection.AddScoped<IStepFinish, Seeding>();
-		collection.AddScoped<CsvService>();
+		collection.AddSingleton<IStepPrepareDownload, DownloadManager>();
+		collection.AddSingleton<IStepPrepareUnzip, UnzipFiles>();
+		collection.AddSingleton<IInstall2Db, Install2Db>();
+		collection.AddSingleton<IStepFinish, Seeding>();
+		collection.AddSingleton<CsvService>();
 
 		collection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetCountry).Assembly));
 		collection.AddAutoMapper(cfg =>
