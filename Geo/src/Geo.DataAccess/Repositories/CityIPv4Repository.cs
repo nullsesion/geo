@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CSharpFunctionalExtensions;
 using EFCore.BulkExtensions;
 using Geo.Application.CQRS.City.Queries;
 using Geo.Application.Interfaces;
@@ -58,7 +59,7 @@ namespace Geo.DataAccess.Repositories
 
 			return true;
 		}
-		public async Task<ResponseEntity<CityIPv4Range>> GetCityIPv4RangeByIp(GetCity ip)
+		public async Task<Result<CityIPv4Range>> GetCityIPv4RangeByIp(GetCity ip)
 		{
 			if (ip.Ip.TryIpV4ToInt(out int number))
 			{
@@ -74,13 +75,10 @@ namespace Geo.DataAccess.Repositories
 					;
 
 				if (cityIPv4s == null)
-					return new ResponseEntity<CityIPv4Range>()
-					{
-						IsSuccess = false,
-						ErrorDetail = "Not Found",
-					};
+					return Result.Failure<CityIPv4Range>("Not Found");
 
-				ResponseEntity<CityIPv4Range> entity = CityIPv4Range.Create(cityIPv4s.Network
+
+				Result<CityIPv4Range> entity = CityIPv4Range.Create(cityIPv4s.Network
 					, cityIPv4s.GeonameId
 					, cityIPv4s.RegisteredCountryGeoNameId
 					, cityIPv4s.RepresentedCountryGeoNameId
@@ -91,15 +89,9 @@ namespace Geo.DataAccess.Repositories
 					, cityIPv4s.AccuracyRadius);
 
 				if (!entity.IsSuccess)
-				{
-					return new ResponseEntity<CityIPv4Range>()
-					{
-						IsSuccess = false,
-						ErrorDetail = entity.ErrorDetail,
-					};
-				}
+					return Result.Failure<CityIPv4Range>("Not Found");
 
-				entity.Entity
+				entity.Value
 					.SetGeoname(cityIPv4s.Geoname == null
 						? null
 						: _mapper.Map<CityLocation>(cityIPv4s.Geoname))
@@ -111,18 +103,10 @@ namespace Geo.DataAccess.Repositories
 						: _mapper.Map<CityLocation>(cityIPv4s.RepresentedCountryGeoName))
 					;
 
-				return new ResponseEntity<CityIPv4Range>()
-				{
-					IsSuccess = true,
-					Entity = entity.Entity
-				};
+				return Result.Success<CityIPv4Range>(entity.Value);
 			}
 
-			return new ResponseEntity<CityIPv4Range>()
-			{
-				IsSuccess = false,
-				ErrorDetail = "Bad IP",
-			};
+			return Result.Failure<CityIPv4Range>("Not Found");
 		}
 
 		public bool MultiInsertCityLocationAsync(IEnumerable<ICityLocation> cityLocations, CancellationToken cancellationToken)
