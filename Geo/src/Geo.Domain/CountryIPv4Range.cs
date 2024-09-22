@@ -1,4 +1,5 @@
-﻿using Geo.DomainShared;
+﻿using CSharpFunctionalExtensions;
+using Geo.DomainShared;
 using Geo.DomainShared.Contracts;
 
 namespace Geo.Domain
@@ -7,7 +8,7 @@ namespace Geo.Domain
 	{
 		private const string ERROR_CREATE = "Error Create Country IPv4 Range";
 
-		public static ResponseEntity<CountryIPv4Range> Create(ICountryIPv4Range countryIPv4Range)
+		public static Result<CountryIPv4Range> Create(ICountryIPv4Range countryIPv4Range)
 		{
 			return Create(
 				countryIPv4Range.Network,
@@ -20,7 +21,7 @@ namespace Geo.Domain
 			);
 		}
 
-		private static ResponseEntity<CountryIPv4Range> Create(
+		private static Result<CountryIPv4Range> Create(
 			string network,
 			int? geonameId,
 			int? registeredCountryGeoNameId,
@@ -31,13 +32,7 @@ namespace Geo.Domain
 			)
 		{
 			if (geonameId == null && registeredCountryGeoNameId == null && representedCountryGeoNameId == null)
-			{
-				return new ResponseEntity<CountryIPv4Range>()
-				{
-					IsSuccess = false,
-					ErrorDetail = ERROR_CREATE
-				};
-			}
+				return Result.Failure<CountryIPv4Range>(ERROR_CREATE);
 			
 			if (GetFromString(network, out int mask, out int ipMin, out int ipMax))
 			{
@@ -54,18 +49,11 @@ namespace Geo.Domain
 					IsSatelliteProvider = isSatelliteProvider,
 					IsAnycast = isAnycast
 				};
-				return new ResponseEntity<CountryIPv4Range>()
-				{
-					IsSuccess = true,
-					Entity = countryIPv4Range,
-				};
+
+				return Result.Success(countryIPv4Range);
 			}
 
-			return new ResponseEntity<CountryIPv4Range>()
-			{
-				IsSuccess = false,
-				ErrorDetail = ERROR_CREATE
-			};
+			return Result.Failure<CountryIPv4Range>(ERROR_CREATE);
 		}
 
 		private static bool GetFromString(string network, out int mask, out int ipMin, out int ipMax)
