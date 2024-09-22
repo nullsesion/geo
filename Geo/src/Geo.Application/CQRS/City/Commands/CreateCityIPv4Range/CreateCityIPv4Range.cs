@@ -1,11 +1,12 @@
-﻿using Geo.DomainShared;
+﻿using CSharpFunctionalExtensions;
+using Geo.DomainShared;
 using Geo.DomainShared.Contracts;
 using MediatR;
 using NpgsqlTypes;
 
 namespace Geo.Application.CQRS.City.Commands.CreateCityIPv4Range
 {
-	public class CreateCityIPv4Range : IRequest<ResponseEntity<string>>, ICityIPv4Range
+	public class CreateCityIPv4Range : IRequest<Result>, ICityIPv4Range
 	{
 		public string Network { get; set; }
 		public int? GeonameId { get; set; }

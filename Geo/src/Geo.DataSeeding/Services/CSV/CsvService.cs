@@ -16,6 +16,7 @@ using Geo.Application.CQRS.Country.Commands.MultiCreateCountryRange;
 using Geo.Application.CQRS.Country.Commands.TruncateCountryLocation;
 using Geo.Application.CQRS.Country.Commands.MultiCreateCountryLocation;
 using Geo.Domain;
+using CSharpFunctionalExtensions;
 
 
 namespace Geo.DataSeeding.Services.CSV
@@ -167,7 +168,7 @@ namespace Geo.DataSeeding.Services.CSV
 					{
 						CityIPv4Ranges = null
 					};
-					ResponseEntity<bool> res;
+					Result res;
 					foreach (GeoLite2CityIPv4 geoLite2CityIPv4 in records)
 					{
 						i++;

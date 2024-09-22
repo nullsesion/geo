@@ -1,4 +1,5 @@
-﻿using Geo.Application.CQRS.City.Queries;
+﻿using CSharpFunctionalExtensions;
+using Geo.Application.CQRS.City.Queries;
 using Geo.Domain;
 using Geo.DomainShared;
 using Geo.DomainShared.Contracts;
@@ -11,7 +12,7 @@ public interface ICityIPv4Repository
 	Task<bool> TruncateCityIPv4RangeAsync();
 	Task<int> InsertCityLocationAsync(CityLocation cityLocation, CancellationToken cancellationToken);
 	Task<bool> TruncateCityLocationAsync();
-	Task<ResponseEntity<CityIPv4Range>> GetCityIPv4RangeByIp(GetCity ip);
+	Task<Result<CityIPv4Range>> GetCityIPv4RangeByIp(GetCity ip);
 
 	bool MultiInsertCityLocationAsync(IEnumerable<ICityLocation> cityLocations,
 		CancellationToken cancellationToken);
