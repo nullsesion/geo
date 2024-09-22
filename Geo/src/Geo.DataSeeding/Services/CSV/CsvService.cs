@@ -108,7 +108,7 @@ namespace Geo.DataSeeding.Services.CSV
 					{
 						CountryIPv4Ranges = null,
 					};
-					ResponseEntity<bool> res = new ();
+					Result res = new ();
 					foreach (GeoLite2CountryIPv4 r in records)
 					{
 						i++;
