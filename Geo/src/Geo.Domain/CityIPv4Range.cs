@@ -80,7 +80,7 @@ namespace Geo.Domain
 						IsAnonymousProxy = cityIPv4Range.IsAnonymousProxy,
 						IsSatelliteProvider = cityIPv4Range.IsSatelliteProvider,
 						IsAnycast = cityIPv4Range.IsAnycast,
-						Location  = cityIPv4Range.Location,
+						//Location  = cityIPv4Range.Location,
 						AccuracyRadius = cityIPv4Range.AccuracyRadius
 				};
 

@@ -1,5 +1,4 @@
-﻿
-using Geo.DomainShared;
+﻿using Geo.DomainShared;
 using Geo.DomainShared.Contracts;
 using MediatR;
 
