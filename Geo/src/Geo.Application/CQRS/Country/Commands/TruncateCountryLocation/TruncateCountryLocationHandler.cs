@@ -1,4 +1,5 @@
-﻿using Geo.Application.CQRS.Country.Commands.TruncateTable;
+﻿using CSharpFunctionalExtensions;
+using Geo.Application.CQRS.Country.Commands.TruncateTable;
 using Geo.Application.Interfaces;
 using Geo.DomainShared;
 using MediatR;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Geo.Application.CQRS.Country.Commands.TruncateCountryLocation
 {
-	public class TruncateCountryLocationHandler : IRequestHandler<TruncateCountryLocation, ResponseEntity<bool>>
+	public class TruncateCountryLocationHandler : IRequestHandler<TruncateCountryLocation, Result>
 	{
 		private readonly ICountryRepository _countryRepository;
 
@@ -19,15 +20,11 @@ namespace Geo.Application.CQRS.Country.Commands.TruncateCountryLocation
 			_countryRepository = countryRepository;
 		}
 
-		public async Task<ResponseEntity<bool>> Handle(TruncateCountryLocation request, CancellationToken cancellationToken)
+		public async Task<Result> Handle(TruncateCountryLocation request, CancellationToken cancellationToken)
 		{
 			await _countryRepository.TruncateCountryLocationAsync();
 			await _countryRepository.SaveChangesAsync();
-			return new ResponseEntity<bool>()
-			{
-				IsSuccess = true,
-				Entity = true,
-			};
+			return Result.Success();
 		}
 	}
 }

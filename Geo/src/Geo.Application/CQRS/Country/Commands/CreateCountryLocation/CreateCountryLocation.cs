@@ -1,10 +1,11 @@
-﻿using Geo.DomainShared;
+﻿using CSharpFunctionalExtensions;
+using Geo.DomainShared;
 using Geo.DomainShared.Contracts;
 using MediatR;
 
 namespace Geo.Application.CQRS.Country.Commands.CreateCountryLocation
 {
-	public class CreateCountryLocation : IRequest<ResponseEntity<int>>, ICountryLocation
+	public class CreateCountryLocation : IRequest<Result>, ICountryLocation
 	{
 		public int GeonameId { get; set; }
 		public string LocaleCode { get; set; }

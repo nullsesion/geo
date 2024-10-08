@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Geo.DataAccess.Entities;
 using Geo.Domain;
+using Geo.Domain.Shared.Contracts;
 using Geo.DomainShared;
 using Geo.DomainShared.Contracts;
 using GeoLoad.Entities;
@@ -120,13 +121,7 @@ namespace Geo.DataAccess.MapperConfig
 			CreateMap<CityIPv4Range, CityIPv4Entity>()
 				.ForMember(dest => dest.Location
 					, opt => opt.MapFrom(src
-						=> new NpgsqlPoint(src.Location.Longitude, src.Location.Latilude)
-					));
-
-			CreateMap<CityIPv4Entity, ICityIPv4Range>()
-				.ForMember(dest => dest.Location
-					, opt => opt.MapFrom(src
-						=> new Coordinate(src.Location.Value.X, src.Location.Value.Y)
+						=> new NpgsqlPoint(src.Location.Longitude, src.Location.Latitude)
 					));
 		}
 	}

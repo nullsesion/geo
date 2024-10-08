@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Geo.Domain.Shared.Contracts;
 using Geo.DomainShared;
 using Geo.DomainShared.Contracts;
 using NpgsqlTypes;

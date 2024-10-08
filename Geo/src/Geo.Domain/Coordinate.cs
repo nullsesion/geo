@@ -5,13 +5,13 @@ namespace Geo.Domain;
 
 public record Coordinate
 {
-	private readonly double _longitude;
-	private readonly double _latitude;
+	public double Longitude { get; private set; }
+	public double Latitude { get; private set; }
 
 	private Coordinate(double longitude, double latitude)
 	{
-		_longitude = longitude;
-		_latitude = latitude;
+		Longitude = longitude;
+		Latitude = latitude;
 	}
 
 	public static Result<Coordinate> Create(double longitude, double latitude)

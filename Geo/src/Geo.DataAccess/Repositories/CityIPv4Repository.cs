@@ -6,6 +6,7 @@ using Geo.Application.Interfaces;
 using Geo.DataAccess.Configuration;
 using Geo.DataAccess.Entities;
 using Geo.Domain;
+using Geo.Domain.Shared.Contracts;
 using Geo.DomainShared;
 using Geo.DomainShared.Contracts;
 using GeoLoad.Entities;
@@ -77,6 +78,10 @@ namespace Geo.DataAccess.Repositories
 				if (cityIPv4s == null)
 					return Result.Failure<CityIPv4Range>("Not Found");
 
+				Coordinate coordinate = null;
+				Result<Coordinate> tryCoordinate = Coordinate.Create(cityIPv4s.Location.Value.X, cityIPv4s.Location.Value.Y);
+				if (tryCoordinate.IsSuccess)
+					coordinate = tryCoordinate.Value;
 
 				Result<CityIPv4Range> entity = CityIPv4Range.Create(cityIPv4s.Network
 					, cityIPv4s.GeonameId
@@ -85,7 +90,7 @@ namespace Geo.DataAccess.Repositories
 					, cityIPv4s.IsAnonymousProxy
 					, cityIPv4s.IsSatelliteProvider
 					, cityIPv4s.IsAnycast
-					, new Coordinate(cityIPv4s.Location.Value.X, cityIPv4s.Location.Value.Y)
+					, coordinate
 					, cityIPv4s.AccuracyRadius);
 
 				if (!entity.IsSuccess)

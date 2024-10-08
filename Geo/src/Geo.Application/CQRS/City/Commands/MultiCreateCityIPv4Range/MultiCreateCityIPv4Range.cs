@@ -1,7 +1,6 @@
-﻿using Geo.DomainShared.Contracts;
-using MediatR;
-using Geo.DomainShared;
+﻿using MediatR;
 using CSharpFunctionalExtensions;
+using Geo.Domain.Shared.Contracts;
 
 namespace Geo.Application.CQRS.City.Commands.MultiCreateCityIPv4Range
 {

@@ -1,17 +1,18 @@
-﻿using Geo.Application.Interfaces;
+﻿using CSharpFunctionalExtensions;
+using Geo.Application.Interfaces;
 using Geo.Domain;
 using Geo.DomainShared;
 using MediatR;
 
 namespace Geo.Application.CQRS.Country.Commands.CreateCountryLocation
 {
-	public class CreateCountryLocationHandler: IRequestHandler<CreateCountryLocation, ResponseEntity<int>>
+	public class CreateCountryLocationHandler: IRequestHandler<CreateCountryLocation, Result>
 	{
 		private readonly ICountryRepository _countryRepository;
 
 		public CreateCountryLocationHandler(ICountryRepository countryRepository) => _countryRepository = countryRepository;
 
-		public async Task<ResponseEntity<int>> Handle(CreateCountryLocation request, CancellationToken cancellationToken)
+		public async Task<Result> Handle(CreateCountryLocation request, CancellationToken cancellationToken)
 		{
 			CountryLocation countryLocation = new CountryLocation()
 			{
@@ -28,11 +29,7 @@ namespace Geo.Application.CQRS.Country.Commands.CreateCountryLocation
 
 			await _countryRepository.SaveChangesAsync();
 
-			return new ResponseEntity<int>()
-			{
-				Entity = geonameId,
-				IsSuccess = true,
-			};
+			return Result.Success();
 		}
 	}
 }

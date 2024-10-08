@@ -1,8 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
-using Geo.DomainShared;
-using Geo.DomainShared.Contracts;
+using Geo.Domain;
+using Geo.Domain.Shared.Contracts;
 using MediatR;
-using NpgsqlTypes;
 
 namespace Geo.Application.CQRS.City.Commands.CreateCityIPv4Range
 {
