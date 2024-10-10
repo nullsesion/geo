@@ -197,7 +197,7 @@ namespace Geo.DataSeeding.Services.CSV
 							{
 								CityIPv4Ranges = buffer
 							};
-							res = await mediator.Send(multiCreateCityIPv4Range, CancellationToken.None);
+							await mediator.Send(multiCreateCityIPv4Range, CancellationToken.None);
 							buffer = new List<CreateCityIPv4Range>();
 							_display.Write("*");
 						}
@@ -206,7 +206,7 @@ namespace Geo.DataSeeding.Services.CSV
 					{
 						CityIPv4Ranges = buffer
 					};
-					res = await mediator.Send(multiCreateCityIPv4Range, CancellationToken.None);
+					await mediator.Send(multiCreateCityIPv4Range, CancellationToken.None);
 					buffer = new List<CreateCityIPv4Range>();
 					_display.Write("*");
 					_display.WriteLine();

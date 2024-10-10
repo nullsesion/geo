@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using CSharpFunctionalExtensions;
 using Geo.DataAccess.Entities;
 using Geo.Domain;
 using Geo.Domain.Shared.Contracts;
-using Geo.DomainShared;
 using Geo.DomainShared.Contracts;
 using GeoLoad.Entities;
 using Newtonsoft.Json;
@@ -121,8 +121,32 @@ namespace Geo.DataAccess.MapperConfig
 			CreateMap<CityIPv4Range, CityIPv4Entity>()
 				.ForMember(dest => dest.Location
 					, opt => opt.MapFrom(src
-						=> new NpgsqlPoint(src.Location.Longitude, src.Location.Latitude)
+						=> CoordinateToNpgsqlPoint(src.Location)
 					));
+
+			CreateMap<CityIPv4Entity, ICityIPv4Range>()
+				.ForMember(dest => dest.Location
+					, opt => opt.MapFrom(src
+						=> NpgsqlPointToCoordinate(src.Location)
+					));
+		}
+
+		public Coordinate NpgsqlPointToCoordinate(NpgsqlPoint? src)
+		{
+			Coordinate coordinate = null;
+			Result<Coordinate> tryCoordinate = Coordinate.Create(src?.X ?? double.MinValue, src?.Y ?? double.MinValue);
+			if (tryCoordinate.IsSuccess)
+				coordinate = tryCoordinate.Value;
+			return coordinate;
+		}
+
+		public NpgsqlPoint CoordinateToNpgsqlPoint(Coordinate coordinate)
+		{
+			if (coordinate is null)
+				return new NpgsqlPoint(0, 0);
+
+			NpgsqlPoint point = new NpgsqlPoint(coordinate.Latitude, coordinate.Longitude);
+			return point;
 		}
 	}
 }

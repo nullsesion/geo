@@ -24,10 +24,10 @@ namespace Geo.DataSeeding.Services
 
 			Dictionary<string, string> FileFragment = new Dictionary<string, string>()
 			{
-				{"GeoLite2CountryLocations" ,"GeoLite2-Country-Locations-en"},
-				{"GeoLite2CityLocations"    ,"GeoLite2-City-Locations-en"},
+				//{"GeoLite2CountryLocations" ,"GeoLite2-Country-Locations-en"},
+				//{"GeoLite2CityLocations"    ,"GeoLite2-City-Locations-en"},
 				{"GeoLite2CityIPv4"         ,"GeoLite2-City-Blocks-IPv4"},
-				{"GeoLite2CountryIPv4"      ,"GeoLite2-Country-Blocks-IPv4"},
+				//{"GeoLite2CountryIPv4"      ,"GeoLite2-Country-Blocks-IPv4"},
 			};
 
 			var truncateCountryLocation = await _mediator.Send(new TruncateCountryLocation(), CancellationToken.None);
