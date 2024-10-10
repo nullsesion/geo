@@ -36,7 +36,7 @@ namespace Geo.Api.Controllers
 
 			if (response.IsSuccess)
 			{
-				return new JsonResult(_mapper.Map<City>(response.Value));
+				return new JsonResult(_mapper.Map<CityResponse>(response.Value));
 			}
 			/*
 			ResponseEntity<CountryIPv4Range> response = await _mediator.Send(new GetCountry()
@@ -47,7 +47,7 @@ namespace Geo.Api.Controllers
 			, cancellationToken);
 			if (response.IsSuccess)
 			{
-				return Results.Json(_mapper.Map<Country>(response.Entity) );
+				return Results.Json(_mapper.Map<CountryResponse>(response.Entity) );
 			}
 			return Results.BadRequest(response.ErrorDetail);
 			*/

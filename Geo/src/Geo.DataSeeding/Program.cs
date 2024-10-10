@@ -7,7 +7,6 @@ using Geo.DataSeeding;
 using Geo.DataSeeding.Interfaces;
 using Geo.DataSeeding.Services;
 using Geo.DataSeeding.Services.CSV;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -29,9 +28,11 @@ public class Program
 	{
 		var collection = new ServiceCollection();
 
-		collection.AddDbContext<IGeoApiDbContext, GeoApiDbContext>(
-			options => options.UseNpgsql(config.GetConnectionString(nameof(GeoApiDbContext)))
-		);
+
+		collection.AddSingleton<IConfiguration, Config>();
+		collection.AddDbContext<IGeoApiDbContext, GeoApiDbContext>();
+		//options => options.UseNpgsql(config.GetConnectionString(nameof(GeoApiDbContext)))
+
 		collection.AddSingleton<ICountryRepository, CountryRepository>();
 		collection.AddSingleton<ICityIPv4Repository, CityIPv4Repository>();
 

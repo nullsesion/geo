@@ -1,6 +1,6 @@
 ﻿namespace Geo.Api.Models
 {
-	public class Country
+	public class CountryResponse
 	{
 		public string Network { get; set; }
 		public bool IsAnonymousProxy { get; set; }

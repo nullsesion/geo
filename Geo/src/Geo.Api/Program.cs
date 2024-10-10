@@ -20,9 +20,8 @@ namespace Geo.Api
 
 			//ConfigurationManager t = builder.Configuration;
 
-			builder.Services.AddDbContext<IGeoApiDbContext, GeoApiDbContext>(
-				options => options.UseNpgsql(builder.Configuration.GetConnectionString(nameof(GeoApiDbContext)))
-			);
+			builder.Services.AddDbContext<IGeoApiDbContext, GeoApiDbContext>();
+			//options => options.UseNpgsql(builder.Configuration.GetConnectionString("GeoApiDbContext"))
 
 			builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 			builder.Services.AddScoped<ICityIPv4Repository, CityIPv4Repository>();

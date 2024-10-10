@@ -1,6 +1,7 @@
-﻿namespace Geo.DomainShared.Contracts;
+﻿namespace Geo.Domain.Shared.Contracts;
 
-public interface ICountryIPv4Range
+
+public interface ICityIPv4Range
 {
 	public string Network { get; set; }
 	public int? GeonameId { get; set; }
@@ -9,4 +10,6 @@ public interface ICountryIPv4Range
 	public bool IsAnonymousProxy { get; set; }
 	public bool IsSatelliteProvider { get; set; }
 	public bool? IsAnycast { get; set; }
+	public Coordinate? Location { get; set; } 
+	public int? AccuracyRadius { get; set; }
 }

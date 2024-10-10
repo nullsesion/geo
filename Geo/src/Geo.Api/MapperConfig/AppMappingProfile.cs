@@ -10,10 +10,10 @@ namespace Geo.Api.MapperConfig
 		public AppMappingProfile()
 		{
 			CreateMap<ICountryLocation, CountryInfo>();
-			CreateMap<CountryIPv4Range, Country>();
+			CreateMap<CountryIPv4Range, CountryResponse>();
 
 			CreateMap<CityLocation, CityInfo>();
-			CreateMap<CityIPv4Range, City>();
+			CreateMap<CityIPv4Range, CityResponse>();
 		}
 	}
 }

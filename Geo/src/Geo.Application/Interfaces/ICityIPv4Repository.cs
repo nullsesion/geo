@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Geo.Application.CQRS.City.Queries;
 using Geo.Domain;
+using Geo.Domain.Shared.Contracts;
 using Geo.DomainShared;
 using Geo.DomainShared.Contracts;
 

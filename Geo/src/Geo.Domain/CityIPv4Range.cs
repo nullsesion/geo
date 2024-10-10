@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Geo.Domain.Shared.Contracts;
 using Geo.DomainShared;
 using Geo.DomainShared.Contracts;
 using NpgsqlTypes;
@@ -69,6 +70,17 @@ namespace Geo.Domain
 
 			if (GetFromString(cityIPv4Range.Network, out int mask, out int ipMin, out int ipMax))
 			{
+				Coordinate coordinate = null;
+
+				if (cityIPv4Range.Location is not null)
+				{
+					Result<Coordinate> tryCoordinate =
+						Coordinate.Create(cityIPv4Range.Location.Longitude
+							, cityIPv4Range.Location.Latitude);
+					if (tryCoordinate.IsSuccess)
+						coordinate = tryCoordinate.Value;
+				}
+
 				CityIPv4Range _cityIPv4Range = new CityIPv4Range()
 				{
 						Network = cityIPv4Range.Network,
@@ -80,7 +92,7 @@ namespace Geo.Domain
 						IsAnonymousProxy = cityIPv4Range.IsAnonymousProxy,
 						IsSatelliteProvider = cityIPv4Range.IsSatelliteProvider,
 						IsAnycast = cityIPv4Range.IsAnycast,
-						Location  = cityIPv4Range.Location,
+						Location  = coordinate,
 						AccuracyRadius = cityIPv4Range.AccuracyRadius
 				};
 

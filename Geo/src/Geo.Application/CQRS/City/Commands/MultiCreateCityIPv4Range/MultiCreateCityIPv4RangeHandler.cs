@@ -22,7 +22,7 @@ namespace Geo.Application.CQRS.City.Commands.MultiCreateCityIPv4Range
 					.Where(x => x.IsSuccess && x.Value != null)
 					.Select(x => x.Value);
 
-				bool res = await _cityIPv4Repository.MultiInsertCityIPv4RangeAsync(cityIPv4Ranges, cancellationToken);
+				await _cityIPv4Repository.MultiInsertCityIPv4RangeAsync(cityIPv4Ranges, cancellationToken);
 				return Result.Success();
 			}
 			return Result.Failure("Empty List");
