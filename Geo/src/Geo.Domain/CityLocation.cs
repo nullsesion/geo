@@ -1,4 +1,5 @@
-﻿using Geo.DomainShared.Contracts;
+﻿using Geo.Domain.Shared.Contracts;
+using Geo.DomainShared.Contracts;
 
 namespace Geo.Domain
 {

@@ -1,17 +1,18 @@
-﻿using Geo.Application.Interfaces;
+﻿using CSharpFunctionalExtensions;
+using Geo.Application.Interfaces;
 using Geo.Domain;
 using Geo.DomainShared;
 using MediatR;
 
 namespace Geo.Application.CQRS.City.Commands.CreateCityLocation
 {
-	public class CreateCityLocationHandler: IRequestHandler<CreateCityLocation, ResponseEntity<int>>
+	public class CreateCityLocationHandler: IRequestHandler<CreateCityLocation, Result>
 	{
 		private readonly ICityIPv4Repository _cityIPv4Repository;
 
 		public CreateCityLocationHandler(ICityIPv4Repository cityIPv4Repository) => _cityIPv4Repository = cityIPv4Repository;
 
-		public async Task<ResponseEntity<int>> Handle(CreateCityLocation request, CancellationToken cancellationToken)
+		public async Task<Result> Handle(CreateCityLocation request, CancellationToken cancellationToken)
 		{
 			var res = await _cityIPv4Repository.InsertCityLocationAsync(new CityLocation()
 			{
@@ -33,11 +34,7 @@ namespace Geo.Application.CQRS.City.Commands.CreateCityLocation
 
 			await _cityIPv4Repository.SaveChangesAsync();
 
-			return new ResponseEntity<int>()
-			{
-				IsSuccess = true,
-				Entity = res,
-			};
+			return Result.Success();
 		}
 	}
 }

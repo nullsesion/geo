@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using CSharpFunctionalExtensions;
 using EFCore.BulkExtensions;
 using Geo.Application.CQRS.City.Queries;
 using Geo.Application.Interfaces;
 using Geo.DataAccess.Configuration;
 using Geo.DataAccess.Entities;
 using Geo.Domain;
+using Geo.Domain.Shared.Contracts;
 using Geo.DomainShared;
 using Geo.DomainShared.Contracts;
 using GeoLoad.Entities;
@@ -58,7 +60,7 @@ namespace Geo.DataAccess.Repositories
 
 			return true;
 		}
-		public async Task<ResponseEntity<CityIPv4Range>> GetCityIPv4RangeByIp(GetCity ip)
+		public async Task<Result<CityIPv4Range>> GetCityIPv4RangeByIp(GetCity ip)
 		{
 			if (ip.Ip.TryIpV4ToInt(out int number))
 			{
@@ -74,32 +76,27 @@ namespace Geo.DataAccess.Repositories
 					;
 
 				if (cityIPv4s == null)
-					return new ResponseEntity<CityIPv4Range>()
-					{
-						IsSuccess = false,
-						ErrorDetail = "Not Found",
-					};
+					return Result.Failure<CityIPv4Range>("Not Found");
 
-				ResponseEntity<CityIPv4Range> entity = CityIPv4Range.Create(cityIPv4s.Network
+				Coordinate coordinate = null;
+				Result<Coordinate> tryCoordinate = Coordinate.Create(cityIPv4s.Location.Value.X, cityIPv4s.Location.Value.Y);
+				if (tryCoordinate.IsSuccess)
+					coordinate = tryCoordinate.Value;
+
+				Result<CityIPv4Range> entity = CityIPv4Range.Create(cityIPv4s.Network
 					, cityIPv4s.GeonameId
 					, cityIPv4s.RegisteredCountryGeoNameId
 					, cityIPv4s.RepresentedCountryGeoNameId
 					, cityIPv4s.IsAnonymousProxy
 					, cityIPv4s.IsSatelliteProvider
 					, cityIPv4s.IsAnycast
-					, new Coordinate(cityIPv4s.Location.Value.X, cityIPv4s.Location.Value.Y)
+					, coordinate
 					, cityIPv4s.AccuracyRadius);
 
 				if (!entity.IsSuccess)
-				{
-					return new ResponseEntity<CityIPv4Range>()
-					{
-						IsSuccess = false,
-						ErrorDetail = entity.ErrorDetail,
-					};
-				}
+					return Result.Failure<CityIPv4Range>("Not Found");
 
-				entity.Entity
+				entity.Value
 					.SetGeoname(cityIPv4s.Geoname == null
 						? null
 						: _mapper.Map<CityLocation>(cityIPv4s.Geoname))
@@ -111,18 +108,10 @@ namespace Geo.DataAccess.Repositories
 						: _mapper.Map<CityLocation>(cityIPv4s.RepresentedCountryGeoName))
 					;
 
-				return new ResponseEntity<CityIPv4Range>()
-				{
-					IsSuccess = true,
-					Entity = entity.Entity
-				};
+				return Result.Success<CityIPv4Range>(entity.Value);
 			}
 
-			return new ResponseEntity<CityIPv4Range>()
-			{
-				IsSuccess = false,
-				ErrorDetail = "Bad IP",
-			};
+			return Result.Failure<CityIPv4Range>("Not Found");
 		}
 
 		public bool MultiInsertCityLocationAsync(IEnumerable<ICityLocation> cityLocations, CancellationToken cancellationToken)

@@ -5,10 +5,10 @@ using Geo.Domain;
 using Geo.DomainShared;
 using MediatR;
 using System.ComponentModel.DataAnnotations;
-using System.Reflection.Metadata;
 using AutoMapper;
 using Geo.Api.Models;
 using Geo.Application.CQRS.City.Queries;
+using CSharpFunctionalExtensions;
 
 namespace Geo.Api.Controllers
 {
@@ -26,9 +26,9 @@ namespace Geo.Api.Controllers
 		}
 
 		[HttpGet(Name = "GetIP")]
-		public async Task<IResult> Get([Required] string Ip, CancellationToken cancellationToken)
+		public async Task<JsonResult> Get([Required] string Ip, CancellationToken cancellationToken)
 		{
-			ResponseEntity<CityIPv4Range> response = await _mediator.Send(new GetCity()
+			Result<CityIPv4Range> response = await _mediator.Send(new GetCity()
 			{
 				Ip = Ip,
 				LocaleCode = "en"
@@ -36,7 +36,7 @@ namespace Geo.Api.Controllers
 
 			if (response.IsSuccess)
 			{
-				return Results.Json(_mapper.Map<City>(response.Entity));
+				return new JsonResult(_mapper.Map<CityResponse>(response.Value));
 			}
 			/*
 			ResponseEntity<CountryIPv4Range> response = await _mediator.Send(new GetCountry()
@@ -47,11 +47,12 @@ namespace Geo.Api.Controllers
 			, cancellationToken);
 			if (response.IsSuccess)
 			{
-				return Results.Json(_mapper.Map<Country>(response.Entity) );
+				return Results.Json(_mapper.Map<CountryResponse>(response.Entity) );
 			}
 			return Results.BadRequest(response.ErrorDetail);
 			*/
-			return Results.BadRequest(response.ErrorDetail);
+			
+			return new JsonResult(BadRequest(response.Error));
 		}
 		
 	}

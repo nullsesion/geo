@@ -1,4 +1,6 @@
-﻿using Geo.DomainShared;
+﻿using CSharpFunctionalExtensions;
+using Geo.Domain.Shared.Contracts;
+using Geo.DomainShared;
 using Geo.DomainShared.Contracts;
 using NpgsqlTypes;
 
@@ -13,7 +15,7 @@ namespace Geo.Domain
 		}
 
 		
-		public static ResponseEntity<CityIPv4Range> Create(string network
+		public static Result<CityIPv4Range> Create(string network
 															,int? geonameId
 															,int? registeredCountryGeoNameId
 															,int? representedCountryGeoNameId
@@ -27,11 +29,7 @@ namespace Geo.Domain
 			    && registeredCountryGeoNameId == null
 			    && representedCountryGeoNameId == null)
 			{
-				return new ResponseEntity<CityIPv4Range>()
-				{
-					IsSuccess = false,
-					ErrorDetail = ERROR_CREATE
-				};
+				return Result.Failure<CityIPv4Range>(ERROR_CREATE);
 			}
 
 
@@ -53,37 +51,36 @@ namespace Geo.Domain
 					AccuracyRadius = accuracyRadius
 				};
 
-				return new ResponseEntity<CityIPv4Range>()
-				{
-					IsSuccess = true,
-					Entity = _cityIPv4Range,
-				};
+				return Result.Success(_cityIPv4Range);
 			}
 
-			return new ResponseEntity<CityIPv4Range>()
-			{
-				IsSuccess = false,
-				ErrorDetail = ERROR_CREATE
-			};
+			return Result.Failure<CityIPv4Range>(ERROR_CREATE);
 		}
 		
-		public static ResponseEntity<CityIPv4Range> Create(ICityIPv4Range cityIPv4Range)
+		public static Result<CityIPv4Range> Create(ICityIPv4Range cityIPv4Range)
 		{
 			if (cityIPv4Range.GeonameId == null
 			    && cityIPv4Range.RegisteredCountryGeoNameId == null
 			    && cityIPv4Range.RepresentedCountryGeoNameId == null)
 			{
-				return new ResponseEntity<CityIPv4Range>()
-				{
-					IsSuccess = false,
-					ErrorDetail = ERROR_CREATE
-				};
+				return Result.Failure<CityIPv4Range>(ERROR_CREATE);
 			}
 
 			
 
 			if (GetFromString(cityIPv4Range.Network, out int mask, out int ipMin, out int ipMax))
 			{
+				Coordinate coordinate = null;
+
+				if (cityIPv4Range.Location is not null)
+				{
+					Result<Coordinate> tryCoordinate =
+						Coordinate.Create(cityIPv4Range.Location.Longitude
+							, cityIPv4Range.Location.Latitude);
+					if (tryCoordinate.IsSuccess)
+						coordinate = tryCoordinate.Value;
+				}
+
 				CityIPv4Range _cityIPv4Range = new CityIPv4Range()
 				{
 						Network = cityIPv4Range.Network,
@@ -95,22 +92,14 @@ namespace Geo.Domain
 						IsAnonymousProxy = cityIPv4Range.IsAnonymousProxy,
 						IsSatelliteProvider = cityIPv4Range.IsSatelliteProvider,
 						IsAnycast = cityIPv4Range.IsAnycast,
-						Location  = cityIPv4Range.Location,
+						Location  = coordinate,
 						AccuracyRadius = cityIPv4Range.AccuracyRadius
 				};
-				
-				return new ResponseEntity<CityIPv4Range>()
-				{
-					IsSuccess = true,
-					Entity = _cityIPv4Range,
-				};
+
+				return Result.Success(_cityIPv4Range);
 			}
 
-			return new ResponseEntity<CityIPv4Range>()
-			{
-				IsSuccess = false,
-				ErrorDetail = ERROR_CREATE
-			};
+			return Result.Failure<CityIPv4Range>(ERROR_CREATE);
 		}
 
 		private static bool GetFromString(string network, out int mask, out int ipMin, out int ipMax)

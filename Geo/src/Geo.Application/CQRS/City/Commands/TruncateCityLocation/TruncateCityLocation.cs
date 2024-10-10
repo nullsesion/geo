@@ -1,9 +1,10 @@
-﻿using Geo.DomainShared;
+﻿using CSharpFunctionalExtensions;
+using Geo.DomainShared;
 using MediatR;
 
 namespace Geo.Application.CQRS.City.Commands.TruncateCityLocation
 {
-	public class TruncateCityLocation: IRequest<ResponseEntity<bool>>
+	public class TruncateCityLocation: IRequest<Result>
 	{
 	}
 }

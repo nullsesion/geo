@@ -2,7 +2,7 @@
 {
 	public class Info
 	{
-		public City City { get; set; }
-		public Country Country { get; set; }
+		public CityResponse CityResponse { get; set; }
+		public CountryResponse CountryResponse { get; set; }
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CSharpFunctionalExtensions;
 using EFCore.BulkExtensions;
 using Geo.Application.CQRS.Country.Queries.GetCountry;
 using Geo.Application.Interfaces;
@@ -30,7 +31,7 @@ namespace Geo.DataAccess.Repositories
 			return true;
 		}
 
-		public async Task<ResponseEntity<CountryIPv4Range>> GetCountryIPv4RangeByIp(GetCountry ip)
+		public async Task<Result<CountryIPv4Range>> GetCountryIPv4RangeByIp(GetCountry ip)
 		{
 
 			if (ip.Ip.TryIpV4ToInt(out int number))
@@ -67,24 +68,14 @@ namespace Geo.DataAccess.Repositories
 				;
 
 				if (countryIPv4s == null)
-					return new ResponseEntity<CountryIPv4Range>()
-					{
-						IsSuccess = false,
-						ErrorDetail = "Not Found",
-					};
+					Result.Failure<CountryIPv4Range>("Not Found");
 
-				ResponseEntity<CountryIPv4Range> entity = CountryIPv4Range.Create(countryIPv4s);
+				Result<CountryIPv4Range> entity = CountryIPv4Range.Create(countryIPv4s);
 
-				if (!entity.IsSuccess)
-				{
-					return new ResponseEntity<CountryIPv4Range>()
-					{
-						IsSuccess = false,
-						ErrorDetail = entity.ErrorDetail,
-					};
-				}
+				if (entity.IsFailure)
+					Result.Failure<CountryIPv4Range>(entity.Error);
 					
-				entity.Entity
+				entity.Value
 					.SetGeoname(countryIPv4s.Geoname == null
 						? null
 						:_mapper.Map<CountryLocation>(countryIPv4s.Geoname))
@@ -95,19 +86,11 @@ namespace Geo.DataAccess.Repositories
 						? null
 						: _mapper.Map<CountryLocation>(countryIPv4s.RepresentedCountryGeoName))
 					;
-				
-				return new ResponseEntity<CountryIPv4Range>()
-				{
-					IsSuccess = true,
-					Entity = entity.Entity
-				};
+
+				return Result.Success(entity.Value);
 			}
 
-			return new ResponseEntity<CountryIPv4Range>()
-			{
-				IsSuccess = false,
-				ErrorDetail = "Bad IP",
-			};
+			return Result.Failure<CountryIPv4Range>("Bad IP");
 			
 		}
 

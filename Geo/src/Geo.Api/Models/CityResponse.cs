@@ -1,8 +1,8 @@
-﻿using Geo.DomainShared;
+﻿using Geo.Domain;
 
 namespace Geo.Api.Models
 {
-	public class City
+	public class CityResponse
 	{
 		public string Network { get; set; }
 		public bool IsAnonymousProxy { get; set; }

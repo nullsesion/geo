@@ -1,9 +1,9 @@
-﻿using Geo.DomainShared;
+﻿using CSharpFunctionalExtensions;
 using MediatR;
 
 namespace Geo.Application.CQRS.Country.Commands.TruncateTable
 {
-	public class TruncateCountryIPv4: IRequest<ResponseEntity<bool>>
+	public class TruncateCountryIPv4: IRequest<Result>
 	{
 
 	}

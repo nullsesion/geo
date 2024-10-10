@@ -16,6 +16,7 @@ using Geo.Application.CQRS.Country.Commands.MultiCreateCountryRange;
 using Geo.Application.CQRS.Country.Commands.TruncateCountryLocation;
 using Geo.Application.CQRS.Country.Commands.MultiCreateCountryLocation;
 using Geo.Domain;
+using CSharpFunctionalExtensions;
 
 
 namespace Geo.DataSeeding.Services.CSV
@@ -40,7 +41,6 @@ namespace Geo.DataSeeding.Services.CSV
 		public async Task LoadGeoLite2CountryLocations(string fragmentName, string path, IMediator mediator)
 		{
 			_display.WriteLine("LoadGeoLite2CountryLocations");
-			ResponseEntity<bool> res = new ();
 
 			IEnumerable <FileInfo> geoLite2CountryLocations = FindFile(fragmentName, path);
 			foreach (FileInfo file in geoLite2CountryLocations)
@@ -72,7 +72,7 @@ namespace Geo.DataSeeding.Services.CSV
 						if ((i % 100 == 0 && i > 1) || (i + 1) == total )
 						{
 							buffer.CountryLocations = countryLocations;
-							res = await mediator.Send(buffer, CancellationToken.None);
+							await mediator.Send(buffer, CancellationToken.None);
 							buffer = new MultiCreateCountryLocation()
 							{
 								CountryLocations = (new List<ICountryLocation>()) as IEnumerable<ICountryLocation>
@@ -107,7 +107,7 @@ namespace Geo.DataSeeding.Services.CSV
 					{
 						CountryIPv4Ranges = null,
 					};
-					ResponseEntity<bool> res = new ();
+					Result res = new ();
 					foreach (GeoLite2CountryIPv4 r in records)
 					{
 						i++;
@@ -167,10 +167,17 @@ namespace Geo.DataSeeding.Services.CSV
 					{
 						CityIPv4Ranges = null
 					};
-					ResponseEntity<bool> res;
+					Result res;
 					foreach (GeoLite2CityIPv4 geoLite2CityIPv4 in records)
 					{
 						i++;
+						Coordinate coordinate = null;
+						Result<Coordinate> tryCoordinate = Coordinate.Create(geoLite2CityIPv4.Longitude ?? double.MinValue,
+							geoLite2CityIPv4.Latitude ?? double.MinValue);
+						if (tryCoordinate.IsSuccess)
+							coordinate = tryCoordinate.Value;
+
+
 						buffer.Add(new CreateCityIPv4Range()
 						{
 							Network = geoLite2CityIPv4.Network,
@@ -180,10 +187,7 @@ namespace Geo.DataSeeding.Services.CSV
 							IsAnonymousProxy = geoLite2CityIPv4.IsAnonymousProxy,
 							IsSatelliteProvider = geoLite2CityIPv4.IsSatelliteProvider,
 							IsAnycast = geoLite2CityIPv4.IsAnycast,
-							Location =
-								geoLite2CityIPv4.Longitude == null || geoLite2CityIPv4.Latitude == null
-									? null
-									: new Coordinate(geoLite2CityIPv4.Longitude ?? 0, geoLite2CityIPv4.Latitude ?? 0),
+							Location = coordinate,
 							AccuracyRadius = geoLite2CityIPv4.AccuracyRadius,
 						});
 						
@@ -193,7 +197,7 @@ namespace Geo.DataSeeding.Services.CSV
 							{
 								CityIPv4Ranges = buffer
 							};
-							res = await mediator.Send(multiCreateCityIPv4Range, CancellationToken.None);
+							await mediator.Send(multiCreateCityIPv4Range, CancellationToken.None);
 							buffer = new List<CreateCityIPv4Range>();
 							_display.Write("*");
 						}
@@ -202,7 +206,7 @@ namespace Geo.DataSeeding.Services.CSV
 					{
 						CityIPv4Ranges = buffer
 					};
-					res = await mediator.Send(multiCreateCityIPv4Range, CancellationToken.None);
+					await mediator.Send(multiCreateCityIPv4Range, CancellationToken.None);
 					buffer = new List<CreateCityIPv4Range>();
 					_display.Write("*");
 					_display.WriteLine();
@@ -251,7 +255,7 @@ namespace Geo.DataSeeding.Services.CSV
 						buffer.Add(cityLocation);
 						if (i % 4000 == 0)//4000
 						{
-							ResponseEntity<bool> t = await mediator.Send(new MultiCreateCityLocation()
+							await mediator.Send(new MultiCreateCityLocation()
 							{
 								CityLocations = buffer,
 							}, CancellationToken.None);
@@ -260,7 +264,7 @@ namespace Geo.DataSeeding.Services.CSV
 						}
 					}
 					
-					ResponseEntity<bool> t2 = await mediator.Send(new MultiCreateCityLocation()
+					await mediator.Send(new MultiCreateCityLocation()
 					{
 						CityLocations = buffer,
 					}, CancellationToken.None);
