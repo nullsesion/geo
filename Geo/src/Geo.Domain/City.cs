@@ -1,10 +1,10 @@
 ﻿namespace Geo.Domain;
 
 public record City(
-	string CityName
+	LocationStrings CityName
 	, string Subdivision1IsoCode
-	, string Subdivision1Name
+	, LocationStrings Subdivision1Name
 	, string Subdivision2IsoCode
-	, string Subdivision2Name
+	, LocationStrings Subdivision2Name
 	, string MetroCode
 	, string TimeZone);

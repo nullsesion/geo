@@ -17,18 +17,20 @@ namespace Geo.DataAccess.MapperConfig
 		{
 			CreateMap<CountryLocationEntity, CountryLocation>()
 				.ForMember(dest => dest.ContinentName
-					, opt => opt.MapFrom(src 
-						=> (string)JObject.Parse(src.ContinentName)["en"]))
+					, opt => opt.MapFrom(
+						src => GetJsonByKey(src.ContinentName,"en"))
+					)
 				.ForMember(dest => dest.CountryName
-					, opt => opt.MapFrom(src 
-						=> (string)JObject.Parse(src.ContinentName)["en"]));
+					, opt => opt.MapFrom(
+						src => GetJsonByKey(src.CountryName, "en"))
+					);
 
 			CreateMap<CountryIPv4Range, CountryIPv4Entity>();
 			
 			CreateMap<CountryLocation, CountryLocationEntity>()
 				.ForMember(dest => dest.ContinentName
-					, opt => opt.MapFrom(src
-						=> JsonConvert.SerializeObject(
+					, opt => opt.MapFrom(
+						src=> JsonConvert.SerializeObject(
 							new Dictionary<string, string>() { { src.LocaleCode, src.ContinentName } }
 						)))
 				.ForMember(dest => dest.CountryName
@@ -90,18 +92,18 @@ namespace Geo.DataAccess.MapperConfig
 							}
 						)))
 				.ForMember(dest => dest.ContinentName
-					, opt => opt.MapFrom(src
-						=> JsonConvert.SerializeObject(
+					, opt => opt.MapFrom(
+						src => JsonConvert.SerializeObject(
 							new Dictionary<string, string>() { { src.LocaleCode, src.ContinentName } }
 						)))
 				.ForMember(dest => dest.CountryName
-					, opt => opt.MapFrom(src
-						=> JsonConvert.SerializeObject(
+					, opt => opt.MapFrom(
+						src => JsonConvert.SerializeObject(
 							new Dictionary<string, string>() { { src.LocaleCode, src.CountryName } }
 						)))
 				.ForMember(dest => dest.CityName
-					, opt => opt.MapFrom(src
-						=> JsonConvert.SerializeObject(
+					, opt => opt.MapFrom(
+						src => JsonConvert.SerializeObject(
 							new Dictionary<string, string>() { { src.LocaleCode, src.CityName } }
 						)))
 				;
@@ -109,13 +111,13 @@ namespace Geo.DataAccess.MapperConfig
 			CreateMap<CityLocationEntity,CityLocation>()
 				.ForMember(dest => dest.ContinentName
 					, opt => opt.MapFrom(src
-						=> (string)JObject.Parse(src.ContinentName)["en"]))
+						=> GetJsonByKey(src.ContinentName, "en")))
 				.ForMember(dest => dest.CountryName
-					, opt => opt.MapFrom(src
-						=> (string)JObject.Parse(src.ContinentName)["en"]))
+					, opt => opt.MapFrom(
+						src => GetJsonByKey(src.CountryName, "en")))
 				.ForMember(dest => dest.CityName
-				, opt => opt.MapFrom(src
-					=> (string)JObject.Parse(src.CityName)["en"]))
+				, opt => opt.MapFrom(
+					src => GetJsonByKey(src.CityName, "en")))
 				;
 
 			CreateMap<CityIPv4Range, CityIPv4Entity>()
@@ -131,22 +133,38 @@ namespace Geo.DataAccess.MapperConfig
 					));
 		}
 
-		public Coordinate NpgsqlPointToCoordinate(NpgsqlPoint? src)
+		private Coordinate NpgsqlPointToCoordinate(NpgsqlPoint? src)
 		{
 			Coordinate coordinate = null;
-			Result<Coordinate> tryCoordinate = Coordinate.Create(src?.X ?? double.MinValue, src?.Y ?? double.MinValue);
+			Result<Coordinate> tryCoordinate = Coordinate.Create(
+				src?.X ?? double.MinValue
+				, src?.Y ?? double.MinValue);
+
 			if (tryCoordinate.IsSuccess)
 				coordinate = tryCoordinate.Value;
 			return coordinate;
 		}
 
-		public NpgsqlPoint CoordinateToNpgsqlPoint(Coordinate coordinate)
+		private NpgsqlPoint CoordinateToNpgsqlPoint(Coordinate coordinate)
 		{
 			if (coordinate is null)
 				return new NpgsqlPoint(0, 0);
 
 			NpgsqlPoint point = new NpgsqlPoint(coordinate.Latitude, coordinate.Longitude);
 			return point;
+		}
+
+		private string GetJsonByKey(string jsonString,string key)
+		{
+			JObject obj = JObject.Parse(jsonString);
+			if (obj is null)
+				return "";
+
+			if (obj.TryGetValue(key, out JToken value))
+			{
+				return value.ToString();
+			}
+			return "";
 		}
 	}
 }

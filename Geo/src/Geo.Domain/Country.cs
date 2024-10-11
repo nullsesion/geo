@@ -1,8 +1,8 @@
 ﻿namespace Geo.Domain;
 
 public record Country(
-	string CountryName
+	LocationStrings CountryName
 	, string ContinentCode
-	, string ContinentName
+	, LocationStrings ContinentName
 	, string CountryIsoCode
 	);

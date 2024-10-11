@@ -1,7 +1,9 @@
-﻿namespace Geo.Domain;
+﻿using Geo.Domain.Shared;
+
+namespace Geo.Domain;
 
 public record IpLocate(
-	 LocaleCode LocaleCode
+	 string LocaleCode
 	, Coordinate Coordinate
 	, Country Country
 	, City? City
