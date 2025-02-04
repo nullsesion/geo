@@ -8,6 +8,7 @@ API
 
 
 ## Запуск 
+скачать и установить [docker](https://www.docker.com/get-started/)
 
 Выполнить App-Docker-InstallOrReinstall-And-Start.bat
 Дождатся открытия в браузере
