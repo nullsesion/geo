@@ -1,23 +1,17 @@
 API 
 
-# Сервис получения данных по IP адрессу
+# Service for get information by IP address
 
-## Описание
+## description
 
-на текущий момент подерживается только IPv4 
+supported only IPv4
 
 
-## Запуск 
-скачать и установить [docker](https://www.docker.com/get-started/)
+## Run 
+download and install [docker](https://www.docker.com/get-started/)
 
-Выполнить App-Docker-InstallOrReinstall-And-Start.bat
-Дождатся открытия в браузере
+run App-Docker-InstallOrReinstall-And-Start.bat
 
-Использовать API
 ![](swagger.jpg)
 
-Код будет рефакторится и улучшатся. Пока не окончательная версия.
-
-В планах. улучшение образа postgesql. Добавление nginx, Docker rootless, агрегация логов. 
-Рефакторинг кода. Замена Automapper на mapster, Возможно замена EF на Linq2Db.
-Добавление IPv6, Добавление других локалей кроме en.
+coverage ~95% of all ipv4
