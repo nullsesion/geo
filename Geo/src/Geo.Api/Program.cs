@@ -46,7 +46,7 @@ namespace Geo.Api
 				app.UseSwaggerUI();
 			}
 
-			app.UseMiddleware<RemoveTrailingSpaces>();
+			app.UseMiddleware<ParseIPFromQS>();
 
 			app.UseAuthorization();
 
