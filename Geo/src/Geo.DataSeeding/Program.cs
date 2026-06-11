@@ -9,6 +9,7 @@ using Geo.DataSeeding.Services;
 using Geo.DataSeeding.Services.CSV;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 
 public class Program
@@ -28,7 +29,7 @@ public class Program
 	{
 		var collection = new ServiceCollection();
 
-
+		collection.AddLogging();
 		collection.AddSingleton<IConfiguration, Config>();
 		collection.AddDbContext<IGeoApiDbContext, GeoApiDbContext>();
 		//options => options.UseNpgsql(config.GetConnectionString(nameof(GeoApiDbContext)))
@@ -43,6 +44,7 @@ public class Program
 		collection.AddSingleton<IInstall2Db, Install2Db>();
 		collection.AddSingleton<IStepFinish, Seeding>();
 		collection.AddSingleton<CsvService>();
+		
 
 		collection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetCountry).Assembly));
 		collection.AddAutoMapper(cfg =>
