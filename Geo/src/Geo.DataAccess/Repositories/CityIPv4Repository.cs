@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 using EFCore.BulkExtensions;
 using Geo.Application.CQRS.City.Queries;
 using Geo.Application.Interfaces;
@@ -10,6 +9,7 @@ using Geo.Domain.Shared.Contracts;
 using Geo.DomainShared;
 using Geo.DomainShared.Contracts;
 using GeoLoad.Entities;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 
 namespace Geo.DataAccess.Repositories
@@ -17,18 +17,15 @@ namespace Geo.DataAccess.Repositories
 
 	public class CityIPv4Repository: AbstractRepository, ICityIPv4Repository
 	{
-		private readonly IMapper _mapper;
-
-		public CityIPv4Repository(GeoApiDbContext dbContext, IMapper mapper) : base(dbContext)
+		public CityIPv4Repository(GeoApiDbContext dbContext) : base(dbContext)
 		{
-			_mapper = mapper;
 		}
 
 		public async Task<bool> InsertCityIPv4RangeAsync(CityIPv4Range cityIPv4Range, CancellationToken cancellationToken)
 		{
 			var res = await _dbContext
 					.CityIPv4s
-					.AddAsync(_mapper.Map<CityIPv4Entity>(cityIPv4Range))
+					.AddAsync(TypeAdapter.Adapt<CityIPv4Entity>(cityIPv4Range))
 				;
 
 			return true;
@@ -47,7 +44,7 @@ namespace Geo.DataAccess.Repositories
 		{
 			var res = await _dbContext
 				.CityLocations
-				.AddAsync(_mapper.Map<CityLocationEntity>(cityLocation), cancellationToken);
+				.AddAsync(TypeAdapter.Adapt<CityLocationEntity>(cityLocation), cancellationToken);
 
 			return cityLocation.GeonameId;
 		}
@@ -99,13 +96,13 @@ namespace Geo.DataAccess.Repositories
 				entity.Value
 					.SetGeoname(cityIPv4s.Geoname == null
 						? null
-						: _mapper.Map<CityLocation>(cityIPv4s.Geoname))
+						: TypeAdapter.Adapt<CityLocation>(cityIPv4s.Geoname))
 					.SetRegisteredCountryGeoName(cityIPv4s.RegisteredCountryGeoName == null
 						? null
-						: _mapper.Map<CityLocation>(cityIPv4s.RegisteredCountryGeoName))
+						: TypeAdapter.Adapt<CityLocation>(cityIPv4s.RegisteredCountryGeoName))
 					.SetRepresentedCountryGeoName(cityIPv4s.RepresentedCountryGeoName == null
 						? null
-						: _mapper.Map<CityLocation>(cityIPv4s.RepresentedCountryGeoName))
+						: TypeAdapter.Adapt<CityLocation>(cityIPv4s.RepresentedCountryGeoName))
 					;
 
 				return Result.Success<CityIPv4Range>(entity.Value);
@@ -116,7 +113,7 @@ namespace Geo.DataAccess.Repositories
 
 		public bool MultiInsertCityLocationAsync(IEnumerable<ICityLocation> cityLocations, CancellationToken cancellationToken)
 		{
-			_dbContext.BulkInsertOrUpdateAsync(cityLocations.Select(x => _mapper.Map<CityLocationEntity>(x))).Wait();
+			_dbContext.BulkInsertOrUpdateAsync(cityLocations.Select(x => TypeAdapter.Adapt<CityLocationEntity>(x))).Wait();
 			_dbContext.BulkSaveChanges();
 			return true;
 		}
@@ -124,7 +121,7 @@ namespace Geo.DataAccess.Repositories
 		public async Task<bool> MultiInsertCityIPv4RangeAsync(IEnumerable<CityIPv4Range> cityIPv4Ranges, CancellationToken cancellationToken)
 		{
 			
-			await _dbContext.BulkInsertAsync(cityIPv4Ranges.Select(x => _mapper.Map<CityIPv4Entity>(x)));
+			await _dbContext.BulkInsertAsync(cityIPv4Ranges.Select(x => TypeAdapter.Adapt<CityIPv4Entity>(x)));
 			_dbContext.BulkSaveChanges();
 			
 			return true;

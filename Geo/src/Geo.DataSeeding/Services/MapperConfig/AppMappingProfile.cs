@@ -1,9 +1,11 @@
-﻿using AutoMapper;
+﻿using Mapster;
 
 namespace Geo.DataSeeding.Services.MapperConfig
 {
-	public class AppMappingProfile:Profile
+	public class AppMappingProfile : IRegister
 	{
-		//
+		public void Register(TypeAdapterConfig config)
+		{
+		}
 	}
 }

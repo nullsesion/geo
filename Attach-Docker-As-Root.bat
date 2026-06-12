@@ -1,1 +1,1 @@
-docker exec -it webapi bash
+docker exec -u root -it webapi bash

@@ -1,19 +1,18 @@
-﻿using AutoMapper;
-using Geo.Api.Models;
-using Geo.DomainShared.Contracts;
+﻿using Geo.Api.Models;
 using Geo.Domain;
+using Geo.DomainShared.Contracts;
+using Mapster;
 
 namespace Geo.Api.MapperConfig
 {
-	public class AppMappingProfile : Profile
+	public class AppMappingProfile : IRegister
 	{
-		public AppMappingProfile()
+		public void Register(TypeAdapterConfig config)
 		{
-			CreateMap<ICountryLocation, CountryInfo>();
-			CreateMap<CountryIPv4Range, CountryResponse>();
-
-			CreateMap<CityLocation, CityInfo>();
-			CreateMap<CityIPv4Range, CityResponse>();
+			config.NewConfig<ICountryLocation, CountryInfo>();
+			config.NewConfig<CountryIPv4Range, CountryResponse>();
+			config.NewConfig<CityLocation, CityInfo>();
+			config.NewConfig<CityIPv4Range, CityResponse>();
 		}
 	}
 }
