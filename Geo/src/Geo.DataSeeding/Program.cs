@@ -7,6 +7,7 @@ using Geo.DataSeeding;
 using Geo.DataSeeding.Interfaces;
 using Geo.DataSeeding.Services;
 using Geo.DataSeeding.Services.CSV;
+using Mapster;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -47,10 +48,8 @@ public class Program
 		
 
 		collection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetCountry).Assembly));
-		collection.AddAutoMapper(cfg =>
-		{
-			cfg.AddProfile(typeof(AppMappingProfile));
-		});
+		TypeAdapterConfig.GlobalSettings.Scan(
+			typeof(AppMappingProfile).Assembly);
 
 		return collection.BuildServiceProvider();
 	}

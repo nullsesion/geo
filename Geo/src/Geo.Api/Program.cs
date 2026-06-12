@@ -4,6 +4,7 @@ using Geo.DataAccess.Repositories;
 using Geo.DataAccess;
 using Geo.Api.Middlewares;
 using Geo.Api.MapperConfig;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 
 namespace Geo.Api
@@ -26,11 +27,9 @@ namespace Geo.Api
 			builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 			builder.Services.AddScoped<ICityIPv4Repository, CityIPv4Repository>();
 
-			builder.Services.AddAutoMapper(cfg =>
-			{
-				cfg.AddProfile(typeof(AppMappingProfile));
-				cfg.AddProfile(typeof(Geo.DataAccess.MapperConfig.AppMappingProfile));
-			});
+			TypeAdapterConfig.GlobalSettings.Scan(
+				typeof(AppMappingProfile).Assembly,
+				typeof(Geo.DataAccess.MapperConfig.AppMappingProfile).Assembly);
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();

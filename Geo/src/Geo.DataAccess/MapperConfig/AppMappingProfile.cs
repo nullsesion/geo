@@ -1,137 +1,96 @@
-﻿using AutoMapper;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 using Geo.DataAccess.Entities;
 using Geo.Domain;
 using Geo.Domain.Shared.Contracts;
 using Geo.DomainShared.Contracts;
 using GeoLoad.Entities;
+using Mapster;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NpgsqlTypes;
 
 namespace Geo.DataAccess.MapperConfig
 {
-	public class AppMappingProfile: Profile
+	public class AppMappingProfile : IRegister
 	{
-		public AppMappingProfile()
+		public void Register(TypeAdapterConfig config)
 		{
-			CreateMap<CountryLocationEntity, CountryLocation>()
-				.ForMember(dest => dest.ContinentName
-					, opt => opt.MapFrom(src 
-						=> (string)JObject.Parse(src.ContinentName)["en"]))
-				.ForMember(dest => dest.CountryName
-					, opt => opt.MapFrom(src 
-						=> (string)JObject.Parse(src.ContinentName)["en"]));
+			config.NewConfig<CountryLocationEntity, CountryLocation>()
+				.Map(dest => dest.ContinentName, src => (string)JObject.Parse(src.ContinentName)["en"])
+				.Map(dest => dest.CountryName, src => (string)JObject.Parse(src.ContinentName)["en"]);
 
-			CreateMap<CountryIPv4Range, CountryIPv4Entity>();
-			
-			CreateMap<CountryLocation, CountryLocationEntity>()
-				.ForMember(dest => dest.ContinentName
-					, opt => opt.MapFrom(src
-						=> JsonConvert.SerializeObject(
-							new Dictionary<string, string>() { { src.LocaleCode, src.ContinentName } }
-						)))
-				.ForMember(dest => dest.CountryName
-					, opt => opt.MapFrom(src
-						=> JsonConvert.SerializeObject(
-							new Dictionary<string, string>() { { src.LocaleCode, src.CountryName } }
-						)))
-				;
+			config.NewConfig<CountryLocation, CountryLocationEntity>()
+				.Map(dest => dest.ContinentName
+					, src => JsonConvert.SerializeObject(
+						new Dictionary<string, string>() { { src.LocaleCode, src.ContinentName } }))
+				.Map(dest => dest.CountryName
+					, src => JsonConvert.SerializeObject(
+						new Dictionary<string, string>() { { src.LocaleCode, src.CountryName } }));
 
-			CreateMap<ICountryLocation, CountryLocationEntity>()
-				.ForMember(dest => dest.ContinentName
-					, opt => opt.MapFrom(src
-						=> JsonConvert.SerializeObject(
-							new Dictionary<string, string>() { { src.LocaleCode, src.ContinentName } }
-						)))
-				.ForMember(dest => dest.CountryName
-					, opt => opt.MapFrom(src
-						=> JsonConvert.SerializeObject(
-							new Dictionary<string, string>() { { src.LocaleCode, src.CountryName } }
-						)))
-				;
+			config.NewConfig<ICountryLocation, CountryLocationEntity>()
+				.Map(dest => dest.ContinentName
+					, src => JsonConvert.SerializeObject(
+						new Dictionary<string, string>() { { src.LocaleCode, src.ContinentName } }))
+				.Map(dest => dest.CountryName
+					, src => JsonConvert.SerializeObject(
+						new Dictionary<string, string>() { { src.LocaleCode, src.CountryName } }));
 
-			CreateMap<CityLocation, CityLocationEntity>()
-				.ForMember(dest => dest.Subdivision
-					, opt => opt.MapFrom(src
-						=> JsonConvert.SerializeObject(new Dictionary<string, string>()
-							{
-								{ "Subdivision1IsoCode", src.Subdivision1IsoCode },
-								{ "Subdivision1Name",    src.Subdivision1Name },
-								{ "Subdivision2IsoCode", src.Subdivision2IsoCode },
-								{ "Subdivision2Name",    src.Subdivision2Name },
-							}
-						)))
-				.ForMember(dest => dest.ContinentName
-					, opt => opt.MapFrom(src
-						=> JsonConvert.SerializeObject(
-							new Dictionary<string, string>() { { src.LocaleCode, src.ContinentName } }
-						)))
-				.ForMember(dest => dest.CountryName
-					, opt => opt.MapFrom(src
-						=> JsonConvert.SerializeObject(
-							new Dictionary<string, string>() { { src.LocaleCode, src.CountryName } }
-						)))
-				.ForMember(dest => dest.CityName
-					, opt => opt.MapFrom(src
-						=> JsonConvert.SerializeObject(
-							new Dictionary<string, string>() { { src.LocaleCode, src.CityName } }
-						)))
-				;
-			CreateMap<ICityLocation, CityLocationEntity>()
-				.ForMember(dest => dest.Subdivision
-					, opt => opt.MapFrom(src
-						=> JsonConvert.SerializeObject(new Dictionary<string, string>()
-							{
-								{ "Subdivision1IsoCode", src.Subdivision1IsoCode },
-								{ "Subdivision1Name",    src.Subdivision1Name },
-								{ "Subdivision2IsoCode", src.Subdivision2IsoCode },
-								{ "Subdivision2Name",    src.Subdivision2Name },
-							}
-						)))
-				.ForMember(dest => dest.ContinentName
-					, opt => opt.MapFrom(src
-						=> JsonConvert.SerializeObject(
-							new Dictionary<string, string>() { { src.LocaleCode, src.ContinentName } }
-						)))
-				.ForMember(dest => dest.CountryName
-					, opt => opt.MapFrom(src
-						=> JsonConvert.SerializeObject(
-							new Dictionary<string, string>() { { src.LocaleCode, src.CountryName } }
-						)))
-				.ForMember(dest => dest.CityName
-					, opt => opt.MapFrom(src
-						=> JsonConvert.SerializeObject(
-							new Dictionary<string, string>() { { src.LocaleCode, src.CityName } }
-						)))
-				;
+			config.NewConfig<CityLocation, CityLocationEntity>()
+				.Map(dest => dest.Subdivision
+					, src => JsonConvert.SerializeObject(new Dictionary<string, string>()
+					{
+						{ "Subdivision1IsoCode", src.Subdivision1IsoCode },
+						{ "Subdivision1Name", src.Subdivision1Name },
+						{ "Subdivision2IsoCode", src.Subdivision2IsoCode },
+						{ "Subdivision2Name", src.Subdivision2Name },
+					}))
+				.Map(dest => dest.ContinentName
+					, src => JsonConvert.SerializeObject(
+						new Dictionary<string, string>() { { src.LocaleCode, src.ContinentName } }))
+				.Map(dest => dest.CountryName
+					, src => JsonConvert.SerializeObject(
+						new Dictionary<string, string>() { { src.LocaleCode, src.CountryName } }))
+				.Map(dest => dest.CityName
+					, src => JsonConvert.SerializeObject(
+						new Dictionary<string, string>() { { src.LocaleCode, src.CityName } }));
 
-			CreateMap<CityLocationEntity,CityLocation>()
-				.ForMember(dest => dest.ContinentName
-					, opt => opt.MapFrom(src
-						=> (string)JObject.Parse(src.ContinentName)["en"]))
-				.ForMember(dest => dest.CountryName
-					, opt => opt.MapFrom(src
-						=> (string)JObject.Parse(src.ContinentName)["en"]))
-				.ForMember(dest => dest.CityName
-				, opt => opt.MapFrom(src
-					=> (string)JObject.Parse(src.CityName)["en"]))
-				;
+			config.NewConfig<ICityLocation, CityLocationEntity>()
+				.Map(dest => dest.Subdivision
+					, src => JsonConvert.SerializeObject(new Dictionary<string, string>()
+					{
+						{ "Subdivision1IsoCode", src.Subdivision1IsoCode },
+						{ "Subdivision1Name", src.Subdivision1Name },
+						{ "Subdivision2IsoCode", src.Subdivision2IsoCode },
+						{ "Subdivision2Name", src.Subdivision2Name },
+					}))
+				.Map(dest => dest.ContinentName
+					, src => JsonConvert.SerializeObject(
+						new Dictionary<string, string>() { { src.LocaleCode, src.ContinentName } }))
+				.Map(dest => dest.CountryName
+					, src => JsonConvert.SerializeObject(
+						new Dictionary<string, string>() { { src.LocaleCode, src.CountryName } }))
+				.Map(dest => dest.CityName
+					, src => JsonConvert.SerializeObject(
+						new Dictionary<string, string>() { { src.LocaleCode, src.CityName } }));
 
-			CreateMap<CityIPv4Range, CityIPv4Entity>()
-				.ForMember(dest => dest.Location
-					, opt => opt.MapFrom(src
-						=> CoordinateToNpgsqlPoint(src.Location)
-					));
+			config.NewConfig<CityLocationEntity, CityLocation>()
+				.Map(dest => dest.ContinentName
+					, src => (string)JObject.Parse(src.ContinentName)["en"])
+				.Map(dest => dest.CountryName
+					, src => (string)JObject.Parse(src.ContinentName)["en"])
+				.Map(dest => dest.CityName
+					, src => (string)JObject.Parse(src.CityName)["en"]);
 
-			CreateMap<CityIPv4Entity, ICityIPv4Range>()
-				.ForMember(dest => dest.Location
-					, opt => opt.MapFrom(src
-						=> NpgsqlPointToCoordinate(src.Location)
-					));
+			config.NewConfig<CityIPv4Range, CityIPv4Entity>()
+				.Map(dest => dest.Location
+					, src => CoordinateToNpgsqlPoint(src.Location));
+
+			config.NewConfig<CityIPv4Entity, ICityIPv4Range>()
+				.Map(dest => dest.Location
+					, src => NpgsqlPointToCoordinate(src.Location));
 		}
 
-		public Coordinate NpgsqlPointToCoordinate(NpgsqlPoint? src)
+		private static Coordinate NpgsqlPointToCoordinate(NpgsqlPoint? src)
 		{
 			Coordinate coordinate = null;
 			Result<Coordinate> tryCoordinate = Coordinate.Create(src?.X ?? double.MinValue, src?.Y ?? double.MinValue);
@@ -140,13 +99,12 @@ namespace Geo.DataAccess.MapperConfig
 			return coordinate;
 		}
 
-		public NpgsqlPoint CoordinateToNpgsqlPoint(Coordinate coordinate)
+		private static NpgsqlPoint CoordinateToNpgsqlPoint(Coordinate coordinate)
 		{
 			if (coordinate is null)
 				return new NpgsqlPoint(0, 0);
 
-			NpgsqlPoint point = new NpgsqlPoint(coordinate.Latitude, coordinate.Longitude);
-			return point;
+			return new NpgsqlPoint(coordinate.Latitude, coordinate.Longitude);
 		}
 	}
 }

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 using EFCore.BulkExtensions;
 using Geo.Application.CQRS.Country.Queries.GetCountry;
 using Geo.Application.Interfaces;
@@ -8,24 +7,22 @@ using Geo.DataAccess.Entities;
 using Geo.Domain;
 using Geo.DomainShared;
 using Geo.DomainShared.Contracts;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 
 namespace Geo.DataAccess.Repositories
 {
 	public class CountryRepository: AbstractRepository, ICountryRepository
 	{
-		private readonly IMapper _mapper;
-
-		public CountryRepository(GeoApiDbContext dbContext, IMapper mapper) : base(dbContext)
+		public CountryRepository(GeoApiDbContext dbContext) : base(dbContext)
 		{
-			_mapper = mapper;
 		}
 
 		public async Task<bool> InsertCountryIPv4RangeAsync(CountryIPv4Range countryIPv4Range, CancellationToken cancellationToken)
 		{
 			var res = await _dbContext
 					.CountryIPv4s  
-					.AddAsync(_mapper.Map<CountryIPv4Entity>(countryIPv4Range))
+					.AddAsync(TypeAdapter.Adapt<CountryIPv4Entity>(countryIPv4Range))
 				;
 
 			return true;
@@ -78,13 +75,13 @@ namespace Geo.DataAccess.Repositories
 				entity.Value
 					.SetGeoname(countryIPv4s.Geoname == null
 						? null
-						:_mapper.Map<CountryLocation>(countryIPv4s.Geoname))
+						:TypeAdapter.Adapt<CountryLocation>(countryIPv4s.Geoname))
 				.SetRegisteredCountryGeoName(countryIPv4s.RegisteredCountryGeoName == null
 						? null
-						:_mapper.Map<CountryLocation>(countryIPv4s.RegisteredCountryGeoName))
+						:TypeAdapter.Adapt<CountryLocation>(countryIPv4s.RegisteredCountryGeoName))
 				.SetRepresentedCountryGeoName(countryIPv4s.RepresentedCountryGeoName == null
 						? null
-						: _mapper.Map<CountryLocation>(countryIPv4s.RepresentedCountryGeoName))
+						: TypeAdapter.Adapt<CountryLocation>(countryIPv4s.RepresentedCountryGeoName))
 					;
 
 				return Result.Success(entity.Value);
@@ -98,7 +95,7 @@ namespace Geo.DataAccess.Repositories
 		{
 			var res = await _dbContext
 					.CountryLocations
-					.AddAsync(_mapper.Map<CountryLocationEntity>(countryLocation)
+					.AddAsync(TypeAdapter.Adapt<CountryLocationEntity>(countryLocation)
 						, cancellationToken)
 				;
 
@@ -107,7 +104,7 @@ namespace Geo.DataAccess.Repositories
 
 		public async Task<bool> MultiInsertCountryLocationAsync(IEnumerable<ICountryLocation> countryLocations, CancellationToken cancellationToken)
 		{
-			IEnumerable<CountryLocationEntity> r = countryLocations.Select(x => _mapper.Map<CountryLocationEntity>(x));
+			IEnumerable<CountryLocationEntity> r = countryLocations.Select(x => TypeAdapter.Adapt<CountryLocationEntity>(x));
 			await _dbContext.BulkInsertOrUpdateAsync(r);
 			_dbContext.BulkSaveChanges();
 			return true;
@@ -115,7 +112,7 @@ namespace Geo.DataAccess.Repositories
 
 		public bool MultiInsertCountryIPv4RangeAsync(IEnumerable<CountryIPv4Range> countryIPv4Ranges, CancellationToken cancellationToken)
 		{
-			_dbContext.BulkInsertAsync(countryIPv4Ranges.Select(x => _mapper.Map<CountryIPv4Entity>(x))).Wait();
+			_dbContext.BulkInsertAsync(countryIPv4Ranges.Select(x => TypeAdapter.Adapt<CountryIPv4Entity>(x))).Wait();
 			_dbContext.BulkSaveChanges();
 			return true;
 		}
