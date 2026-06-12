@@ -1,14 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using Geo.Application.CQRS.Country.Queries.GetCountry;
 using Geo.Domain;
 using Geo.DomainShared;
 using MediatR;
 using System.ComponentModel.DataAnnotations;
-using AutoMapper;
+using CSharpFunctionalExtensions;
 using Geo.Api.Models;
 using Geo.Application.CQRS.City.Queries;
-using CSharpFunctionalExtensions;
+using Mapster;
 
 namespace Geo.Api.Controllers
 {
@@ -18,11 +17,10 @@ namespace Geo.Api.Controllers
 	{
 		private readonly ILogger<IPController> _logger;
 		private readonly IMediator _mediator;
-		private readonly IMapper _mapper;
 
-		public IPController(ILogger<IPController> logger, IMediator mediator, IMapper mapper)
+		public IPController(ILogger<IPController> logger, IMediator mediator)
 		{
-			(_logger, _mediator, _mapper) = (logger, mediator, mapper);
+			(_logger, _mediator) = (logger, mediator);
 		}
 
 		[HttpGet(Name = "GetIP")]
@@ -36,7 +34,7 @@ namespace Geo.Api.Controllers
 
 			if (response.IsSuccess)
 			{
-				return new JsonResult(_mapper.Map<CityResponse>(response.Value));
+				return new JsonResult(TypeAdapter.Adapt<CityResponse>(response.Value));
 			}
 			/*
 			ResponseEntity<CountryIPv4Range> response = await _mediator.Send(new GetCountry()
